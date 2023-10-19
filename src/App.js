@@ -14,13 +14,13 @@ function App() {
 	return (
 		<Router>
 			<Routes>
-				<Route path='/' exact element={<Home />} />
-				<Route path='/add-vendor' element={<AddVendor />} />
-        		<Route path='/sign-in' element={<SignIn />} />
-				<Route path='/dashboard' element={<Dashboard />} />
-				<Route path='/add-user' element={<AddUser />} />
-				<Route path='/vendor-profile/:id' element={<VendorProfile />} />
-				<Route path='/privacy' element={<Privacy />} />
+				<Route path='/perkspass' exact element={<Home />} />
+				<Route path='/perkspass/add-vendor' element={<AddVendor />} />
+        		<Route path='/perkspass/sign-in' element={<SignIn />} />
+				<Route path='/perkspass/dashboard' element={<Dashboard />} />
+				<Route path='/perkspass/add-user' element={<AddUser />} />
+				<Route path='/perkspass/vendor-profile/:id' element={<VendorProfile />} />
+				<Route path='/perkspass/privacy' element={<Privacy />} />
 			</Routes>
 		</Router>
 	);

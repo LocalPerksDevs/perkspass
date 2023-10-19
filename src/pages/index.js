@@ -27,8 +27,8 @@ const Home = () => {
 			<div>
 				<div className='topbar'>
 					<div className='space align-center'>
-						<NavLink to="/">
-							<img src='https://firebasestorage.googleapis.com/v0/b/localperkstest.appspot.com/o/perkspass.svg?alt=media&token=1837f3e4-fbfa-4a68-9914-9b0097d9f2c5&_gl=1*4zggl0*_ga*MTkxMzE3MzM5Mi4xNjg5MTE2MzM4*_ga_CW55HF8NVT*MTY5NjU0MTQ4My4xMDMuMS4xNjk2NTQyNzEyLjMwLjAuMA..' to="/" alt="PerksPass Logo"></img>
+						<NavLink to="/perkspass">
+							<img src='https://firebasestorage.googleapis.com/v0/b/localperkstest.appspot.com/o/perkspass.svg?alt=media&token=1837f3e4-fbfa-4a68-9914-9b0097d9f2c5&_gl=1*4zggl0*_ga*MTkxMzE3MzM5Mi4xNjg5MTE2MzM4*_ga_CW55HF8NVT*MTY5NjU0MTQ4My4xMDMuMS4xNjk2NTQyNzEyLjMwLjAuMA..' to="/perkspass" alt="PerksPass Logo"></img>
 						</NavLink>
 						<div className='row center'>
 							<div className='bars' onClick={showSidebar}>
@@ -38,7 +38,7 @@ const Home = () => {
 								<NavLink to="https://perkspassvendorapplication.paperform.co/">
 									<p className='link-red mr40'>Own a Business?</p>
 								</NavLink>
-								<NavLink to="/sign-in">
+								<NavLink to="/perkspass/sign-in">
 									<p className='link-red'>Affiliate Log In</p>
 								</NavLink>
 							</div>
