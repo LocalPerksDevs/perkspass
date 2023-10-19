@@ -122,7 +122,7 @@ const Dashboard = () => {
 					</thead>
 					<tbody>
 						{vendors.map(doc => (
-							<tr key={doc.id} onClick={() => navigate("/perkspass/vendor-profile/" + doc.id)}>
+							<tr key={doc.id} onClick={() => navigate("/perkspass/" + "vendor-profile/" + doc.id)}>
 								<td>{doc.Name}</td>
 								<td>{doc.City}</td>
 								<td>{doc.State}</td>
