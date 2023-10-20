@@ -292,6 +292,12 @@ tbody tr:hover td {
   max-width: 720px;
 }
 
+.space-between {
+  display: flex;
+  justify-content: space-between;
+  margin: 24px 24px;
+}
+
 .topbar.space {
   margin-right: 40px;
   max-width: 95vw;
@@ -545,11 +551,21 @@ div.error, input.error {
   max-width: 500px;
   min-height: 100px;
   margin-top: 40px;
+  margin-bottom: 40px;
 }
 
-.vendor-name {
+.vendor-profile .vendor-name {
   font-size: 16px;
   font-weight: 600;
+  margin-top: 16px;
+}
+
+.w50 {
+  width: 50vw;
+}
+
+.mr12 {
+  margin-right: 12px;
 }
 
 .vendor-category {
@@ -559,6 +575,16 @@ div.error, input.error {
 
 .col.center h1 {
   max-width: 50vw;
+}
+
+.vendor-profile .label {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.vendor-profile p {
+  margin-top: 0px;
+  margin-bottom: 30px;
 }
 
 #logo-img {
