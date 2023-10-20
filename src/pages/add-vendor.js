@@ -87,13 +87,15 @@ const AddVendor = () => {
 		date.setDate(date.getDate() + 1);
 		date.setHours(0, 0, 0, 0);
 		contact.appLaunchDate = date;
-		date.setDate(date.getFullYear() + 1);
-		contact.contractEnds = date;
 
-		date = new Date(contact.posCall);
-		date.setDate(date.getDate() + 1);
-		date.setHours(0, 0, 0, 0);
-		contact.posCall = date;
+		let date2 = new Date(contact.contractEnds);
+		date2.setFullYear(date.getFullYear() + 1);
+		contact.contractEnds = date2;
+
+		let date3 = new Date(contact.posCall);
+		date3.setDate(date.getDate() + 1);
+		date3.setHours(0, 0, 0, 0);
+		contact.posCall = date3;
 
 		let pa = document.getElementById("lat");
 		LAT = parseFloat(pa.innerText.substring(10, pa.innerText.lastIndexOf('L')));
@@ -130,8 +132,7 @@ const AddVendor = () => {
 			Fee: contact.fee,
 			TermsSigned: contact.terms,
 			Notes: contact.notes,
-			POSSetup: false,
-			ContractSigned: false
+			POSSetup: false
 		}).then((docRef) => {
 			document.getElementsByClassName("message")[0].classList.remove('hide');
 			document.getElementsByClassName("form")[0].classList.add('hide');

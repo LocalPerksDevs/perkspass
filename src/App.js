@@ -11,6 +11,7 @@ import VendorProfile from './pages/vendor-profile';
 import Privacy from './pages/privacy';
 
 function App() {
+	document.title = "PerksPass";
 	return (
 		<Router>
 			<Routes>
