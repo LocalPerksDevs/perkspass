@@ -70,7 +70,7 @@ const Home = () => {
 						<i className='fa-solid fa-x end'></i>
 					</div>
 					<div className='link'>
-						<NavLink to="/sign-in">
+						<NavLink to="/perkspass/sign-in">
 							<p>Affiliate Log in</p>
 						</NavLink>
 					</div>
