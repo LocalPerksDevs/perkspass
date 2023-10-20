@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { db, auth } from '../firebase-config';
+import { signInAnonymously } from "firebase/auth";
 
 const VendorProfile = () => {
 
@@ -26,9 +27,9 @@ const VendorProfile = () => {
     const getVendorData = async () => {
         const snapshot = await db.collection("Establishments").doc(vendorID).get();
         if (snapshot.exists) {
-            setContact((prev) => {
+            setContact(() => {
                 return {
-                    ...prev, address: snapshot.data().Address,
+                    address: snapshot.data().Address,
                     name: snapshot.data().Name,
                     phone: snapshot.data().Phone,
                     category: snapshot.data().Category,
@@ -40,7 +41,8 @@ const VendorProfile = () => {
                     website: snapshot.data().Website,
                     promoCode: snapshot.data().PromoCode,
                     disclaimer: snapshot.data().Disclaimer,
-                    contractEnds: snapshot.data().ContractEnds
+                    contractEnds: snapshot.data().ContractEnds,
+                    logoURL: snapshot.data().LogoURL
                 };
             });
         }
@@ -65,10 +67,17 @@ const VendorProfile = () => {
                     </NavLink>
                 </div>
             </div>
-            <div className="center">
+            <div className="center col">
                 <h1>
                     Vendor Profile
                 </h1>
+                <div className="vendor-profile">
+                    <div className="col center mt24 mb24">
+                        <img src={contact.logoURL} id="logo-img"></img>
+                        <p className="vendor-name">{contact.name}</p>
+                        <p className="vendor-category">{contact.category}</p>
+                    </div>
+                </div>
             </div>
         </div>
     );

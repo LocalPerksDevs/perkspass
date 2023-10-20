@@ -348,6 +348,10 @@ div.error, input.error {
   margin-top: 24px;
 }
 
+.mb24 {
+  margin-bottom: 24px;
+}
+
 .mr8 {
   margin-right: 8px;
 }
@@ -534,6 +538,29 @@ div.error, input.error {
   max-width: 1130px;
 }
 
+.vendor-profile {
+  border: solid 1px #E1E1E1;
+  border-radius: 4px;
+  width: 90%;
+  max-width: 500px;
+  min-height: 100px;
+  margin-top: 40px;
+}
+
+.vendor-name {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.vendor-category {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.col.center h1 {
+  max-width: 50vw;
+}
+
 #logo-img {
   height: 88px;
   width: 88px;
@@ -604,5 +631,18 @@ div.error, input.error {
     position: absolute;
     top: 0;
     left: 0;
+  }
+
+  .table {
+    display: block;
+    overflow: scroll;
+    max-width: 100vw;
+    height: 80vh;
+    margin-left: 0px;
+    margin-top: 24px;
+  }
+
+  table {
+    margin-left: 8px;
   }
 }
