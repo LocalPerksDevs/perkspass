@@ -1,21 +1,114 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { db, auth } from '../firebase-config';
-import { signInAnonymously } from "firebase/auth";
+import { doc, updateDoc } from "firebase/firestore";
 
 const VendorProfile = () => {
 
-    let vendorID = '';
+    const [vendorID, setVendorID] = useState(window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1));
 
     const navigate = useNavigate();
+
+    const isUserAdmin = async () => {
+		const snapshot = await db.collection("Admins").get();
+		if (!snapshot.docs[0].data().IDs.includes(auth.currentUser.uid)) {
+			document.getElementById("active").classList.add('disabled');
+		}
+    }
+
+    function editClick() {
+        let inputs = document.querySelectorAll('.vendor-input');
+        for (const i of inputs) {
+            i.classList.add('update');
+        }
+
+        let selects = document.querySelectorAll('.vs');
+        for (const s of selects) {
+            s.classList.remove("hide");
+        }
+
+        let labels = document.querySelectorAll('.vendor-select');
+        for (const l of labels) {
+            l.classList.add("hide");
+        }
+
+        document.getElementById("name").classList.add('update');
+        document.getElementById("edit").classList.add('hide');
+        document.getElementById("save").classList.remove('hide');
+        document.getElementById("cancel").classList.remove('hide');
+    }
+
+    function hideBorders() {
+        let inputs = document.querySelectorAll('.vendor-input');
+        for (const i of inputs) {
+            i.classList.remove('update');
+        }
+
+        let selects = document.querySelectorAll('.vs');
+        for (const s of selects) {
+            s.classList.add("hide");
+        }
+
+        let labels = document.querySelectorAll('.vendor-select');
+        for (const l of labels) {
+            l.classList.remove("hide");
+        }
+
+        document.getElementById("name").classList.remove('update');
+        document.getElementById("edit").classList.remove('hide');
+        document.getElementById("save").classList.add('hide');
+        document.getElementById("cancel").classList.add('hide');
+    }
+
+    const saveClick = async () => {
+        hideBorders();
+        const establishmentRef = db.collection('Establishments').doc(vendorID);
+        try {
+            await establishmentRef.update({
+                Active: contact.active === "Yes" ? true : false,
+                Address: !contact.address ? "" : contact.address.trim(),
+                Category: !contact.category ? "" : contact.category.trim(),
+                City: !contact.city ? "" : contact.city.trim(),
+                ContactEmail: !contact.contactEmail ? "" : contact.contactEmail.trim(),
+                ContactName: !contact.contactName ? "" : contact.contactName.trim(),
+                ContactPhone: !contact.contactPhone,
+                Disclaimer: !contact.disclaimer ? "" : contact.disclaimer.trim(),
+                Discount: !contact.discount ? "" : contact.discount.trim(),
+                Fee: !contact.fee ? "" : contact.fee.trim(),
+                Name: !contact.name ? "" : contact.name.trim(),
+                Notes: !contact.notes ? "" : contact.notes.trim(),
+                OnlineOrdering: contact.onlineOrdering === "Yes" ? true : false,
+                OnlineOrderingURL: !contact.website ? "" : contact.website.trim(),
+                POSName: !contact.posName ? "" : contact.posName.trim(),
+                POSSetup: contact.posSetup === "Yes" ? true : false,
+                Phone: !contact.phone ? "" : contact.phone.trim(),
+                PromoCode: !contact.promoCode ? "" : contact.promoCode.trim(),
+                State: !contact.state ? "" : contact.state.trim(),
+                TermsSigned: contact.termsSigned === "Yes" ? true : false,
+                TypeOfThing: !contact.typeOfThing ? "" : contact.typeOfThing.trim(),
+                Zip: !contact.zip ? "" : contact.zip.trim()
+                });
+                //console.log("Document successfully updated!");
+            } catch (error) {
+                console.error('Error updating document: ', error);
+            }
+      };
+
+      /*active: "false", address: "", affiliateID: "", category: "",
+      appLaunchDate: "", category: "", city: "", contactEmail: "",
+      contactName: "", contactPhone: "", conractEnds: "",
+      disclaimer: "", discount: "", fee: "", logoURL: "", 
+      name: "", notes: "", onlineOrdering: "true", posCall: "",
+      posName: "", posSetup: "", phone: "", promoCode: "", state: "",
+      termsSigned: "", typeOfThing: "Food", website: "", zip: ""*/
 
     useEffect(() => {
         if (!auth.currentUser) {
             navigate("/perkspass/sign-in");
         } else {
-            vendorID = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1)
+            isUserAdmin();
             if (vendorID === "vendor-profile") {
-                vendorID = '';
+                setVendorID('');
             }
 
             if (vendorID) {
@@ -27,8 +120,9 @@ const VendorProfile = () => {
     const getVendorData = async () => {
         const snapshot = await db.collection("Establishments").doc(vendorID).get();
         if (snapshot.exists) {
-            setContact(() => {
+            setContact((prev) => {
                 return {
+                    ...prev,
                     active: snapshot.data().Active === true ? "Yes" : "No",
                     address: snapshot.data().Address,
                     affiliateID: snapshot.data().AffiliateID,
@@ -56,18 +150,30 @@ const VendorProfile = () => {
                     termsSigned: snapshot.data().termsSigned === "true" ? "Yes" : "No",
                     typeOfThing: snapshot.data().TypeOfThing,
                     website: !snapshot.data().Website ? "None" : snapshot.data().Website,
-                    zip: !snapshot.data().Zip ? "N/A" : snapshot.data().Zip, 
+                    zip: !snapshot.data().Zip ? "N/A" : snapshot.data().Zip,
                 };
             });
         }
     }
 
     const [contact, setContact] = useState({
-        address: "", category: "",
-        city: "", discount: "", logoURL: "", name: "", onlineOrdering: "true",
-        phone: "", promoCode: "", state: "",
-        typeOfThing: "Food", website: "", contractEnds: "", disclaimer: ""
+        active: "false", address: "", affiliateID: "",
+        appLaunchDate: "", category: "", city: "", contactEmail: "",
+        contactName: "", contactPhone: "", contractEnds: "",
+        disclaimer: "", discount: "", fee: "", logoURL: "", 
+        name: "", notes: "", onlineOrdering: "true", posCall: "",
+        posName: "", posSetup: "", phone: "", promoCode: "", state: "",
+        termsSigned: "", typeOfThing: "Food", website: "", zip: ""
     });
+
+    const handleChange = (event) => {
+		event.preventDefault();
+		const { name, value } = event.target;
+		setContact((prev) => {
+			return { ...prev, [name]: value };
+		});
+        console.log(name + ": " + value);
+	}
 
     return (
         <div>
@@ -82,73 +188,179 @@ const VendorProfile = () => {
                 </div>
             </div>
             <div className="center col">
-                <h1>
-                    Vendor Profile
-                </h1>
                 <div className="vendor-profile">
                     <div className="col center mt24 mb24">
                         <img src={contact.logoURL} id="logo-img"></img>
-                        <p className="vendor-name">{contact.name}</p>
+                        <p id="edit" onClick={() => editClick()}>EDIT</p>
+                        <p className="hide" id="save" onClick={() => saveClick()}>SAVE</p>
+                        <p className="hide" id="cancel" onClick={() => hideBorders()}>CANCEL</p>
+                        <input name="name" id="name" className="vendor-name" defaultValue={contact.name} onChange={handleChange}></input>
                     </div>
-                    <div className="row space-between">
-                        <div className="col w50 mr12">
-                            <p className="label">CATEGORY</p>
-                            <p className="vendor-category">{contact.category}</p>
-                            <p className="label">CUSTOMER PHONE</p>
-                            <p className="vendor-category">{contact.phone}</p>
-                            <p className="label">CITY</p>
-                            <p className="vendor-category">{contact.city}</p>
-                            <p className="label">ZIP</p>
-                            <p className="vendor-category">{contact.zip}</p>
-                            <p className="label">ACTIVE?</p>
-                            <p className="vendor-category">{contact.active}</p>
-                            <p className="label">CONTACT NAME</p>
-                            <p className="vendor-category">{contact.contactName}</p>
-                            <p className="label">CONTACT EMAIL</p>
-                            <p className="vendor-category">{contact.contactEmail}</p>
-                            <p className="label">REVETIZE FEE</p>
-                            <p className="vendor-category">{contact.fee}</p>
-                            <p className="label">ONLINE ORDERING?</p>
-                            <p className="vendor-category">{contact.onlineOrdering}</p>
-                            <p className="label">POS NAME</p>
-                            <p className="vendor-category">{contact.posName}</p>
-                            <p className="label">POS CALL DATE </p>
-                            <p className="vendor-category">{contact.posCall}</p>
-                            <p className="label">TERMS SIGNED? </p>
-                            <p className="vendor-category">{contact.termsSigned}</p>
+                    <div className="col" id="info">
+                        <div className="col">
+                            <div className="row m24">
+                                <div className="col">
+                                    <p className="label">ACTIVE</p>
+                                    <p className="vendor-select">{contact.active}</p>
+                                    <select name="active" id="active" className="vendor-input vs hide" value={contact.active} onChange={handleChange}>
+								        <option value="Yes">Yes</option>
+								        <option value="No">No</option>
+							        </select>
+                                </div>
+                                <div className="col">
+                                    <p className="label">APP LAUNCH DATE</p>
+                                    <input name="appLaunchDate" className="vendor-input" defaultValue={contact.appLaunchDate} onChange={handleChange}></input>
+                                </div>
+                            </div>
                         </div>
-                        <div className="col w50">
-                            <p className="label">ADDRESS</p>
-                            <p className="vendor-category">{contact.address}</p>
-                            <p className="label">TYPE</p>
-                            <p className="vendor-category">{contact.typeOfThing}</p>
-                            <p className="label">STATE</p>
-                            <p className="vendor-category">{contact.state}</p>
-                            <p className="label">DISCOUNT</p>
-                            <p className="vendor-category">{contact.discount}</p>
-                            <p className="label">APP LAUNCH DATE</p>
-                            <p className="vendor-category">{contact.appLaunchDate}</p>
-                            <p className="label">CONTACT PHONE</p>
-                            <p className="vendor-category">{contact.contactPhone}</p>
-                            <p className="label">CONTRACT ENDS</p>
-                            <p className="vendor-category">{contact.contractEnds}</p>
-                            <p className="label">NOTES</p>
-                            <p className="vendor-category">{contact.notes}</p>
-                            <p className="label">ONLINE ORDERING FORM</p>
-                            <p className="vendor-category">{contact.website}</p>
-                            <p className="label">POS SETUP?</p>
-                            <p className="vendor-category">{contact.posSetup}</p>
-                            <p className="label">PROMO CODE</p>
-                            <p className="vendor-category">{contact.promoCode}</p>
-                            <p className="label">DISCLAIMER</p>
-                            <p className="vendor-category">{contact.disclaimer}</p>
+                        <div className="row m24">
+                            <div className="col">
+                                <p className="label">CATEGORY</p>
+                                <input name="categoy" className="vendor-input" defaultValue={contact.category} onChange={handleChange}></input>
+                            </div>
+                            <div className="col">
+                                <p className="label">ADDRESS</p>
+                                <input name="address" className="vendor-input" defaultValue={contact.address} onChange={handleChange}></input>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="row m24">
+                                <div className="col">
+                                    <p className="label">CUSTOMER PHONE</p>
+                                    <input name="phone" className="vendor-input" defaultValue={contact.phone} onChange={handleChange}></input>
+                                </div>
+                                <div className="col">
+                                    <p className="label">TYPE</p>
+                                    <input name="type" className="vendor-input" defaultValue={contact.typeOfThing} onChange={handleChange}></input>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="row m24">
+                                <div className="col">
+                                    <p className="label">CITY</p>
+                                    <input name="city" className="vendor-input" defaultValue={contact.city} onChange={handleChange}></input>
+                                </div>
+                                <div className="col">
+                                    <p className="label">STATE</p>
+                                    <input name="state" className="vendor-input" defaultValue={contact.state} onChange={handleChange}></input>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="row m24">
+                                <div className="col">
+                                    <p className="label">ZIP</p>
+                                    <input name="zip" className="vendor-input" defaultValue={contact.zip} onChange={handleChange}></input>
+                                </div>
+                                <div className="col">
+                                    <p className="label">DISCOUNT</p>
+                                    <input name="discount" className="vendor-input" defaultValue={contact.discount} onChange={handleChange}></input>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="row m24">
+                                <div className="col">
+                                    <p className="label">CONTACT NAME</p>
+                                    <input name="contactName" className="vendor-input" defaultValue={contact.contactName} onChange={handleChange}></input>
+                                </div>
+                                <div className="col">
+                                    <p className="label">CONTACT PHONE</p>
+                                    <input name="contactPhone" className="vendor-input" defaultValue={contact.contactPhone} onChange={handleChange}></input>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="row m24">
+                                <div className="col">
+                                    <p className="label">CONTACT EMAIL</p>
+                                    <input name="contactEmail" className="vendor-input" defaultValue={contact.contactEmail} onChange={handleChange}></input>
+                                </div>
+                                <div className="col">
+                                    <p className="label">CONTRACT ENDS</p>
+                                    <input name="contractEnds" className="vendor-input" defaultValue={contact.contractEnds} onChange={handleChange}></input>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="row m24">
+                                <div className="col">
+                                    <p className="label">REVETIZE FEE</p>
+                                    <input name="revetizeFee" className="vendor-input" defaultValue={contact.fee} onChange={handleChange}></input>
+                                </div>
+                                <div className="col">
+                                    <p className="label">NOTES</p>
+                                    <textarea rows="5" cols="25" name="notes" className="vendor-input" defaultValue={contact.notes} onChange={handleChange}></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="row m24">
+                                <div className="col">
+                                    <p className="label">ONLINE ORDERING?</p>
+                                    <p className="vendor-select">{contact.onlineOrdering}</p>
+                                    <select name="onlineOrdering" id="onlineOrdering" className="vendor-input vs hide" value={contact.onlineOrdering} onChange={handleChange}>
+								        <option value="Yes">Yes</option>
+								        <option value="No">No</option>
+							        </select>
+                                </div>
+                                <div className="col">
+                                    <p className="label">ONLINE ORDERING FORM</p>
+                                    <input name="onlineOrderingForm" className="vendor-input" defaultValue={contact.website} onChange={handleChange}></input>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="row m24">
+                                <div className="col">
+                                    <p className="label">POS NAME</p>
+                                    <input name="posName" className="vendor-input" defaultValue={contact.posName} onChange={handleChange}></input>
+                                </div>
+                                <div className="col">
+                                    <p className="label">POS SETUP?</p>
+                                    <p className="vendor-select">{contact.posSetup}</p>
+                                    <select name="posSetup" id="posSetup" className="vendor-input vs hide" value={contact.posSetup} onChange={handleChange}>
+								        <option value="Yes">Yes</option>
+								        <option value="No">No</option>
+							        </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="row m24">
+                                <div className="col">
+                                    <p className="label">POS CALL DATE</p>
+                                    <input name="posCallDate" className="vendor-input" defaultValue={contact.posCall} onChange={handleChange}></input>
+                                </div>
+                                <div className="col">
+                                    <p className="label">PROMO CODE</p>
+                                    <input name="notes" className="vendor-input" defaultValue={contact.promoCode} onChange={handleChange}></input>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="row m24">
+                                <div className="col">
+                                    <p className="label">TERMS SIGNED?</p>
+                                    <p className="vendor-select">{contact.termsSigned}</p>
+                                    <select name="termsSigned" id="termsSigned" className="vendor-input vs hide" value={contact.termsSigned} onChange={handleChange}>
+								        <option value="Yes">Yes</option>
+								        <option value="No">No</option>
+							        </select>
+                                </div>
+                                <div className="col">
+                                    <p className="label">DISCLAIMER</p>
+                                    <textarea name="disclaimer"  rows="5" cols="25" className="vendor-input" defaultValue={contact.disclaimer} onChange={handleChange}></textarea>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    );
+            );
 
 };
 
-export default VendorProfile;
+            export default VendorProfile;

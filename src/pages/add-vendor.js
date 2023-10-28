@@ -130,7 +130,7 @@ const AddVendor = () => {
 			POSName: contact.posName,
 			POSCall: contact.posCall,
 			Fee: contact.fee,
-			TermsSigned: contact.terms,
+			TermsSigned: contact.terms === "true" ? true : false,
 			Notes: contact.notes,
 			POSSetup: false
 		}).then((docRef) => {
