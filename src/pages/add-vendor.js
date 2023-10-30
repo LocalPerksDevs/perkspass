@@ -26,8 +26,8 @@ const AddVendor = () => {
 		city: "", discount: "", logoURL: "", name: "", onlineOrdering: "true",
 		phone: "", promoCode: "", state: "", zip: "", appLaunchDate: "",
 		typeOfThing: "Food", website: "", contractEnds: "", disclaimer: "",
-		contactName: "", contactEmail: "", contactNumber: "", posName: "",
-		fee: "", terms: "true", notes: "", posCall: ""
+		contactName: "", contactEmail: "", contactNumber: "",
+		fee: "", terms: "true", notes: ""
 	});
 
 	let message = "Success! " + contact.name + " was added to the database";
@@ -92,11 +92,6 @@ const AddVendor = () => {
 		date2.setFullYear(date.getFullYear() + 1);
 		contact.contractEnds = date2;
 
-		let date3 = new Date(contact.posCall);
-		date3.setDate(date.getDate() + 1);
-		date3.setHours(0, 0, 0, 0);
-		contact.posCall = date3;
-
 		let pa = document.getElementById("lat");
 		LAT = parseFloat(pa.innerText.substring(10, pa.innerText.lastIndexOf('L')));
 		LON = parseFloat(pa.innerText.substring(pa.innerText.lastIndexOf(' ')));
@@ -127,8 +122,6 @@ const AddVendor = () => {
 			ContactName: contact.contactName,
 			ContactEmail: contact.contactEmail,
 			ContactPhone: contact.contactNumber,
-			POSName: contact.posName,
-			POSCall: contact.posCall,
 			Fee: contact.fee,
 			TermsSigned: contact.terms === "true" ? true : false,
 			Notes: contact.notes,
@@ -200,16 +193,12 @@ const AddVendor = () => {
 		document.getElementsByName("contactEmail")[0].value = "";
 		contact.contactPhone = '';
 		document.getElementsByName("contactNumber")[0].value = "";
-		contact.posName = '';
-		document.getElementsByName("posName")[0].value = "";
 		contact.fee = '';
 		document.getElementsByName("fee")[0].value = "";
 		contact.terms = '';
 		document.getElementsByName("terms")[0].value = "";
 		contact.notes = '';
 		document.getElementsByName("notes")[0].value = "";
-		contact.posCall = '';
-		document.getElementsByName("posCall")[0].value = "";
 	}
 
 	const uploadFile = () => {
@@ -504,10 +493,11 @@ const AddVendor = () => {
 				</div>
 				<div className="local-perks">
 					<p>Fill out this form with the vendor to initiate the onboarding process</p>
-					<p>Before you fill out this form <b>MAKE SURE TO DO THESE TWO THINGS:</b></p>
+					<p>Before you fill out this form <b>MAKE SURE TO DO THIS:</b></p>
 					<ol>
-						<li>Fill out <a href="https://vendoragreement.paperform.co/">this short form</a>&nbsp;(once this form is submitted it will automatically send the e-signature vendor agreement to them with the custom fields from the form)</li>
-						<li>Use <a href="https://calendly.com/perkspasspos/30min">this calendar link</a> to schedule a call for our team to show the vendor how to add a discount in their system and run the report we need </li>
+						<li>Fill out <a href="https://vendoragreement.paperform.co/">this short form.</a>&nbsp;Once this form is submitted it will:<br></br><br></br>
+						1. Send the e-signature vendor agreement to your email for you to sign first and then to theirs, with the custom fields from the form.<br></br><br></br>
+						2. Send an email to the vendor requesting the creation of a promotional code in their Point of Sale (POS) system, include our <a href="https://qx78hjqq.paperform.co/">POS form</a> for completion and provide them with clear instructions on when and where to send the monthly report.</li>
 					</ol>
 				</div>
 				<div className='logoForm' id="logo-form">
@@ -593,11 +583,6 @@ const AddVendor = () => {
 							<p className="label">Contact Phone Number</p>
 							<p className="sub-label">Enter main contact's phone number</p>
 							<input type="text" placeholder="primary contact's phone number" name="contactNumber" value={contact.contactNumber} onChange={handleChange} onKeyUp={() => phoneMask("contactNumber")}></input>
-							<p className="label">Point of Sale Name</p>
-							<p className="sub-label">e.g. Toast, Square, Jobber</p>
-							<input type="text" placeholder="POS name" name="posName" value={contact.posName} onChange={handleChange}></input>
-							<label htmlFor="contractEnds" className="label">When Did You Schedule the POS Call For?</label>
-							<input type="date" id="posCall" name="posCall" onChange={handleChange}></input>
 							<label htmlFor="terms" className="label mt24">Terms Signed?</label>
 							<p className="sub-label">Has the vendor signed the Local Perks terms yet? (Have them look over the agreement and sign while you are filling out this form)</p>
 							<select name="terms" id="terms" value={contact.terms} onChange={handleChange}>

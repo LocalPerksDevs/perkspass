@@ -79,7 +79,6 @@ const VendorProfile = () => {
                 Notes: !contact.notes ? "" : contact.notes.trim(),
                 OnlineOrdering: contact.onlineOrdering === "Yes" ? true : false,
                 OnlineOrderingURL: !contact.website ? "" : contact.website.trim(),
-                POSName: !contact.posName ? "" : contact.posName.trim(),
                 POSSetup: contact.posSetup === "Yes" ? true : false,
                 Phone: !contact.phone ? "" : contact.phone.trim(),
                 PromoCode: !contact.promoCode ? "" : contact.promoCode.trim(),
@@ -93,14 +92,6 @@ const VendorProfile = () => {
                 console.error('Error updating document: ', error);
             }
       };
-
-      /*active: "false", address: "", affiliateID: "", category: "",
-      appLaunchDate: "", category: "", city: "", contactEmail: "",
-      contactName: "", contactPhone: "", conractEnds: "",
-      disclaimer: "", discount: "", fee: "", logoURL: "", 
-      name: "", notes: "", onlineOrdering: "true", posCall: "",
-      posName: "", posSetup: "", phone: "", promoCode: "", state: "",
-      termsSigned: "", typeOfThing: "Food", website: "", zip: ""*/
 
     useEffect(() => {
         if (!auth.currentUser) {
@@ -141,8 +132,6 @@ const VendorProfile = () => {
                     name: snapshot.data().Name,
                     notes: !snapshot.data().Notes ? "None" : snapshot.data().Notes,
                     onlineOrdering: snapshot.data().OnlineOrdering === true ? "Yes" : "No",
-                    posCall: !snapshot.data().POSCall ? "N/A" : snapshot.data().POSCall.toDate().toDateString(),
-                    posName: !snapshot.data().POSName ? "N/A" : snapshot.data().POSName,
                     posSetup: snapshot.data().POSSetup === true ? "Yes" : "No",
                     phone: snapshot.data().Phone,
                     promoCode: snapshot.data().PromoCode,
@@ -314,24 +303,12 @@ const VendorProfile = () => {
                         <div className="col">
                             <div className="row m24">
                                 <div className="col">
-                                    <p className="label">POS NAME</p>
-                                    <input name="posName" className="vendor-input" defaultValue={contact.posName} onChange={handleChange}></input>
-                                </div>
-                                <div className="col">
                                     <p className="label">POS SETUP?</p>
                                     <p className="vendor-select">{contact.posSetup}</p>
                                     <select name="posSetup" id="posSetup" className="vendor-input vs hide" value={contact.posSetup} onChange={handleChange}>
 								        <option value="Yes">Yes</option>
 								        <option value="No">No</option>
 							        </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col">
-                            <div className="row m24">
-                                <div className="col">
-                                    <p className="label">POS CALL DATE</p>
-                                    <input name="posCallDate" className="vendor-input" defaultValue={contact.posCall} onChange={handleChange}></input>
                                 </div>
                                 <div className="col">
                                     <p className="label">PROMO CODE</p>
