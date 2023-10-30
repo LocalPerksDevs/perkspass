@@ -108,25 +108,29 @@ const Dashboard = () => {
 				<table>
 					<thead>
 						<tr>
-							<th>Name</th>
-							<th>City</th>
-							<th>State</th>
-							<th>Status</th>
-							<th>Category</th>
-							<th>Type</th>
-							<th>Discount</th>
-							<th>Promo Code</th>
-							<th>Phone</th>
-							<th>Online Ordering?</th>
+							<th>NAME</th>
+							<th>STATUS</th>
+							<th>POS SETUP?</th>
+							<th>TERMS SIGNED?</th>
+							<th>CITY</th>
+							<th>STATE</th>
+							<th>CATEGORY</th>
+							<th>TYPE</th>
+							<th>DISCOUNT</th>
+							<th>PROMO CODE</th>
+							<th>PHONE</th>
+							<th>ONLINE ORDERING?</th>
 						</tr>
 					</thead>
 					<tbody>
 						{vendors.map(doc => (
 							<tr key={doc.id} onClick={() => navigate("/perkspass/" + "vendor-profile/" + doc.id)}>
 								<td>{doc.Name}</td>
+								<td>{doc.Active === true? "Active" : "Inactive"}</td>
+								<td>{doc.POSSetup && doc.POSSetup === true? "Yes" : "No"}</td>
+								<td>{doc.TermsSigned && doc.TermsSigned === true? "Yes" : "No"}</td>
 								<td>{doc.City}</td>
 								<td>{doc.State}</td>
-								<td>{doc.Active === true? "Active" : "Inactive"}</td>
 								<td>{doc.Category}</td>
 								<td>{doc.TypeOfThing}</td>
 								<td>{doc.Discount}</td>
