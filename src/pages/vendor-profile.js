@@ -71,7 +71,7 @@ const VendorProfile = () => {
                 City: !contact.city ? "" : contact.city.trim(),
                 ContactEmail: !contact.contactEmail ? "" : contact.contactEmail.trim(),
                 ContactName: !contact.contactName ? "" : contact.contactName.trim(),
-                ContactPhone: !contact.contactPhone,
+                ContactPhone: !contact.contactPhone ? "" : contact.contactPhone.trim(),
                 Disclaimer: !contact.disclaimer ? "" : contact.disclaimer.trim(),
                 Discount: !contact.discount ? "" : contact.discount.trim(),
                 Fee: !contact.fee ? "" : contact.fee.trim(),
@@ -152,7 +152,7 @@ const VendorProfile = () => {
         disclaimer: "", discount: "", fee: "", logoURL: "", 
         name: "", notes: "", onlineOrdering: "true", posCall: "",
         posName: "", posSetup: "", phone: "", promoCode: "", state: "",
-        termsSigned: "", typeOfThing: "Food", website: "", zip: ""
+        termsSigned: "", typeOfThing: "", website: "", zip: ""
     });
 
     const handleChange = (event) => {
@@ -205,7 +205,7 @@ const VendorProfile = () => {
                         <div className="row m24">
                             <div className="col">
                                 <p className="label">CATEGORY</p>
-                                <input name="categoy" className="vendor-input" defaultValue={contact.category} onChange={handleChange}></input>
+                                <input name="category" className="vendor-input" defaultValue={contact.category} onChange={handleChange}></input>
                             </div>
                             <div className="col">
                                 <p className="label">ADDRESS</p>
