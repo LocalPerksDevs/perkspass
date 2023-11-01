@@ -312,7 +312,7 @@ const VendorProfile = () => {
                                 </div>
                                 <div className="col">
                                     <p className="label">PROMO CODE</p>
-                                    <input name="notes" className="vendor-input" defaultValue={contact.promoCode} onChange={handleChange}></input>
+                                    <input name="promoCode" className="vendor-input" defaultValue={contact.promoCode} onChange={handleChange}></input>
                                 </div>
                             </div>
                         </div>
