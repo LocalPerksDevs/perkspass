@@ -32,6 +32,8 @@ const AddUser = () => {
 		document.getElementsByName("email")[0].value = "";
         setPassword('');
         document.getElementsByName("password")[0].value = "";
+        setName('');
+        document.getElementsByName("name")[0].value = "";
         setAdmin(false);
         document.getElementById("user-form").classList.remove('hide');
         document.getElementById("user-message").classList.add('hide');
@@ -86,6 +88,12 @@ const AddUser = () => {
                     setMsg('Error getting documents: ' + error);
                 })
             }
+
+            const newAffiliateRef = db.collection('Affiliates').doc(auth.currentUser.uid);
+            await newAffiliateRef.set({
+                Name: name,
+            });
+
             document.getElementById("user-form").classList.add('hide');
             document.getElementById("user-message").classList.remove('hide');
             document.getElementById("user-btn").classList.remove('hide');
@@ -97,6 +105,7 @@ const AddUser = () => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [name, setName] = useState("");
     const [admin, setAdmin] = useState(false);
     const [userObj, setUserObj] = useState({});
     const navigate = useNavigate();
@@ -133,10 +142,14 @@ const AddUser = () => {
 			</div>
             <div className="col center" id="user-form">
                 <p id="email-msg" className="hide">{emailMsg}</p>
+                <p className="label">Email</p>
                 <input placeholder="Email" name="email" onChange={(event) => { setEmail(event.target.value) }}></input>
                 <p id="password-msg" className="hide">{passwordMsg}</p>
+                <p className="label">Password</p>
                 <input placeholder="Password" name="password" onChange={(event) => { setPassword(event.target.value) }}></input>
-                <label htmlFor="onlineOrdering">Make User An Admin?</label>
+                <p className="label">Affiliate Name</p>
+                <input placeholder="Affiliate Name" name="name" onChange={(event) => { setName(event.target.value) }}></input>
+                <label htmlFor="onlineOrdering" className="label">Make User An Admin?</label>
                 <select name="admin" id="admin" value={admin} onChange={(event) => { 
                     if (event.target.value === "true") {
                         setAdmin(true);

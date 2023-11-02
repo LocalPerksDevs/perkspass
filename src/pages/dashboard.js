@@ -12,9 +12,12 @@ const Dashboard = () => {
 		} else {
 			isUserAdmin();
 			getCurrentUser();
+			getAffiliates();
 		}
 	}, []);
 	const navigate = useNavigate();
+
+	const [affiliates, setAffiliates] = useState({});
 
 	const [userCount, setUserCount] = useState(0);
 	const [vendorCount, setVendorCount] = useState(0);
@@ -61,6 +64,15 @@ const Dashboard = () => {
 		}));
 		setVendorCount(snapshot.size);
 		setVendors(documents);
+	}
+
+	const getAffiliates = async () => {
+		const snapshot = await db.collection("Affiliates").get();
+		const a = {};
+		snapshot.forEach(doc => {
+			a[doc.id] = doc.data().Name;
+		});
+		setAffiliates(a);
 	}
 
 	const getCurrentUser = async () => {
@@ -119,7 +131,7 @@ const Dashboard = () => {
 							<th>DISCOUNT</th>
 							<th>PROMO CODE</th>
 							<th>PHONE</th>
-							<th>ONLINE ORDERING?</th>
+							<th>AFFILIATE</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -136,7 +148,7 @@ const Dashboard = () => {
 								<td>{doc.Discount}</td>
 								<td>{doc.PromoCode}</td>
 								<td>{doc.Phone}</td>
-								<td>{doc.OnlineOrdering === true? "Yes" : "No"}</td>
+								<td>{affiliates[doc.AffiliateID]}</td>
 							</tr>
 						))}
 					</tbody>
