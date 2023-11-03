@@ -89,7 +89,9 @@ const AddVendor = () => {
 		contact.appLaunchDate = date;
 
 		let date2 = new Date(contact.contractEnds);
-		date2.setFullYear(date.getFullYear() + 1);
+		date2.setDate(date2.getDate() +1);
+		date2.setHours(0, 0, 0, 0);
+		date2.setFullYear(date2.getFullYear() + 1);
 		contact.contractEnds = date2;
 
 		let pa = document.getElementById("lat");

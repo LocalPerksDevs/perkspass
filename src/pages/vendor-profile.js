@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { db, auth } from '../firebase-config';
-import { doc, updateDoc } from "firebase/firestore";
+import { app, db, auth } from '../firebase-config';
+import firebase from "../../node_modules/firebase/compat/app";
+import { getStorage, ref, getDownloadURL, uploadBytes } from "../../node_modules/firebase/storage";
 
 const VendorProfile = () => {
 
     const [vendorID, setVendorID] = useState(window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1));
 
+    const [imageUpload, setImageUpload] = useState();
+
     const navigate = useNavigate();
+    const storage = getStorage(app);
+    const [logoURL, setLogoURL] = useState("");
 
     const isUserAdmin = async () => {
 		const snapshot = await db.collection("Admins").get();
@@ -36,6 +41,7 @@ const VendorProfile = () => {
         document.getElementById("edit").classList.add('hide');
         document.getElementById("save").classList.remove('hide');
         document.getElementById("cancel").classList.remove('hide');
+        document.getElementById("logo").classList.remove('hide');
     }
 
     function hideBorders() {
@@ -58,23 +64,38 @@ const VendorProfile = () => {
         document.getElementById("edit").classList.remove('hide');
         document.getElementById("save").classList.add('hide');
         document.getElementById("cancel").classList.add('hide');
+        document.getElementById("logo").classList.add('hide');
     }
 
     const saveClick = async () => {
         hideBorders();
         const establishmentRef = db.collection('Establishments').doc(vendorID);
+        let date = new Date(contact.appLaunchDate);
+		date.setDate(date.getDate() + 1);
+		date.setHours(0, 0, 0, 0);
+		contact.appLaunchDate = date;
+
+        let date2 = new Date(contact.contractEnds);
+		date2.setDate(date2.getDate() + 1);
+		date2.setHours(0, 0, 0, 0);
+		contact.contractEnds = date2;
+
         try {
             await establishmentRef.update({
                 Active: contact.active === "Yes" ? true : false,
                 Address: !contact.address ? "" : contact.address.trim(),
+                AppLaunchDate: !contact.appLaunchDate ? null : contact.appLaunchDate,
                 Category: !contact.category ? "" : contact.category.trim(),
                 City: !contact.city ? "" : contact.city.trim(),
                 ContactEmail: !contact.contactEmail ? "" : contact.contactEmail.trim(),
                 ContactName: !contact.contactName ? "" : contact.contactName.trim(),
                 ContactPhone: !contact.contactPhone ? "" : contact.contactPhone.trim(),
+                ContractEnds: !contact.contractEnds ? null : contact.contractEnds,
                 Disclaimer: !contact.disclaimer ? "" : contact.disclaimer.trim(),
                 Discount: !contact.discount ? "" : contact.discount.trim(),
                 Fee: !contact.fee ? "" : contact.fee.trim(),
+                latLon: new firebase.firestore.GeoPoint(Number(contact.latitude), Number(contact.longitude)),
+                LogoURL: contact.logoURL,
                 Name: !contact.name ? "" : contact.name.trim(),
                 Notes: !contact.notes ? "" : contact.notes.trim(),
                 OnlineOrdering: contact.onlineOrdering === "Yes" ? true : false,
@@ -82,6 +103,8 @@ const VendorProfile = () => {
                 POSSetup: contact.posSetup === "Yes" ? true : false,
                 Phone: !contact.phone ? "" : contact.phone.trim(),
                 PromoCode: !contact.promoCode ? "" : contact.promoCode.trim(),
+                ReminderEmail: !contact.reminderEmail ? "" : contact.reminderEmail,
+                ReminderPhone: !contact.reminderPhone ? "" : contact.reminderPhone,
                 State: !contact.state ? "" : contact.state.trim(),
                 TermsSigned: contact.termsSigned === "Yes" ? true : false,
                 TypeOfThing: !contact.typeOfThing ? "" : contact.typeOfThing.trim(),
@@ -108,26 +131,38 @@ const VendorProfile = () => {
         }
     }, []);
 
+    function yyyymmdd(date) {
+        var y = date.getFullYear().toString();
+        var m = (date.getMonth() + 1).toString();
+        var d = date.getDate().toString();
+        (d.length == 1) && (d = '0' + d);
+        (m.length == 1) && (m = '0' + m);
+        var yyyymmdd = y + "-" + m +  "-" + d;
+        return yyyymmdd;
+    }
+
     const getVendorData = async () => {
         const snapshot = await db.collection("Establishments").doc(vendorID).get();
         if (snapshot.exists) {
+            setLogoURL(snapshot.data().LogoURL);
             setContact((prev) => {
                 return {
                     ...prev,
                     active: snapshot.data().Active === true ? "Yes" : "No",
                     address: snapshot.data().Address,
                     affiliateID: snapshot.data().AffiliateID,
-                    appLaunchDate: !snapshot.data().AppLaunchDate ? "N/A" : snapshot.data().AppLaunchDate.toDate().toDateString(),
+                    appLaunchDate: !snapshot.data().AppLaunchDate ? null : yyyymmdd(snapshot.data().AppLaunchDate.toDate()),
                     category: snapshot.data().Category,
                     city: snapshot.data().City,
                     contactEmail: !snapshot.data().ContactEmail ? "N/A" : snapshot.data().ContactEmail,
                     contactName: !snapshot.data().ContactName ? "N/A" : snapshot.data().ContactName,
                     contactPhone: !snapshot.data().ContactPhone ? "N/A" : snapshot.data().ContactPhone,
-                    contractEnds: !snapshot.data().ContractEnds ? "N/A" : snapshot.data().ContractEnds.toDate().toDateString(),
+                    contractEnds: !snapshot.data().ContractEnds ? null : yyyymmdd(snapshot.data().ContractEnds.toDate()),
                     disclaimer: !snapshot.data().Disclaimer ? "None" : snapshot.data().Disclaimer,
                     discount: snapshot.data().Discount,
                     fee: !snapshot.data().Fee ? "N/A" : snapshot.data().Fee,
-                    latLon: snapshot.data().latLon,
+                    latitude: snapshot.data().latLon._lat,
+                    longitude: snapshot.data().latLon._long,
                     logoURL: snapshot.data().LogoURL,
                     name: snapshot.data().Name,
                     notes: !snapshot.data().Notes ? "None" : snapshot.data().Notes,
@@ -138,7 +173,7 @@ const VendorProfile = () => {
                     reminderEmail: !snapshot.data().ReminderEmail ? "N/A" : snapshot.data().ReminderEmail,
                     reminderPhone: !snapshot.data().ReminderPhone ? "N/A" : snapshot.data().ReminderPhone,
                     state: snapshot.data().State,
-                    termsSigned: snapshot.data().termsSigned === "true" ? "Yes" : "No",
+                    termsSigned: snapshot.data().TermsSigned === true ? "Yes" : "No",
                     typeOfThing: snapshot.data().TypeOfThing,
                     website: !snapshot.data().Website ? "None" : snapshot.data().Website,
                     zip: !snapshot.data().Zip ? "N/A" : snapshot.data().Zip,
@@ -149,7 +184,7 @@ const VendorProfile = () => {
 
     const [contact, setContact] = useState({
         active: "false", address: "", affiliateID: "",
-        appLaunchDate: "", category: "", city: "", contactEmail: "",
+        appLaunchDate: null, category: "", city: "", contactEmail: "",
         contactName: "", contactPhone: "", contractEnds: "",
         disclaimer: "", discount: "", fee: "", logoURL: "", 
         name: "", notes: "", onlineOrdering: "true", posCall: "",
@@ -164,7 +199,30 @@ const VendorProfile = () => {
 		setContact((prev) => {
 			return { ...prev, [name]: value };
 		});
-        console.log(name + ": " + value);
+	}
+
+    const uploadFile = async () => {
+		if (!imageUpload) return;
+
+		const imageRef = ref(storage, `${imageUpload.name}`);
+
+		await uploadBytes(imageRef, imageUpload).then((snapshot) => {
+			getDownloadURL(snapshot.ref).then((url) => {
+				setLogoURL(url);
+				contact.logoURL = url;
+			});
+		});
+
+        document.getElementById("upload").classList.add('hide');
+        const establishmentRef = db.collection('Establishments').doc(vendorID);
+
+        try {
+            await establishmentRef.update({
+                LogoURL: logoURL
+                });
+            } catch (error) {
+                console.error('Error updating document: ', error);
+            }
 	}
 
     return (
@@ -182,7 +240,12 @@ const VendorProfile = () => {
             <div className="center col">
                 <div className="vendor-profile">
                     <div className="col center mt24 mb24">
-                        <img src={contact.logoURL} id="logo-img"></img>
+                        <img src={logoURL} id="logo-img"></img>
+                        <input type="file" id="logo" className="hide" name="logo" onChange={(event) => { 
+                            setImageUpload(event.target.files[0]);
+                            document.getElementById("upload").classList.remove("hide");
+                            }} />
+                        <button onClick={uploadFile} className='mt24 hide' id='upload'>Upload Logo</button>
                         <p id="edit" onClick={() => editClick()}>EDIT</p>
                         <p className="hide" id="save" onClick={() => saveClick()}>SAVE</p>
                         <p className="hide" id="cancel" onClick={() => hideBorders()}>CANCEL</p>
@@ -201,7 +264,7 @@ const VendorProfile = () => {
                                 </div>
                                 <div className="col">
                                     <p className="label">APP LAUNCH DATE</p>
-                                    <input name="appLaunchDate" className="vendor-input" defaultValue={contact.appLaunchDate} onChange={handleChange}></input>
+                                    <input name="appLaunchDate" type="date" className="vendor-input" defaultValue={contact.appLaunchDate} onChange={handleChange}></input>
                                 </div>
                             </div>
                         </div>
@@ -271,7 +334,7 @@ const VendorProfile = () => {
                                 </div>
                                 <div className="col">
                                     <p className="label">CONTRACT ENDS</p>
-                                    <input name="contractEnds" className="vendor-input" defaultValue={contact.contractEnds} onChange={handleChange}></input>
+                                    <input name="contractEnds" type="date" className="vendor-input" defaultValue={contact.contractEnds} onChange={handleChange}></input>
                                 </div>
                             </div>
                         </div>
@@ -279,7 +342,7 @@ const VendorProfile = () => {
                             <div className="row m24">
                                 <div className="col">
                                     <p className="label">REVETIZE FEE</p>
-                                    <input name="revetizeFee" className="vendor-input" defaultValue={contact.fee} onChange={handleChange}></input>
+                                    <input name="fee" className="vendor-input" defaultValue={contact.fee} onChange={handleChange}></input>
                                 </div>
                                 <div className="col">
                                     <p className="label">NOTES</p>
@@ -328,6 +391,18 @@ const VendorProfile = () => {
                                 <div className="col">
                                     <p className="label">REMINDER PHONE</p>
                                     <input name="reminderPhone" className="vendor-input" defaultValue={contact.reminderPhone} onChange={handleChange}></input>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="row m24">
+                                <div className="col">
+                                    <p className="label">LATITUDE</p>
+                                    <input name="latitude" className="vendor-input" defaultValue={contact.latitude} onChange={handleChange}></input>
+                                </div>
+                                <div className="col">
+                                    <p className="label">LONGITUDE</p>
+                                    <input name="longitude" className="vendor-input" defaultValue={contact.longitude} onChange={handleChange}></input>
                                 </div>
                             </div>
                         </div>

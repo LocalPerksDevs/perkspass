@@ -116,7 +116,7 @@ const Dashboard = () => {
 
 		// Call this function to download csv file  
 
-		csv_data = csv_data.replace('<i class="fas fa-download ml24"></i>', '');
+		csv_data = csv_data.replace('<i className="fas fa-download ml24"></i>', '');
 		downloadCSVFile(csv_data);
 	}
 
@@ -192,7 +192,7 @@ const Dashboard = () => {
 							<th>DISCOUNT</th>
 							<th>PROMO CODE</th>
 							<th>PHONE</th>
-							<th>AFFILIATE<i class="fas fa-download ml24" onClick={() => tableToCSV()}></i></th>
+							<th>AFFILIATE<i className="fas fa-download ml24" onClick={() => tableToCSV()}></i></th>
 						</tr>
 					</thead>
 					<tbody>
