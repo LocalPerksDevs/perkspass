@@ -135,6 +135,8 @@ const VendorProfile = () => {
                     posSetup: snapshot.data().POSSetup === true ? "Yes" : "No",
                     phone: snapshot.data().Phone,
                     promoCode: snapshot.data().PromoCode,
+                    reminderEmail: !snapshot.data().ReminderEmail ? "N/A" : snapshot.data().ReminderEmail,
+                    reminderPhone: !snapshot.data().ReminderPhone ? "N/A" : snapshot.data().ReminderPhone,
                     state: snapshot.data().State,
                     termsSigned: snapshot.data().termsSigned === "true" ? "Yes" : "No",
                     typeOfThing: snapshot.data().TypeOfThing,
@@ -151,7 +153,8 @@ const VendorProfile = () => {
         contactName: "", contactPhone: "", contractEnds: "",
         disclaimer: "", discount: "", fee: "", logoURL: "", 
         name: "", notes: "", onlineOrdering: "true", posCall: "",
-        posName: "", posSetup: "", phone: "", promoCode: "", state: "",
+        posName: "", posSetup: "", phone: "", promoCode: "", reminderEmail: "",
+        reminderPhone: "", state: "",
         termsSigned: "", typeOfThing: "", website: "", zip: ""
     });
 
@@ -313,6 +316,18 @@ const VendorProfile = () => {
                                 <div className="col">
                                     <p className="label">PROMO CODE</p>
                                     <input name="promoCode" className="vendor-input" defaultValue={contact.promoCode} onChange={handleChange}></input>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="row m24">
+                                <div className="col">
+                                    <p className="label">REMINDER EMAIL</p>
+                                    <input name="reminderEmail" className="vendor-input" defaultValue={contact.reminderEmail} onChange={handleChange}></input>
+                                </div>
+                                <div className="col">
+                                    <p className="label">REMINDER PHONE</p>
+                                    <input name="reminderPhone" className="vendor-input" defaultValue={contact.reminderPhone} onChange={handleChange}></input>
                                 </div>
                             </div>
                         </div>

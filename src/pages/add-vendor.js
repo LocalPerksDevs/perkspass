@@ -22,7 +22,7 @@ const AddVendor = () => {
 	});
 
 	const [contact, setContact] = useState({
-		address: "", category: "",
+		address: "", category: "", reminderEmail: "", reminderNumber: "",
 		city: "", discount: "", logoURL: "", name: "", onlineOrdering: "true",
 		phone: "", promoCode: "", state: "", zip: "", appLaunchDate: "",
 		typeOfThing: "Food", website: "", contractEnds: "", disclaimer: "",
@@ -125,7 +125,9 @@ const AddVendor = () => {
 			Fee: contact.fee,
 			TermsSigned: contact.terms === "true" ? true : false,
 			Notes: contact.notes,
-			POSSetup: false
+			POSSetup: false,
+			ReminderEmail: contact.reminderEmail,
+			ReminderPhone: contact.reminderNumber
 		}).then((docRef) => {
 			document.getElementsByClassName("message")[0].classList.remove('hide');
 			document.getElementsByClassName("form")[0].classList.add('hide');
@@ -589,6 +591,12 @@ const AddVendor = () => {
 								<option value="true">Yes</option>
 								<option value="false">No</option>
 							</select>
+							<p className="label">Reminder Email</p>
+							<p className="sub-label">Email address for monthly report reminders</p>
+							<input type="text" placeholder="reminder email" name="reminderEmail" value={contact.reminderEmail} onChange={handleChange}></input>
+							<p className="label">Reminder Phone Number</p>
+							<p className="sub-label">Phone number for monthly report reminders</p>
+							<input type="text" placeholder="reminder phone number" name="reminderNumber" value={contact.reminderNumber} onChange={handleChange} onKeyUp={() => phoneMask("reminderNumber")}></input>
 							<p className="label">Notes/Homework</p>
 							<p className="sub-label">Any additional custom notes that should be included in the agreement on this one? Anything else our team should know about the account to get it launched?</p>
 							<input type="text" placeholder="notes" name="notes" value={contact.notes} onChange={handleChange}></input>
