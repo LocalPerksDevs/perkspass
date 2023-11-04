@@ -111,7 +111,7 @@ const AddVendor = () => {
 			Discount: contact.discount,
 			Disclaimer: contact.disclaimer,
 			OnlineOrdering: contact.onlineOrdering,
-			PromoCode: contact.promoCode,
+			PromoCode: "PerksPass",
 			Website: contact.website,
 			LogoURL: contact.logoURL,
 			ContractEnds: contact.contractEnds,
@@ -305,7 +305,7 @@ const AddVendor = () => {
 		}
 
 		// ADDRESS
-		if(document.getElementsByName("address")[0].value === '') {
+		/*if(document.getElementsByName("address")[0].value === '') {
 			tempErrors.lat = "Please enter the vendor's address";
 			document.getElementById("latError").classList.remove('hide');
 			document.getElementsByName("address")[0].classList.add("error");
@@ -317,7 +317,7 @@ const AddVendor = () => {
 			tempErrors.lat = '';
 			document.getElementById("latError").classList.add('hide');
 			document.getElementsByName("address")[0].classList.remove("error");
-		}
+		}*/
 
 		// VENDOR NAME
 		if(document.getElementsByName("name")[0].value === "") {
@@ -507,6 +507,7 @@ const AddVendor = () => {
 				<div className='logoForm' id="logo-form">
 					<div className='col center'>
 						<label htmlFor="logo" className='mt24 label'>Upload the company logo</label>
+						<p className="sub-label">Must be formatted as JPG, JPEG, PNG or SVG</p>
 						<p id="logoError" className="errorMessage hide">{errors.logo}</p>
 						<input type="file" id="logo" name="logo" onChange={(event) => {
 							setImageUpload(event.target.files[0]);
@@ -519,7 +520,7 @@ const AddVendor = () => {
 				<div className="lat-lon-form" id="lat-lon-form">
 					<div className='col center'>
 						<p className="label">Address</p>
-						<p className="sub-label">What is the Physical Location of Vendor's Business? We don't have to display this in app if this is a home based business.</p>
+						<p className="sub-label">What is the Physical Location of Vendor's Business? If this is a home based business just delete the address after clicking "Get Latitude & Longitude"</p>
 						<p id="latError" className="errorMessage hide">{errors.lat}</p>
 						<input type="text" className="mb0" placeholder="address" name="address" value={contact.address} onChange={handleChange}></input>
 						<div className="button" id="lat-btn" onClick={getLatLonGoogle}>Get Latitude & Longitude</div>
@@ -552,6 +553,7 @@ const AddVendor = () => {
 							<input type="text" placeholder="city" name="city" value={contact.city} onChange={handleChange} onKeyUp={() => CheckInput("city")}></input>
 							<p className="label">State</p>
 							<p id="stateError" className="errorMessage hide">{errors.state}</p>
+							<p className="sub-label">Spell it out. E.G. Utah, Colorado, Missouri, etc.</p>
 							<input type="text" placeholder="state" name="state" value={contact.state} onChange={handleChange} onKeyUp={() => CheckInput("state")}></input>
 							<p className="label">Zip Code</p>
 							<p id="zipError" className="errorMessage hide">{errors.zip}</p>
@@ -571,10 +573,10 @@ const AddVendor = () => {
 							<p className="sub-label">Paste the URL to the vendor's online order form here (before adding this make sure they can actually plug in the promo code into the checkout form). The online ordering must be through the POS (no doordash, grubhub etc...)</p>
 							<input type="text" placeholder="online ordering form URL" name="website" value={contact.website} onChange={handleChange}></input>
 							<p className="label">Promo Code</p>
-							<p className="sub-label">What is the promo code that will be used? e.g. "local10", "local20" etc...</p>
-							<input type="text" placeholder="promo code" name="promoCode" value={contact.promoCode} onChange={handleChange}></input>
+							<p className="sub-label">Promo code must be "PerksPass"</p>
+							<input type="text" placeholder="promo code" name="promoCode" value="PerksPass" disabled></input>
 							<p className="label">App Disclaimer</p>
-							<p className="sub-label">Any disclaimers that should accompany this discount? e.g. "Discount offer valid at provo location only"</p>
+							<p className="sub-label">Any disclaimers that should accompany this discount? e.g. "*Discount valid on all food and drink purchases at Provo location only. Can't be combined with any other offers."</p>
 							<input type="text" placeholder="app disclaimer" name="disclaimer" value={contact.disclaimer} onChange={handleChange}></input>
 							<label htmlFor="contractEnds" className="label">App Launch Date:</label>
 							<input type="date" id="contractEnds" name="contractEnds" onChange={handleChange}></input>

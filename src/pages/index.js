@@ -58,7 +58,7 @@ const Home = () => {
 							</NavLink>
 						</div>
 						<div className='col cutoff'>
-							<img src='https://firebasestorage.googleapis.com/v0/b/localperkstest.appspot.com/o/screenshot.svg?alt=media&token=38d3cdd1-edaf-47bc-b7e0-8d771577d35e&_gl=1*ecaxv*_ga*MTkxMzE3MzM5Mi4xNjg5MTE2MzM4*_ga_CW55HF8NVT*MTY5Njg3MDUzMi4xMDYuMS4xNjk2ODcyMjU5LjYwLjAuMA..' className='screenshot' alt="screenshot of the Perks Pass app"></img>
+							<img src='https://firebasestorage.googleapis.com/v0/b/localperkstest.appspot.com/o/Phone%20Screenshot.svg?alt=media&token=f7a8597d-185c-41c6-93e2-bea805cdb9e6&_gl=1*1wyd5y9*_ga*MTkxMzE3MzM5Mi4xNjg5MTE2MzM4*_ga_CW55HF8NVT*MTY5OTA2MTY5NS4xNDYuMS4xNjk5MDYxNzE1LjQwLjAuMA..' className='screenshot' alt="screenshot of the Perks Pass app"></img>
 						</div>
 					</div>
 				</div>
