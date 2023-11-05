@@ -107,7 +107,7 @@ const VendorProfile = () => {
                 State: !contact.state ? "" : contact.state.trim(),
                 TermsSigned: contact.termsSigned === "Yes" ? true : false,
                 TypeOfThing: !contact.typeOfThing ? "" : contact.typeOfThing.trim(),
-                Webiste: !contact.website ? "" : contact.website.trim(),
+                Website: contact.website.trim(),
                 Zip: !contact.zip ? "" : contact.zip.trim()
                 });
                 //console.log("Document successfully updated!");
@@ -175,7 +175,7 @@ const VendorProfile = () => {
                     state: snapshot.data().State,
                     termsSigned: snapshot.data().TermsSigned === true ? "Yes" : "No",
                     typeOfThing: snapshot.data().TypeOfThing,
-                    website: !snapshot.data().Website ? "None" : snapshot.data().Website,
+                    website: !snapshot.data().Website ? "" : snapshot.data().Website,
                     zip: !snapshot.data().Zip ? "N/A" : snapshot.data().Zip,
                 };
             });
