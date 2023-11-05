@@ -99,7 +99,6 @@ const VendorProfile = () => {
                 Name: !contact.name ? "" : contact.name.trim(),
                 Notes: !contact.notes ? "" : contact.notes.trim(),
                 OnlineOrdering: contact.onlineOrdering === "Yes" ? true : false,
-                OnlineOrderingURL: !contact.website ? "" : contact.website.trim(),
                 POSSetup: contact.posSetup === "Yes" ? true : false,
                 Phone: !contact.phone ? "" : contact.phone.trim(),
                 PromoCode: !contact.promoCode ? "" : contact.promoCode.trim(),
@@ -108,6 +107,7 @@ const VendorProfile = () => {
                 State: !contact.state ? "" : contact.state.trim(),
                 TermsSigned: contact.termsSigned === "Yes" ? true : false,
                 TypeOfThing: !contact.typeOfThing ? "" : contact.typeOfThing.trim(),
+                Webiste: !contact.website ? "" : contact.website.trim(),
                 Zip: !contact.zip ? "" : contact.zip.trim()
                 });
                 //console.log("Document successfully updated!");
@@ -362,7 +362,7 @@ const VendorProfile = () => {
                                 </div>
                                 <div className="col">
                                     <p className="label">ONLINE ORDERING FORM</p>
-                                    <input name="onlineOrderingForm" className="vendor-input" defaultValue={contact.website} onChange={handleChange}></input>
+                                    <input name="website" className="vendor-input" defaultValue={contact.website} onChange={handleChange}></input>
                                 </div>
                             </div>
                         </div>
