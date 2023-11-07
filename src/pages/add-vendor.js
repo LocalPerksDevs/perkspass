@@ -27,7 +27,7 @@ const AddVendor = () => {
 		phone: "", promoCode: "", state: "", zip: "", appLaunchDate: "",
 		typeOfThing: "Food", website: "", contractEnds: "", disclaimer: "",
 		contactName: "", contactEmail: "", contactNumber: "",
-		fee: "", terms: "true", notes: ""
+		fee: "", terms: "true", notes: "", posName: ""
 	});
 
 	let message = "Success! " + contact.name + " was added to the database";
@@ -101,35 +101,36 @@ const AddVendor = () => {
 
 
 		db.collection("Establishments").add({
-			Name: contact.name,
+			Name: contact.name.trim(),
 			Phone: contact.phone,
-			Address: contact.address,
-			Category: contact.category,
+			Address: contact.address.trim(),
+			Category: contact.category.trim(),
 			TypeOfThing: contact.typeOfThing,
-			City: contact.city,
-			State: contact.state,
-			Discount: contact.discount,
-			Disclaimer: contact.disclaimer,
+			City: contact.city.trim(),
+			State: contact.state.trim(),
+			Discount: contact.discount.trim(),
+			Disclaimer: contact.disclaimer.trim(),
 			OnlineOrdering: contact.onlineOrdering,
 			PromoCode: "PerksPass",
-			Website: contact.website,
+			Website: contact.website.trim(),
 			LogoURL: contact.logoURL,
 			ContractEnds: contact.contractEnds,
 			latLon: latLong,
 			Active: false,
 			ID: generateRandomString(8),
 			AffiliateID: auth.currentUser.uid,
-			Zip: contact.zip,
+			Zip: contact.zip.trim(),
 			AppLaunchDate: contact.appLaunchDate,
-			ContactName: contact.contactName,
-			ContactEmail: contact.contactEmail,
+			ContactName: contact.contactName.trim(),
+			ContactEmail: contact.contactEmail.trim(),
 			ContactPhone: contact.contactNumber,
-			Fee: contact.fee,
+			Fee: contact.fee.trim(),
 			TermsSigned: contact.terms === "true" ? true : false,
-			Notes: contact.notes,
+			Notes: contact.notes.trim(),
 			POSSetup: false,
-			ReminderEmail: contact.reminderEmail,
-			ReminderPhone: contact.reminderNumber
+			ReminderEmail: contact.reminderEmail.trim(),
+			ReminderPhone: contact.reminderNumber,
+			POSName: contact.posName.trim()
 		}).then((docRef) => {
 			document.getElementsByClassName("message")[0].classList.remove('hide');
 			document.getElementsByClassName("form")[0].classList.add('hide');
@@ -197,6 +198,8 @@ const AddVendor = () => {
 		document.getElementsByName("contactEmail")[0].value = "";
 		contact.contactPhone = '';
 		document.getElementsByName("contactNumber")[0].value = "";
+		contact.posName = '';
+		document.getElementsByName("posName")[0].value = "";
 		contact.fee = '';
 		document.getElementsByName("fee")[0].value = "";
 		contact.terms = '';
@@ -499,7 +502,7 @@ const AddVendor = () => {
 					<p>Fill out this form with the vendor to initiate the onboarding process</p>
 					<p>Before you fill out this form <b>MAKE SURE TO DO THIS:</b></p>
 					<ol>
-						<li>Fill out <a href="https://vendoragreement.paperform.co/">this short form.</a>&nbsp;Once this form is submitted it will:<br></br><br></br>
+						<li>Fill out <a href="https://vendoragreement.paperform.co/" target="_blank">this short form.</a>&nbsp;Once this form is submitted it will:<br></br><br></br>
 						1. Send the e-signature vendor agreement to your email for you to sign first and then to theirs, with the custom fields from the form.<br></br><br></br>
 						2. Send an email to the vendor requesting the creation of a promotional code in their Point of Sale (POS) system, include our <a href="https://qx78hjqq.paperform.co/">POS form</a> for completion and provide them with clear instructions on when and where to send the monthly report.</li>
 					</ol>
@@ -601,6 +604,9 @@ const AddVendor = () => {
 							<p className="label">Reminder Phone Number</p>
 							<p className="sub-label">Phone number for monthly report reminders</p>
 							<input type="text" placeholder="reminder phone number" name="reminderNumber" value={contact.reminderNumber} onChange={handleChange} onKeyUp={() => phoneMask("reminderNumber")}></input>
+							<p className="label">Name of POS</p>
+							<p className="sub-label">E.g. Square, Toast, Clover...</p>
+							<input type="text" placeholder="name of pos" name="posName" value={contact.posName} onChange={handleChange}></input>
 							<p className="label">Notes/Homework</p>
 							<p className="sub-label">Any additional custom notes that should be included in the agreement on this one? Anything else our team should know about the account to get it launched?</p>
 							<input type="text" placeholder="notes" name="notes" value={contact.notes} onChange={handleChange}></input>

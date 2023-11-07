@@ -100,6 +100,7 @@ const VendorProfile = () => {
                 Notes: !contact.notes ? "" : contact.notes.trim(),
                 OnlineOrdering: contact.onlineOrdering === "Yes" ? true : false,
                 POSSetup: contact.posSetup === "Yes" ? true : false,
+                POSName: contact.posName.trim(),
                 Phone: !contact.phone ? "" : contact.phone.trim(),
                 PromoCode: !contact.promoCode ? "" : contact.promoCode.trim(),
                 ReminderEmail: !contact.reminderEmail ? "" : contact.reminderEmail,
@@ -168,6 +169,7 @@ const VendorProfile = () => {
                     notes: !snapshot.data().Notes ? "None" : snapshot.data().Notes,
                     onlineOrdering: snapshot.data().OnlineOrdering === true ? "Yes" : "No",
                     posSetup: snapshot.data().POSSetup === true ? "Yes" : "No",
+                    posName: !snapshot.data().POSName ? "N/A" : snapshot.data().POSName,
                     phone: snapshot.data().Phone,
                     promoCode: snapshot.data().PromoCode,
                     reminderEmail: !snapshot.data().ReminderEmail ? "N/A" : snapshot.data().ReminderEmail,
@@ -416,6 +418,14 @@ const VendorProfile = () => {
 								        <option value="No">No</option>
 							        </select>
                                 </div>
+                                <div className="col">
+                                    <p className="label">POS NAME</p>
+                                    <input name="posName" className="vendor-input" defaultValue={contact.posName} onChange={handleChange}></input>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="row m24">
                                 <div className="col">
                                     <p className="label">DISCLAIMER</p>
                                     <textarea name="disclaimer"  rows="5" cols="25" className="vendor-input" defaultValue={contact.disclaimer} onChange={handleChange}></textarea>
