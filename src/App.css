@@ -101,6 +101,10 @@ td {
   padding: 12px;
 }
 
+td, th {
+  min-width: 100px;
+}
+
 tr td:first-child {
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
@@ -235,12 +239,13 @@ textarea {
 }
 
 .table {
-  display: flex;
-  flex-direction: column;
+  /*display: flex;*/
+  /*flex-direction: column;*/
   align-items: center;
-  overflow-y: auto;
+  overflow: scroll;
   height: 65vh;
   width: 100%;
+  position: relative;
 }
 
 .App {
@@ -370,6 +375,22 @@ textarea {
   cursor: pointer;
   color: #333333;
   margin-right: 24px;
+}
+
+.phone {
+  min-width: 140px;
+}
+
+.address {
+  min-width: 240px;
+}
+
+.name {
+  min-width: 240px;
+}
+
+.date {
+  min-width: 180px;
 }
 
 .link:hover, .profile:hover, .link-red:hover {
@@ -753,6 +774,17 @@ i.fas.fa-download:hover {
   scale: 1.1;
 }
 
+#download {
+  position: absolute;
+  bottom: 12px;
+  right: 60px;
+  z-index: 10;
+}
+
+#rel {
+  position: relative;
+}
+
 @media (max-height: 786px) {
   .screenshot {
     margin-top: 6vh;
@@ -809,10 +841,11 @@ i.fas.fa-download:hover {
     height: 80vh;
     margin-left: 0px;
     margin-top: 24px;
+    position: relative;
   }
 
   table {
-    margin-left: 8px;
+    margin-left: 20vw;
   }
   
   #info {

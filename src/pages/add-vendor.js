@@ -504,7 +504,7 @@ const AddVendor = () => {
 					<ol>
 						<li>Fill out <a href="https://vendoragreement.paperform.co/" target="_blank">this short form.</a>&nbsp;Once this form is submitted it will:<br></br><br></br>
 						1. Send the e-signature vendor agreement to your email for you to sign first and then to theirs, with the custom fields from the form.<br></br><br></br>
-						2. Send an email to the vendor requesting the creation of a promotional code in their Point of Sale (POS) system, include our <a href="https://qx78hjqq.paperform.co/">POS form</a> for completion and provide them with clear instructions on when and where to send the monthly report.</li>
+						2. Send an email to the vendor requesting the creation of a promotional code in their Point of Sale (POS) system, include our <a href="https://qx78hjqq.paperform.co/" target="_blank">POS form</a> for completion and provide them with clear instructions on when and where to send the monthly report.</li>
 					</ol>
 				</div>
 				<div className='logoForm' id="logo-form">

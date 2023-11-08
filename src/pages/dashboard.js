@@ -172,16 +172,17 @@ const Dashboard = () => {
 				</div>
 
 			</div>
-			<div className='col center'>
+			<div className='col center' id="rel">
 				<h1>Affiliate Dashboard</h1>
 				<h2>User Count: {userCount}</h2>
 				<h2>Vendors: {vendorCount}</h2>
+				<i id="download" className="fas fa-download" onClick={() => tableToCSV()}></i>
 			</div>
 			<div className='table'>
 				<table>
 					<thead>
 						<tr>
-							<th>NAME</th>
+							<th className='name'>NAME</th>
 							<th>STATUS</th>
 							<th>POS SETUP?</th>
 							<th>TERMS SIGNED?</th>
@@ -191,8 +192,13 @@ const Dashboard = () => {
 							<th>TYPE</th>
 							<th>DISCOUNT</th>
 							<th>PROMO CODE</th>
-							<th>PHONE</th>
-							<th>AFFILIATE<i className="fas fa-download ml24" onClick={() => tableToCSV()}></i></th>
+							<th className='phone'>PHONE</th>
+							<th className='name'>AFFILIATE</th>
+							<th className='address'>ADDRESS</th>
+							<th className='date'>LAUNCH DATE</th>
+							<th className='name'>CONTACT NAME</th>
+							<th>CONTACT EMAIL</th>
+							<th className='phone'>CONTACT PHONE</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -210,6 +216,11 @@ const Dashboard = () => {
 								<td>{doc.PromoCode}</td>
 								<td>{doc.Phone}</td>
 								<td>{affiliates[doc.AffiliateID]}</td>
+								<td>{doc.Address === "" ? "N/A" : doc.Address}</td>
+								<td>{!doc.AppLaunchDate ? "N/A" : doc.AppLaunchDate.toDate().toDateString()}</td>
+								<td>{doc.ContactName === "" ? "N/A" : doc.ContactName}</td>
+								<td>{doc.ContactEmail === "" ? "N/A" : doc.ContactEmail}</td>
+								<td>{doc.ContactPhone === "" ? "N/A" : doc.ContactPhone}</td>
 							</tr>
 						))}
 					</tbody>
