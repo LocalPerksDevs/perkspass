@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/perkspass/static/css/main.0759b3cc.css",
-    "main.js": "/perkspass/static/js/main.53d1b854.js",
+    "main.css": "/perkspass/static/css/main.48bdbdae.css",
+    "main.js": "/perkspass/static/js/main.9c3287ea.js",
     "static/media/fa-solid-900.ttf": "/perkspass/static/media/fa-solid-900.d75e3fd1eb12e9bd6655.ttf",
     "static/media/fa-brands-400.ttf": "/perkspass/static/media/fa-brands-400.016b4a6cdced82ab3aa1.ttf",
     "static/media/fa-solid-900.woff2": "/perkspass/static/media/fa-solid-900.b6879d41b0852f01ed5b.woff2",
@@ -11,11 +11,11 @@
     "static/media/fa-v4compatibility.ttf": "/perkspass/static/media/fa-v4compatibility.c6a0c95b0a95c4553700.ttf",
     "static/media/fa-v4compatibility.woff2": "/perkspass/static/media/fa-v4compatibility.1bac2991f3dbfa237aec.woff2",
     "index.html": "/perkspass/index.html",
-    "main.0759b3cc.css.map": "/perkspass/static/css/main.0759b3cc.css.map",
-    "main.53d1b854.js.map": "/perkspass/static/js/main.53d1b854.js.map"
+    "main.48bdbdae.css.map": "/perkspass/static/css/main.48bdbdae.css.map",
+    "main.9c3287ea.js.map": "/perkspass/static/js/main.9c3287ea.js.map"
   },
   "entrypoints": [
-    "static/css/main.0759b3cc.css",
-    "static/js/main.53d1b854.js"
+    "static/css/main.48bdbdae.css",
+    "static/js/main.9c3287ea.js"
   ]
 }
