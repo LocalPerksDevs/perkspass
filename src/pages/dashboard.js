@@ -22,6 +22,8 @@ const Dashboard = () => {
 	const [userCount, setUserCount] = useState(0);
 	const [vendorCount, setVendorCount] = useState(0);
 	const [vendors, setVendors] = useState([]);
+	const [zipCodeData, setZipCodeData] = useState({});
+	const [zipCodeCount, setZipCodeCount] = useState({});
 
 	const logout = async () => {
 		await signOut(auth);
@@ -49,6 +51,53 @@ const Dashboard = () => {
 		}));
 		setVendorCount(snapshot.size);
 		setVendors(documents);
+	}
+
+	const getZipCount = async () => {
+		const snapshot = await db.collection("ZipCount").get();
+		const documents = snapshot.docs.map(doc => ({
+			id: doc.id,
+			...doc.data(),
+		}));
+		setZipCodeCount(documents);
+		console.log(zipCodeCount);
+		let csvContent = "Zip, Number of Users\n";
+
+		for (const key in zipCodeCount) {
+			csvContent += key + ", ";
+			csvContent += zipCodeCount[key] + "\n";
+		}
+
+		downloadCSVFile(csvContent);
+	}
+
+	const getZipCodes = async () => {
+		const snapshot = await db.collection("Users").get();
+		const zipData = {};
+		snapshot.forEach((doc) => {
+			if (doc.data().ZipCode) {
+				let zip = parseInt(doc.data().ZipCode);
+				//zipData[zip] = 1;
+				if (zipData[zip] >= 1) {
+					zipData[zip] += 1;
+				} else {
+					zipData[zip] = 1;
+				}
+				
+			}
+		})
+		setZipCodeData(zipData);
+		let jsn = {};
+		Object.entries(zipCodeData).forEach(([key, value]) => {
+			jsn[key] = value;
+		});
+		//console.log(jsn);
+		const ZipRef = db.collection("ZipCount");
+		const docSnapshot = await ZipRef.limit(1).get();
+		const firstDoc = docSnapshot.docs[0];
+		await ZipRef.doc(firstDoc.id).update({
+			Data: jsn
+		});
 	}
 
 	const countUsersAdmin = async () => {
@@ -85,40 +134,6 @@ const Dashboard = () => {
 	}*/
 
 	const [userEmail, setUserEmail] = useState("");
-
-	/*function tableToCSV() {
- 
-		// Variable to store the final csv data
-		var csv_data = [];
-
-		// Get each row data
-		var rows = document.getElementsByTagName('tr');
-		for (var i = 0; i < rows.length; i++) {
-
-			// Get each column data
-			var cols = rows[i].querySelectorAll('td,th');
-
-			// Stores each csv row data
-			var csvrow = [];
-			for (var j = 0; j < cols.length; j++) {
-
-				// Get the text data of each cell
-				// of a row and push it to csvrow
-				csvrow.push(cols[j].innerHTML);
-			}
-
-			// Combine each column value with comma
-			csv_data.push(csvrow.join(","));
-		}
-
-		// Combine each row data with new line character
-		csv_data = csv_data.join('\n');
-
-		// Call this function to download csv file  
-
-		csv_data = csv_data.replace('<i className="fas fa-download ml24"></i>', '');
-		downloadCSVFile(csv_data);
-	}*/
 
 	function downloadCSVFile(csv_data) {
  
@@ -219,6 +234,11 @@ const Dashboard = () => {
 				<h2>User Count: {userCount}</h2>
 				<h2>Vendors: {vendorCount}</h2>
 				<i id="download" className="fas fa-download" onClick={() => createCSV()}></i>
+				<div id="usersTab" className='row'>
+					<h2 className='active'>Vendors</h2>
+					<h2 className='ml24 inactive' onClick={() => getZipCodes()}>Users</h2>
+				</div>
+				
 			</div>
 			<div className='table'>
 				<table>

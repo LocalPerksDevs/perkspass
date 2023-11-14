@@ -215,6 +215,14 @@ textarea {
   text-align: center;
 }
 
+.active {
+  color: #000000;
+}
+
+.inactive {
+  color: #ABABAB;
+}
+
 .vendor-profile .col .col {
   width: 99%;
 }
@@ -777,6 +785,14 @@ i.fas.fa-download:hover {
   bottom: 12px;
   right: 60px;
   z-index: 10;
+}
+
+#usersTab {
+  position: absolute;
+  top: 0;
+  left: 24px;
+  cursor: pointer;
+  display: none;
 }
 
 #rel {

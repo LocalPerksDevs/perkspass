@@ -231,6 +231,7 @@ const AddVendor = () => {
 			return;
 		}
 		let num = element.value.replace(/\D/g, '');
+		
 		let val = '(' + num.substring(0, 3);
 		if (num.length > 3) {
 			val += ') ' + num.substring(3, 6);
@@ -239,6 +240,14 @@ const AddVendor = () => {
 			val += '-' + num.substring(6, 10);
 		}
 		element.value = val;
+		if (phoneName === 'phone') {
+			contact.phone = val;
+		} else if (phoneName === 'contactNumber') {
+			contact.contactNumber = val;
+		} else if (phoneName === 'reminderNumber') {
+			contact.reminderNumber = val;
+		}
+		
 	}
 
 	function CheckInput(inputName) {
