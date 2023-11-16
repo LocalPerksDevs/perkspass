@@ -254,6 +254,11 @@ textarea {
   position: relative;
 }
 
+.table.user {
+  display: flex;
+  flex-direction: column;
+}
+
 .App {
   font-family: 'Open Sans', sans-serif;
   display: flex;
@@ -787,16 +792,28 @@ i.fas.fa-download:hover {
   z-index: 10;
 }
 
-#usersTab {
+#tabs {
   position: absolute;
   top: 0;
   left: 24px;
   cursor: pointer;
-  display: none;
+}
+
+#tabs h2:hover {
+  transform: scale(1.1);
 }
 
 #rel {
   position: relative;
+}
+
+#userTable th i {
+  margin-left: 12px;
+  cursor: pointer;
+}
+
+#userTable th i:hover {
+  transform: scale(1.1);
 }
 
 @media (max-height: 786px) {

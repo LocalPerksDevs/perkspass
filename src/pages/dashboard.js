@@ -5,6 +5,8 @@ import { signOut } from '../../node_modules/firebase/auth/';
 import { auth, db } from '../firebase-config';
 
 const Dashboard = () => {
+	const [zipCodeCount, setZipCodeCount] = useState({});
+	const [zip, setZip] = useState({});
 
 	useEffect(() => {
 		if (!auth.currentUser) {
@@ -15,6 +17,61 @@ const Dashboard = () => {
 			getAffiliates();
 		}
 	}, []);
+
+	const userZip = () => {
+		if (document.getElementById('userTable').getElementsByTagName('td').length) {
+			return
+		}
+		let html = '';
+		if(zipCodeCount[0] && zipCodeCount[0].Data) {
+			console.log(zipCodeCount[0].Data);
+		}
+		//console.log(zipCodeCount[0]);
+		if (zipCodeCount[0] && zipCodeCount[0].Data && typeof zipCodeCount[0].Data === 'object') {
+				Object.keys(zipCodeCount[0].Data).forEach((key) => {
+					if (key === "Total") {
+						setUserCount(zipCodeCount[0].Data[key]);
+					} else {
+						let tab = document.getElementById('userTable');
+						let tr = document.createElement("tr");
+						let td1 = document.createElement("td");
+						td1.textContent = key;
+						let td2 = document.createElement("td");
+						td2.textContent = zipCodeCount[0].Data[key];
+						tr.appendChild(td1);
+						tr.appendChild(td2);
+						tab.appendChild(tr);
+					}
+				});
+			
+				
+		}
+		
+	}
+
+	const showUserTable = () => {
+		document.getElementsByClassName("table user")[0].classList.remove("hide");
+		document.getElementsByClassName("table vendor")[0].classList.add("hide");
+		document.getElementById("vend_tab").classList.remove("active");
+		document.getElementById("vend_tab").classList.add("inactive");
+		document.getElementById("user_tab").classList.add("active");
+		document.getElementById("user_tab").classList.remove("inactive");
+		document.getElementById("UserCount").classList.remove("hide");
+		document.getElementById("VendorCount").classList.add("hide");
+
+		userZip();
+	}
+
+	const showVendorTable = () => {
+		document.getElementsByClassName("table user")[0].classList.add("hide");
+		document.getElementsByClassName("table vendor")[0].classList.remove("hide");
+		document.getElementById("vend_tab").classList.add("active");
+		document.getElementById("vend_tab").classList.remove("inactive");
+		document.getElementById("user_tab").classList.remove("active");
+		document.getElementById("user_tab").classList.add("inactive");
+		document.getElementById("UserCount").classList.add("hide");
+		document.getElementById("VendorCount").classList.remove("hide");
+	}
 	const navigate = useNavigate();
 
 	const [affiliates, setAffiliates] = useState({});
@@ -23,7 +80,6 @@ const Dashboard = () => {
 	const [vendorCount, setVendorCount] = useState(0);
 	const [vendors, setVendors] = useState([]);
 	const [zipCodeData, setZipCodeData] = useState({});
-	const [zipCodeCount, setZipCodeCount] = useState({});
 
 	const logout = async () => {
 		await signOut(auth);
@@ -33,11 +89,14 @@ const Dashboard = () => {
 	const isUserAdmin = async () => {
 		const snapshot = await db.collection("Admins").get();
 		if (snapshot.docs[0].data().IDs.includes(auth.currentUser.uid)) {
-			countUsersAdmin();
+			getZipCount();
+			userZip();
 			getVendorsAdmin();
 			document.getElementById("add-user").classList.remove('hide');
+			document.getElementById("refresh").classList.remove('hide');
 		} else {
-			countUsersAdmin();
+			getZipCount();
+			userZip();
 			getVendors();
 		}
 	}
@@ -60,21 +119,26 @@ const Dashboard = () => {
 			...doc.data(),
 		}));
 		setZipCodeCount(documents);
-		console.log(zipCodeCount);
-		let csvContent = "Zip, Number of Users\n";
+
+		userZip();
+		//console.log(zipCodeCount[0]);
+
+		/*let csvContent = "Zip, Number of Users\n";
 
 		for (const key in zipCodeCount) {
 			csvContent += key + ", ";
 			csvContent += zipCodeCount[key] + "\n";
 		}
 
-		downloadCSVFile(csvContent);
+		downloadCSVFile(csvContent);*/
 	}
 
 	const getZipCodes = async () => {
 		const snapshot = await db.collection("Users").get();
 		const zipData = {};
+		let counter = 0;
 		snapshot.forEach((doc) => {
+			counter += 1;
 			if (doc.data().ZipCode) {
 				let zip = parseInt(doc.data().ZipCode);
 				//zipData[zip] = 1;
@@ -88,6 +152,7 @@ const Dashboard = () => {
 		})
 		setZipCodeData(zipData);
 		let jsn = {};
+		jsn["Total"] = counter;
 		Object.entries(zipCodeData).forEach(([key, value]) => {
 			jsn[key] = value;
 		});
@@ -135,7 +200,7 @@ const Dashboard = () => {
 
 	const [userEmail, setUserEmail] = useState("");
 
-	function downloadCSVFile(csv_data) {
+	function downloadCSVFile(csv_data, csv_name) {
  
 		// Create CSV file object and feed
 		// our csv_data into it
@@ -148,7 +213,7 @@ const Dashboard = () => {
 		var temp_link = document.createElement('a');
 
 		// Download csv file
-		temp_link.download = "Vendors.csv";
+		temp_link.download = csv_name;
 		var url = window.URL.createObjectURL(CSVFile);
 		temp_link.href = url;
 
@@ -163,45 +228,58 @@ const Dashboard = () => {
 	}
 
 	function createCSV() {
-		let csvContent = "Active, Address, Affiliate, App Launch Date, Category, City, Contact Email," +
+
+		let csvContent = "";
+
+		if (document.getElementById("user_tab").classList.contains('active')) {
+			csvContent = "Zip Code, Number of Users\n";
+			if (zipCodeCount[0] && zipCodeCount[0].Data && typeof zipCodeCount[0].Data === 'object') {
+				Object.keys(zipCodeCount[0].Data).forEach((key) => {
+					csvContent += key + ", " + zipCodeCount[0].Data[key] + "\n";
+				});
+			}
+			downloadCSVFile(csvContent, "Users.csv");
+		} else {
+			csvContent = "Active, Address, Affiliate, App Launch Date, Category, City, Contact Email," +
 			" Contact Name, Contact Phone, Contract Ends, Customer Phone, Disclaimer, Discount," + 
 			" Name, Notes, Latitude, Longitude, Online Ordering, POS Name, POS Setup, Promo Code, Reminder Email, Reminder Phone," + 
 			" Revetize Fee, State, Terms Signed, Type of Thing, Website, Zip\n";
 
-		vendors.map(doc => {
-			csvContent += doc.Active ? "Yes, " : "No, ";
-			csvContent += doc.Address ? `"${doc.Address}", ` : "N/A, ";
-			csvContent += affiliates[doc.AffiliateID] ? `"${affiliates[doc.AffiliateID]}", ` : "N/A, ";
-			csvContent += doc.AppLaunchDate ? doc.AppLaunchDate.toDate().toDateString() + ", " : "N/A, ";
-			csvContent += doc.Category ? `"${doc.Category}", ` : "N/A, ";
-			csvContent += doc.City ? `"${doc.City}", ` : "N/A, ";
-			csvContent += doc.ContactEmail ? `"${doc.ContactEmail}", ` : "N/A, ";
-			csvContent += doc.ContactName ? `"${doc.ContactName}", ` : "N/A, ";
-			csvContent += doc.ContactPhone ? `"${doc.ContactPhone}", ` : "N/A, ";
-			csvContent += doc.ContractEnds ? doc.ContractEnds.toDate().toDateString() + ", " : "N/A, ";
-			csvContent += doc.Phone ? `"${doc.Phone}", ` : "N/A, ";
-			csvContent += doc.Disclaimer ? `"${doc.Disclaimer}", ` : "N/A, ";
-			csvContent += doc.Discount ? doc.Discount + ", " : "N/A, ";
-			csvContent += doc.Name ? `"${doc.Name}", ` : "N/A, ";
-			csvContent += doc.Notes ? `"${doc.Notes}", ` : "N/A, ";
-			csvContent += doc.latLon._lat ? doc.latLon._lat + ", " : "N/A, ";
-			csvContent += doc.latLon._long ? doc.latLon._long + ", " : "N/A, ";
-			csvContent += doc.OnlineOrdering ? "Yes, " : "No, ";
-			csvContent += doc.POSName ? `"${doc.POSName}", ` : "N/A, ";
-			csvContent += doc.POSSetup ? "Yes, " : "No, ";
-			csvContent += doc.PromoCode ? `"${doc.PromoCode}", ` : "N/A, ";
-			csvContent += doc.ReminderEmail ? `"${doc.ReminderEmail}", ` : "N/A, ";
-			csvContent += doc.ReminderPhone ? `"${doc.ReminderPhone}", ` : "N/A, ";
-			csvContent += doc.Fee ? `"${doc.Fee}", ` : "N/A, ";
-			csvContent += doc.State ? `"${doc.State}", ` : "N/A, ";
-			csvContent += doc.TermsSigned ? "Yes, " : "No, ";
-			csvContent += doc.TypeOfThing ? `"${doc.TypeOfThing}", ` : "N/A, ";
-			csvContent += doc.Website ? `"${doc.Website}", ` : "N/A, ";
-			csvContent += doc.Zip ? `"${doc.Zip}", ` : "N/A, ";
-			csvContent += "\n";
-		});
+			vendors.map(doc => {
+				csvContent += doc.Active ? "Yes, " : "No, ";
+				csvContent += doc.Address ? `"${doc.Address}", ` : "N/A, ";
+				csvContent += affiliates[doc.AffiliateID] ? `"${affiliates[doc.AffiliateID]}", ` : "N/A, ";
+				csvContent += doc.AppLaunchDate ? doc.AppLaunchDate.toDate().toDateString() + ", " : "N/A, ";
+				csvContent += doc.Category ? `"${doc.Category}", ` : "N/A, ";
+				csvContent += doc.City ? `"${doc.City}", ` : "N/A, ";
+				csvContent += doc.ContactEmail ? `"${doc.ContactEmail}", ` : "N/A, ";
+				csvContent += doc.ContactName ? `"${doc.ContactName}", ` : "N/A, ";
+				csvContent += doc.ContactPhone ? `"${doc.ContactPhone}", ` : "N/A, ";
+				csvContent += doc.ContractEnds ? doc.ContractEnds.toDate().toDateString() + ", " : "N/A, ";
+				csvContent += doc.Phone ? `"${doc.Phone}", ` : "N/A, ";
+				csvContent += doc.Disclaimer ? `"${doc.Disclaimer}", ` : "N/A, ";
+				csvContent += doc.Discount ? doc.Discount + ", " : "N/A, ";
+				csvContent += doc.Name ? `"${doc.Name}", ` : "N/A, ";
+				csvContent += doc.Notes ? `"${doc.Notes}", ` : "N/A, ";
+				csvContent += doc.latLon._lat ? doc.latLon._lat + ", " : "N/A, ";
+				csvContent += doc.latLon._long ? doc.latLon._long + ", " : "N/A, ";
+				csvContent += doc.OnlineOrdering ? "Yes, " : "No, ";
+				csvContent += doc.POSName ? `"${doc.POSName}", ` : "N/A, ";
+				csvContent += doc.POSSetup ? "Yes, " : "No, ";
+				csvContent += doc.PromoCode ? `"${doc.PromoCode}", ` : "N/A, ";
+				csvContent += doc.ReminderEmail ? `"${doc.ReminderEmail}", ` : "N/A, ";
+				csvContent += doc.ReminderPhone ? `"${doc.ReminderPhone}", ` : "N/A, ";
+				csvContent += doc.Fee ? `"${doc.Fee}", ` : "N/A, ";
+				csvContent += doc.State ? `"${doc.State}", ` : "N/A, ";
+				csvContent += doc.TermsSigned ? "Yes, " : "No, ";
+				csvContent += doc.TypeOfThing ? `"${doc.TypeOfThing}", ` : "N/A, ";
+				csvContent += doc.Website ? `"${doc.Website}", ` : "N/A, ";
+				csvContent += doc.Zip ? `"${doc.Zip}", ` : "N/A, ";
+				csvContent += "\n";
+			});
 
-		downloadCSVFile(csvContent);
+			downloadCSVFile(csvContent, "Vendors.csv");
+		}
 	}
 
 	return (
@@ -231,16 +309,28 @@ const Dashboard = () => {
 			</div>
 			<div className='col center' id="rel">
 				<h1>Affiliate Dashboard</h1>
-				<h2>User Count: {userCount}</h2>
-				<h2>Vendors: {vendorCount}</h2>
+				<h2 className='hide' id="UserCount">Users: {userCount}</h2>
+				<h2 id="VendorCount">Vendors: {vendorCount}</h2>
 				<i id="download" className="fas fa-download" onClick={() => createCSV()}></i>
-				<div id="usersTab" className='row'>
-					<h2 className='active'>Vendors</h2>
-					<h2 className='ml24 inactive' onClick={() => getZipCodes()}>Users</h2>
+				<div id="tabs" className='row'>
+					<h2 className='active' id="vend_tab" onClick={() => showVendorTable()}>Vendors</h2>
+					<h2 className='ml24 inactive' id="user_tab" onClick={() => showUserTable()}>Users</h2>
 				</div>
 				
 			</div>
-			<div className='table'>
+			<div className='table user hide'>
+				<table id="userTable">
+					<thead>
+						<tr>
+							<th>Zip Code</th>
+							<th>Number of Users<i id="refresh" className="fas fa-refresh hide" onClick={() => getZipCodes()}></i></th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			<div className='table vendor'>
 				<table>
 					<thead>
 						<tr>
