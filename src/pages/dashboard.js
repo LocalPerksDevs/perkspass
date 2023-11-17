@@ -24,12 +24,13 @@ const Dashboard = () => {
 		}
 		let html = '';
 		if(zipCodeCount[0] && zipCodeCount[0].Data) {
-			console.log(zipCodeCount[0].Data);
+			//console.log(zipCodeCount[0].Data);
 		}
 		//console.log(zipCodeCount[0]);
 		if (zipCodeCount[0] && zipCodeCount[0].Data && typeof zipCodeCount[0].Data === 'object') {
 				Object.keys(zipCodeCount[0].Data).forEach((key) => {
 					if (key === "Total") {
+						console.log("setting Total users");
 						setUserCount(zipCodeCount[0].Data[key]);
 					} else {
 						let tab = document.getElementById('userTable');
@@ -47,6 +48,14 @@ const Dashboard = () => {
 				
 		}
 		
+	}
+
+	const resetUserTable = () => {
+		console.log("Reset User Table");
+		let usrTab = document.getElementById("userTable");
+		while (usrTab.childElementCount > 1) {
+			usrTab.removeChild(usrTab.lastChild);
+		}
 	}
 
 	const showUserTable = () => {
@@ -121,16 +130,6 @@ const Dashboard = () => {
 		setZipCodeCount(documents);
 
 		userZip();
-		//console.log(zipCodeCount[0]);
-
-		/*let csvContent = "Zip, Number of Users\n";
-
-		for (const key in zipCodeCount) {
-			csvContent += key + ", ";
-			csvContent += zipCodeCount[key] + "\n";
-		}
-
-		downloadCSVFile(csvContent);*/
 	}
 
 	const getZipCodes = async () => {
@@ -141,7 +140,6 @@ const Dashboard = () => {
 			counter += 1;
 			if (doc.data().ZipCode) {
 				let zip = parseInt(doc.data().ZipCode);
-				//zipData[zip] = 1;
 				if (zipData[zip] >= 1) {
 					zipData[zip] += 1;
 				} else {
@@ -163,6 +161,8 @@ const Dashboard = () => {
 		await ZipRef.doc(firstDoc.id).update({
 			Data: jsn
 		});
+		resetUserTable();
+		getZipCount();
 	}
 
 	const countUsersAdmin = async () => {
