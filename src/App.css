@@ -676,6 +676,14 @@ div.error, input.error {
   pointer-events: none;
 }
 
+.reset {
+  cursor: pointer;
+}
+
+.reset:hover {
+  transform: scale(1.1);
+}
+
 .even {
   display: flex;
   justify-content: center;
