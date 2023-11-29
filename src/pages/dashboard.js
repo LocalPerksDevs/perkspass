@@ -6,7 +6,6 @@ import { auth, db } from '../firebase-config';
 
 const Dashboard = () => {
 	const [zipCodeCount, setZipCodeCount] = useState({});
-	const [zip, setZip] = useState({});
 
 	useEffect(() => {
 		if (!auth.currentUser) {
@@ -18,27 +17,24 @@ const Dashboard = () => {
 		}
 	}, []);
 
-	const userZip = () => {
+	const userZip = (obj) => {
 		if (document.getElementById('userTable').getElementsByTagName('td').length) {
 			return
 		}
 		let html = '';
-		if(zipCodeCount[0] && zipCodeCount[0].Data) {
-			//console.log(zipCodeCount[0].Data);
+		if(obj[0] && obj[0].Data) {
 		}
-		//console.log(zipCodeCount[0]);
-		if (zipCodeCount[0] && zipCodeCount[0].Data && typeof zipCodeCount[0].Data === 'object') {
-				Object.keys(zipCodeCount[0].Data).forEach((key) => {
+		if (obj[0] && obj[0].Data && typeof obj[0].Data === 'object') {
+				Object.keys(obj[0].Data).forEach((key) => {
 					if (key === "Total") {
-						console.log("setting Total users");
-						setUserCount(zipCodeCount[0].Data[key]);
+						setUserCount(obj[0].Data[key]);
 					} else {
 						let tab = document.getElementById('userTable');
 						let tr = document.createElement("tr");
 						let td1 = document.createElement("td");
 						td1.textContent = key;
 						let td2 = document.createElement("td");
-						td2.textContent = zipCodeCount[0].Data[key];
+						td2.textContent = obj[0].Data[key];
 						tr.appendChild(td1);
 						tr.appendChild(td2);
 						tab.appendChild(tr);
@@ -51,7 +47,6 @@ const Dashboard = () => {
 	}
 
 	const resetUserTable = () => {
-		console.log("Reset User Table");
 		let usrTab = document.getElementById("userTable");
 		while (usrTab.childElementCount > 1) {
 			usrTab.removeChild(usrTab.lastChild);
@@ -68,7 +63,7 @@ const Dashboard = () => {
 		document.getElementById("UserCount").classList.remove("hide");
 		document.getElementById("VendorCount").classList.add("hide");
 
-		userZip();
+		//userZip();
 	}
 
 	const showVendorTable = () => {
@@ -88,7 +83,7 @@ const Dashboard = () => {
 	const [userCount, setUserCount] = useState(0);
 	const [vendorCount, setVendorCount] = useState(0);
 	const [vendors, setVendors] = useState([]);
-	const [zipCodeData, setZipCodeData] = useState({});
+	//const [zipCodeData, setZipCodeData] = useState({});
 
 	const logout = async () => {
 		await signOut(auth);
@@ -99,13 +94,11 @@ const Dashboard = () => {
 		const snapshot = await db.collection("Admins").get();
 		if (snapshot.docs[0].data().IDs.includes(auth.currentUser.uid)) {
 			getZipCount();
-			userZip();
 			getVendorsAdmin();
 			document.getElementById("add-user").classList.remove('hide');
 			document.getElementById("refresh").classList.remove('hide');
 		} else {
 			getZipCount();
-			userZip();
 			getVendors();
 		}
 	}
@@ -127,9 +120,11 @@ const Dashboard = () => {
 			id: doc.id,
 			...doc.data(),
 		}));
-		setZipCodeCount(documents);
+		setZipCodeCount({
+			Data: documents
+		});
 
-		userZip();
+		userZip(documents);
 	}
 
 	const getZipCodes = async () => {
@@ -148,13 +143,12 @@ const Dashboard = () => {
 				
 			}
 		})
-		setZipCodeData(zipData);
+		setUserCount(counter);
 		let jsn = {};
 		jsn["Total"] = counter;
-		Object.entries(zipCodeData).forEach(([key, value]) => {
+		Object.entries(zipData).forEach(([key, value]) => {
 			jsn[key] = value;
 		});
-		//console.log(jsn);
 		const ZipRef = db.collection("ZipCount");
 		const docSnapshot = await ZipRef.limit(1).get();
 		const firstDoc = docSnapshot.docs[0];
