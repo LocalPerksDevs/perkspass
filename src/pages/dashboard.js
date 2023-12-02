@@ -237,7 +237,7 @@ const Dashboard = () => {
 			csvContent = "Active, Address, Affiliate, App Launch Date, Category, City, Contact Email," +
 			" Contact Name, Contact Phone, Contract Ends, Customer Phone, Disclaimer, Discount," + 
 			" Name, Notes, Latitude, Longitude, Online Ordering, POS Name, POS Setup, Promo Code, Reminder Email, Reminder Phone," + 
-			" Revetize Fee, State, Terms Signed, Type of Thing, Website, Zip\n";
+			" Local Perks Fee, State, Terms Signed, Type of Thing, Website, Zip\n";
 
 			vendors.map(doc => {
 				csvContent += doc.Active ? "Yes, " : "No, ";
