@@ -1,21 +1,21 @@
 {
   "files": {
-    "main.css": "/perkspass/static/css/main.4974e4b8.css",
-    "main.js": "/perkspass/static/js/main.ec4655f8.js",
-    "static/media/fa-solid-900.ttf": "/perkspass/static/media/fa-solid-900.d75e3fd1eb12e9bd6655.ttf",
-    "static/media/fa-brands-400.ttf": "/perkspass/static/media/fa-brands-400.016b4a6cdced82ab3aa1.ttf",
-    "static/media/fa-solid-900.woff2": "/perkspass/static/media/fa-solid-900.b6879d41b0852f01ed5b.woff2",
-    "static/media/fa-brands-400.woff2": "/perkspass/static/media/fa-brands-400.878f31251d960bd6266f.woff2",
-    "static/media/fa-regular-400.ttf": "/perkspass/static/media/fa-regular-400.50701fbb8177c2dde530.ttf",
-    "static/media/fa-regular-400.woff2": "/perkspass/static/media/fa-regular-400.b041b1fa4fe241b23445.woff2",
-    "static/media/fa-v4compatibility.ttf": "/perkspass/static/media/fa-v4compatibility.c6a0c95b0a95c4553700.ttf",
-    "static/media/fa-v4compatibility.woff2": "/perkspass/static/media/fa-v4compatibility.1bac2991f3dbfa237aec.woff2",
-    "index.html": "/perkspass/index.html",
-    "main.4974e4b8.css.map": "/perkspass/static/css/main.4974e4b8.css.map",
-    "main.ec4655f8.js.map": "/perkspass/static/js/main.ec4655f8.js.map"
+    "main.css": "/static/css/main.86e0735a.css",
+    "main.js": "/static/js/main.e10def11.js",
+    "static/media/fa-solid-900.ttf": "/static/media/fa-solid-900.d75e3fd1eb12e9bd6655.ttf",
+    "static/media/fa-brands-400.ttf": "/static/media/fa-brands-400.016b4a6cdced82ab3aa1.ttf",
+    "static/media/fa-solid-900.woff2": "/static/media/fa-solid-900.b6879d41b0852f01ed5b.woff2",
+    "static/media/fa-brands-400.woff2": "/static/media/fa-brands-400.878f31251d960bd6266f.woff2",
+    "static/media/fa-regular-400.ttf": "/static/media/fa-regular-400.50701fbb8177c2dde530.ttf",
+    "static/media/fa-regular-400.woff2": "/static/media/fa-regular-400.b041b1fa4fe241b23445.woff2",
+    "static/media/fa-v4compatibility.ttf": "/static/media/fa-v4compatibility.c6a0c95b0a95c4553700.ttf",
+    "static/media/fa-v4compatibility.woff2": "/static/media/fa-v4compatibility.1bac2991f3dbfa237aec.woff2",
+    "index.html": "/index.html",
+    "main.86e0735a.css.map": "/static/css/main.86e0735a.css.map",
+    "main.e10def11.js.map": "/static/js/main.e10def11.js.map"
   },
   "entrypoints": [
-    "static/css/main.4974e4b8.css",
-    "static/js/main.ec4655f8.js"
+    "static/css/main.86e0735a.css",
+    "static/js/main.e10def11.js"
   ]
 }
