@@ -18,11 +18,11 @@ const AddUser = () => {
 
 	useEffect(() => {
 		if (!auth.currentUser) {
-			navigate("/perkspass/sign-in");
+			navigate("/sign-in");
 		}
 
         if (!isUserAdmin()) {
-            navigate("/perkspass/dashboard");
+            navigate("/dashboard");
         }
         setMsg("Success! User was signed up!");
 	}, []);
@@ -122,11 +122,11 @@ const AddUser = () => {
     return (
         <div>
             <div className="topbar space">
-                <NavLink to="/perkspass">
+                <NavLink to="/">
                     <img src='https://firebasestorage.googleapis.com/v0/b/localperkstest.appspot.com/o/perkspass.png?alt=media&token=899760db-0c70-4284-9425-f45543329990&_gl=1*1gkdcls*_ga*MTkxMzE3MzM5Mi4xNjg5MTE2MzM4*_ga_CW55HF8NVT*MTY5NjI4MDc4Ni44Ni4xLjE2OTYyODA4MDAuNDYuMC4w' to="/" alt="PerksPass Logo"></img>
                 </NavLink>
                 <div className='row'>
-					<NavLink to="/perkspass/dashboard">
+					<NavLink to="/dashboard">
 						<p className='link'>Dashboard</p>
 					</NavLink>
 				</div>

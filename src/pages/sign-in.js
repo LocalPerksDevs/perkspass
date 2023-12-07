@@ -9,7 +9,7 @@ const AddVendor = () => {
 
 	useEffect(() => {
 		if (auth.currentUser) {
-			navigate("/perkspass/dashboard");
+			navigate("/dashboard");
 		}
 	}, []);
 
@@ -32,7 +32,7 @@ const AddVendor = () => {
 		try {
 			await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
 			if (auth.currentUser) {
-				navigate("/perkspass/dashboard");
+				navigate("/dashboard");
 			}
 		} catch (error) {
 			setMsg("Error: " + error.message);
@@ -76,7 +76,7 @@ const AddVendor = () => {
 	return (
 		<div>
 			<div className="topbar left">
-				<NavLink to="/perkspass">
+				<NavLink to="/">
 					<img src='https://firebasestorage.googleapis.com/v0/b/localperkstest.appspot.com/o/perkspass.png?alt=media&token=899760db-0c70-4284-9425-f45543329990&_gl=1*1gkdcls*_ga*MTkxMzE3MzM5Mi4xNjg5MTE2MzM4*_ga_CW55HF8NVT*MTY5NjI4MDc4Ni44Ni4xLjE2OTYyODA4MDAuNDYuMC4w' to="/" alt="PerksPass Logo"></img>
 				</NavLink>
 			</div>

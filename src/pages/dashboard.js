@@ -9,7 +9,7 @@ const Dashboard = () => {
 
 	useEffect(() => {
 		if (!auth.currentUser) {
-			navigate("/perkspass/sign-in");
+			navigate("/sign-in");
 		} else {
 			isUserAdmin();
 			getCurrentUser();
@@ -87,7 +87,7 @@ const Dashboard = () => {
 
 	const logout = async () => {
 		await signOut(auth);
-		navigate("/perkspass/sign-in");
+		navigate("/sign-in");
 	}
 
 	const isUserAdmin = async () => {
@@ -279,14 +279,14 @@ const Dashboard = () => {
 	return (
 		<div>
 			<div className='topbar space'>
-				<NavLink to="/perkspass">
+				<NavLink to="/">
 					<img src='https://firebasestorage.googleapis.com/v0/b/localperkstest.appspot.com/o/perkspass.png?alt=media&token=899760db-0c70-4284-9425-f45543329990&_gl=1*1gkdcls*_ga*MTkxMzE3MzM5Mi4xNjg5MTE2MzM4*_ga_CW55HF8NVT*MTY5NjI4MDc4Ni44Ni4xLjE2OTYyODA4MDAuNDYuMC4w' to="/" alt="PerksPass Logo"></img>
 				</NavLink>
 				<div className='row center'>
-					<NavLink to="/perkspass/add-user" className="hide" id="add-user">
+					<NavLink to="/add-user" className="hide" id="add-user">
 						<p className='link'>Add User</p>
 					</NavLink>
-					<NavLink to="/perkspass/add-vendor">
+					<NavLink to="/add-vendor">
 						<p className='link'>Add Vendor</p>
 					</NavLink>
 					<div className="profile row center" onClick={() => {document.getElementById("profile").style.visibility === "visible" ? 
@@ -344,7 +344,7 @@ const Dashboard = () => {
 					</thead>
 					<tbody>
 						{vendors.map(doc => (
-							<tr key={doc.id} onClick={() => navigate("/perkspass/" + "vendor-profile/" + doc.id)}>
+							<tr key={doc.id} onClick={() => navigate("/" + "vendor-profile/" + doc.id)}>
 								<td>{doc.Name}</td>
 								<td>{doc.Active === true? "Active" : "Inactive"}</td>
 								<td>{doc.POSSetup && doc.POSSetup === true? "Yes" : "No"}</td>
