@@ -21,7 +21,7 @@ function App() {
 				<Route path='/dashboard' element={<Dashboard />} />
 				<Route path='/add-user' element={<AddUser />} />
 				<Route path='/vendor-profile/:id' element={<VendorProfile />} />
-				<Route path='/priv' element={<Privacy />} />
+				<Route path='/privacy' element={<Privacy />} />
 			</Routes>
 		</Router>
 	);
