@@ -48,7 +48,7 @@ const Home = () => {
 				<div className='main-group'>
 					<div className='space'>
 						<div className='col'>
-							<img src='https://firebasestorage.googleapis.com/v0/b/localperkstest.appspot.com/o/text.svg?alt=media&token=8a39319b-b22b-48f4-b6b2-0732d6f11a90&_gl=1*oz2kvq*_ga*MTkxMzE3MzM5Mi4xNjg5MTE2MzM4*_ga_CW55HF8NVT*MTY5Njg3MDUzMi4xMDYuMS4xNjk2ODcxMTE5LjQ0LjAuMA..' className='main-text' alt="Repeatable, Unlimited-Use Discounts"></img>
+							<img src='https://firebasestorage.googleapis.com/v0/b/localperkstest.appspot.com/o/New%20Web%20Text.svg?alt=media&token=03808334-1ec4-480f-8c92-40cad6e39696' className='main-text' alt="Repeatable, Unlimited-Use Discounts"></img>
 							<p className='subtext'>at the best local restaurants, service and entertainment businesses</p>
 							<NavLink to="https://apps.apple.com/us/app/perkspass/id6466313325">
 								<img src='https://firebasestorage.googleapis.com/v0/b/localperkstest.appspot.com/o/Apple%20app%20store%20badge.svg?alt=media&token=428872a6-5fb9-4ee3-bcd1-13b1aaad2956&_gl=1*j61f2u*_ga*MTkxMzE3MzM5Mi4xNjg5MTE2MzM4*_ga_CW55HF8NVT*MTY5Njg3MDUzMi4xMDYuMS4xNjk2ODcxOTAyLjYwLjAuMA..' className='apple-store' alt="Download on the App Store"></img>

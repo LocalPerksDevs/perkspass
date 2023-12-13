@@ -121,8 +121,12 @@ const Dashboard = () => {
 			...doc.data(),
 		}));
 		setZipCodeCount({
-			Data: documents
+			Data: documents[0].Data
 		});
+
+		/*Object.keys(zipCodeCount.Data).forEach((key) => {
+			console.log(key + " " + zipCodeCount.Data[key]);
+		});*/
 
 		userZip(documents);
 	}
