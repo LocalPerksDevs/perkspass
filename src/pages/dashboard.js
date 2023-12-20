@@ -131,7 +131,15 @@ const Dashboard = () => {
 		userZip(documents);
 	}
 
-	const getZipCodes = async () => {
+	/*const deleteAllUsers = async () => {
+		const snapshot = await db.collection("Users").get();
+		snapshot.forEach((doc) => {
+			doc.ref.delete();
+		})
+	}*/
+
+	// OLD CODE
+	/*const getZipCodes = async () => {
 		const snapshot = await db.collection("Users").get();
 		const zipData = {};
 		let counter = 0;
@@ -152,6 +160,44 @@ const Dashboard = () => {
 		jsn["Total"] = counter;
 		Object.entries(zipData).forEach(([key, value]) => {
 			jsn[key] = value;
+		});
+		const ZipRef = db.collection("ZipCount");
+		const docSnapshot = await ZipRef.limit(1).get();
+		const firstDoc = docSnapshot.docs[0];
+		await ZipRef.doc(firstDoc.id).update({
+			Data: jsn
+		});
+		resetUserTable();
+		getZipCount();
+	}*/
+
+	// NEW VERSION, UPDATES ZipCount WITH NEW USERS INSTEAD OF REPLACING ENTIRE COLLECTION
+	const getZipCodesNew = async () => {
+		const snapshot = await db.collection("Users").get();
+		let counter = userCount;
+		snapshot.forEach((doc) => {
+			counter += 1;
+			if (doc.data().ZipCode) {
+				let zip = parseInt(doc.data().ZipCode);
+				if (zipCodeCount.Data[zip] >= 1) {
+					zipCodeCount.Data[zip] += 1;
+				} else {
+					zipCodeCount.Data[zip] = 1;
+				}
+			}
+			doc.ref.delete(); // REMOVE USER FROM COLLECTION, MORE EFFICIENT WITH READS THIS WAY
+		})
+		let jsn = {};
+		Object.entries(zipCodeCount.Data).forEach(([key, value]) => {
+			if (key === "Total") {
+				jsn["Total"] = counter;
+			} else {
+				jsn[key] = value;
+			}
+			
+		});
+		Object.entries(jsn).forEach(([key, value]) => {
+			console.log(key + ": " + value);
 		});
 		const ZipRef = db.collection("ZipCount");
 		const docSnapshot = await ZipRef.limit(1).get();
@@ -321,7 +367,7 @@ const Dashboard = () => {
 					<thead>
 						<tr>
 							<th>Zip Code</th>
-							<th>Number of Users<i id="refresh" className="fas fa-refresh hide" onClick={() => getZipCodes()}></i></th>
+							<th>Number of Users<i id="refresh" className="fas fa-refresh hide" onClick={() => getZipCodesNew()}></i></th>
 						</tr>
 					</thead>
 					<tbody>
