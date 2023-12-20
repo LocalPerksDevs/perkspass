@@ -55,7 +55,7 @@ const AddVendor = () => {
 		if (!contact.address) {
 			return;
 		}
-		response = await axios.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURI(contact.address) + '&key=AIzaSyCLeCv237OPhic4zEUnV1v894AVAASTNBU');
+		response = await axios.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURI(contact.address) + '&key=AIzaSyC-N8P43eh7n8_82SzcHXZ6h6rmgk7q448');
 		const { status, results } = response.data;
 		let p = document.createElement("p");
 		if (status === 'OK' && results.length > 0) {
