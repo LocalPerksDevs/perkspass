@@ -124,10 +124,6 @@ const Dashboard = () => {
 			Data: documents[0].Data
 		});
 
-		/*Object.keys(zipCodeCount.Data).forEach((key) => {
-			console.log(key + " " + zipCodeCount.Data[key]);
-		});*/
-
 		userZip(documents);
 	}
 
@@ -195,9 +191,6 @@ const Dashboard = () => {
 				jsn[key] = value;
 			}
 			
-		});
-		Object.entries(jsn).forEach(([key, value]) => {
-			console.log(key + ": " + value);
 		});
 		const ZipRef = db.collection("ZipCount");
 		const docSnapshot = await ZipRef.limit(1).get();
@@ -277,9 +270,9 @@ const Dashboard = () => {
 
 		if (document.getElementById("user_tab").classList.contains('active')) {
 			csvContent = "Zip Code, Number of Users\n";
-			if (zipCodeCount[0] && zipCodeCount[0].Data && typeof zipCodeCount[0].Data === 'object') {
-				Object.keys(zipCodeCount[0].Data).forEach((key) => {
-					csvContent += key + ", " + zipCodeCount[0].Data[key] + "\n";
+			if (zipCodeCount.Data && typeof zipCodeCount.Data === 'object') {
+				Object.keys(zipCodeCount.Data).forEach((key) => {
+					csvContent += key + ", " + zipCodeCount.Data[key] + "\n";
 				});
 			}
 			downloadCSVFile(csvContent, "Users.csv");
