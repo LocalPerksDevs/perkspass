@@ -10,6 +10,8 @@ const VendorProfile = () => {
 
     const [imageUpload, setImageUpload] = useState();
 
+    const [affiliates, setAffiliates] = useState({});
+
     const navigate = useNavigate();
     const storage = getStorage(app);
     const [logoURL, setLogoURL] = useState("");
@@ -19,6 +21,7 @@ const VendorProfile = () => {
 		if (!snapshot.docs[0].data().IDs.includes(auth.currentUser.uid)) {
 			document.getElementById("active").classList.add('disabled');
 		}
+        getAffiliates();
     }
 
     function editClick() {
@@ -43,6 +46,15 @@ const VendorProfile = () => {
         document.getElementById("cancel").classList.remove('hide');
         document.getElementById("logo").classList.remove('hide');
     }
+
+    const getAffiliates = async () => {
+		const snapshot = await db.collection("Affiliates").get();
+		const a = {};
+		snapshot.forEach(doc => {
+			a[doc.id] = doc.data().Name;
+		});
+		setAffiliates(a);
+	}
 
     function hideBorders() {
         let inputs = document.querySelectorAll('.vendor-input');
@@ -109,7 +121,8 @@ const VendorProfile = () => {
                 TermsSigned: contact.termsSigned === "Yes" ? true : false,
                 TypeOfThing: !contact.typeOfThing ? "" : contact.typeOfThing.trim(),
                 Website: contact.website.trim(),
-                Zip: !contact.zip ? "" : contact.zip.trim()
+                Zip: !contact.zip ? "" : contact.zip.trim(),
+                SecondaryAffiliate: contact.secondaryAffiliate === "None" ? "" : contact.secondaryAffiliate
                 });
                 //console.log("Document successfully updated!");
             } catch (error) {
@@ -179,6 +192,7 @@ const VendorProfile = () => {
                     typeOfThing: snapshot.data().TypeOfThing,
                     website: !snapshot.data().Website ? "" : snapshot.data().Website,
                     zip: !snapshot.data().Zip ? "N/A" : snapshot.data().Zip,
+                    secondaryAffiliate: !snapshot.data().SecondaryAffiliate ? "None" : snapshot.data().SecondaryAffiliate
                 };
             });
         }
@@ -192,7 +206,7 @@ const VendorProfile = () => {
         name: "", notes: "", onlineOrdering: "true", posCall: "",
         posName: "", posSetup: "", phone: "", promoCode: "", reminderEmail: "",
         reminderPhone: "", state: "",
-        termsSigned: "", typeOfThing: "", website: "", zip: ""
+        termsSigned: "", typeOfThing: "", website: "", zip: "", secondaryAffiliate: ""
     });
 
     const handleChange = (event) => {
@@ -421,6 +435,23 @@ const VendorProfile = () => {
                                 <div className="col">
                                     <p className="label">POS NAME</p>
                                     <input name="posName" className="vendor-input" defaultValue={contact.posName} onChange={handleChange}></input>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="row m24">
+                                <div className="col">
+                                    <p className="label">Secondary Affiliate</p>
+                                    <p className="vendor-select">{!affiliates[contact.secondaryAffiliate] ? "None" : affiliates[contact.secondaryAffiliate]}</p>
+                                    <select name="secondaryAffiliate" id="secondaryAffiliate" className="vendor-input vs hide" value={contact.secondaryAffiliate} onChange={handleChange}>
+								        <option value="None">None</option>
+                                        {Object.keys(affiliates).map((key) => (
+									        <option value={key} id={key}>{affiliates[key]}</option>
+								        ))}
+							        </select>
+                                </div>
+                                <div className="col">
+                                    &nbsp;
                                 </div>
                             </div>
                         </div>

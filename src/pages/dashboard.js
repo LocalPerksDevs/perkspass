@@ -202,10 +202,10 @@ const Dashboard = () => {
 		getZipCount();
 	}
 
-	const countUsersAdmin = async () => {
+	/*const countUsersAdmin = async () => {
 		const snapshot = await db.collection("Users").get();
 		setUserCount(snapshot.size);
-	}
+	}*/
 
 	const getVendorsAdmin = async () => {
 		const snapshot = await db.collection("Establishments").orderBy('Name').get();
@@ -280,7 +280,7 @@ const Dashboard = () => {
 			csvContent = "Active, Address, Affiliate, App Launch Date, Category, City, Contact Email," +
 			" Contact Name, Contact Phone, Contract Ends, Customer Phone, Disclaimer, Discount," + 
 			" Name, Notes, Latitude, Longitude, Online Ordering, POS Name, POS Setup, Promo Code, Reminder Email, Reminder Phone," + 
-			" Local Perks Fee, State, Terms Signed, Type of Thing, Website, Zip\n";
+			" Local Perks Fee, Secondary Affiliate, State, Terms Signed, Type of Thing, Website, Zip\n";
 
 			vendors.map(doc => {
 				csvContent += doc.Active ? "Yes, " : "No, ";
@@ -307,6 +307,7 @@ const Dashboard = () => {
 				csvContent += doc.ReminderEmail ? `"${doc.ReminderEmail}", ` : "N/A, ";
 				csvContent += doc.ReminderPhone ? `"${doc.ReminderPhone}", ` : "N/A, ";
 				csvContent += doc.Fee ? `"${doc.Fee}", ` : "N/A, ";
+				csvContent += doc.SecondaryAffiliate ? `"${doc.SecondaryAffiliate}", ` : "N/A, ";
 				csvContent += doc.State ? `"${doc.State}", ` : "N/A, ";
 				csvContent += doc.TermsSigned ? "Yes, " : "No, ";
 				csvContent += doc.TypeOfThing ? `"${doc.TypeOfThing}", ` : "N/A, ";
@@ -383,6 +384,7 @@ const Dashboard = () => {
 							<th>PROMO CODE</th>
 							<th className='phone'>PHONE</th>
 							<th className='name'>AFFILIATE</th>
+							<th className=''>SECONDARY AFFILIATE</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -400,6 +402,7 @@ const Dashboard = () => {
 								<td>{doc.PromoCode}</td>
 								<td>{doc.Phone}</td>
 								<td>{affiliates[doc.AffiliateID]}</td>
+								<td>{!affiliates[doc.SecondaryAffiliate] ? "None" : affiliates[doc.SecondaryAffiliate]}</td>
 							</tr>
 						))}
 					</tbody>

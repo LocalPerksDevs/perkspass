@@ -12,6 +12,8 @@ const AddVendor = () => {
 	useEffect(() => {
 		if (!auth.currentUser) {
 			navigate("/sign-in");
+		} else {
+			getAffiliates();
 		}
 	}, []);
 
@@ -27,8 +29,10 @@ const AddVendor = () => {
 		phone: "", promoCode: "", state: "", zip: "", appLaunchDate: "",
 		typeOfThing: "Food", website: "", contractEnds: "", disclaimer: "",
 		contactName: "", contactEmail: "", contactNumber: "",
-		fee: "", terms: "true", notes: "", posName: ""
+		fee: "", terms: "true", notes: "", posName: "", secondaryAffiliate: ""
 	});
+
+	const [affiliates, setAffiliates] = useState({});
 
 	let message = "Success! " + contact.name + " was added to the database";
 	let logourl = '';
@@ -49,6 +53,15 @@ const AddVendor = () => {
 		setContact((prev) => {
 			return { ...prev, [name]: value };
 		});
+	}
+
+	const getAffiliates = async () => {
+		const snapshot = await db.collection("Affiliates").get();
+		const a = {};
+		snapshot.forEach(doc => {
+			a[doc.id] = doc.data().Name;
+		});
+		setAffiliates(a);
 	}
 
 	async function getLatLonGoogle() {
@@ -130,7 +143,8 @@ const AddVendor = () => {
 			POSSetup: false,
 			ReminderEmail: contact.reminderEmail.trim(),
 			ReminderPhone: contact.reminderNumber,
-			POSName: contact.posName.trim()
+			POSName: contact.posName.trim(),
+			SecondaryAffiliate: contact.secondaryAffiliate
 		}).then((docRef) => {
 			document.getElementsByClassName("message")[0].classList.remove('hide');
 			document.getElementsByClassName("form")[0].classList.add('hide');
@@ -206,6 +220,8 @@ const AddVendor = () => {
 		document.getElementsByName("terms")[0].value = "";
 		contact.notes = '';
 		document.getElementsByName("notes")[0].value = "";
+		contact.secondaryAffiliate = '';
+		document.getElementsByName("secondaryAffiliate")[0].value = "None";
 	}
 
 	const uploadFile = () => {
@@ -619,6 +635,13 @@ const AddVendor = () => {
 							<p className="label">Name of POS</p>
 							<p className="sub-label">E.g. Square, Toast, Clover...</p>
 							<input type="text" placeholder="name of pos" name="posName" value={contact.posName} onChange={handleChange}></input>
+							<label htmlFor="secondaryAffiliate" className="label">Secondary Affiliate</label>
+							<select name="secondaryAffiliate" id="secondaryAffiliate" value={contact.secondaryAffiliate} onChange={handleChange}>
+								<option value="none" id="none">None</option>
+								{Object.keys(affiliates).map((key) => (
+									<option value={key} id={key}>{affiliates[key]}</option>
+								))}
+							</select>
 							<p className="label">Notes/Homework</p>
 							<p className="sub-label">Any additional custom notes that should be included in the agreement on this one? Anything else our team should know about the account to get it launched?</p>
 							<input type="text" placeholder="notes" name="notes" value={contact.notes} onChange={handleChange}></input>
@@ -631,5 +654,9 @@ const AddVendor = () => {
 	);
 };
 
-
+/*
+{affiliates.map((option, index) => (
+									<option value={index} id={index}>{option}</option>
+								))}
+*/
 export default AddVendor;
