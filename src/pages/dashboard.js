@@ -110,8 +110,15 @@ const Dashboard = () => {
 			id: doc.id,
 			...doc.data(),
 		}));
-		setVendorCount(snapshot.size);
-		setVendors(documents);
+
+		const snapshot2 = await db.collection("Establishments")
+		.where('SecondaryAffiliate', '==', auth.currentUser.uid).orderBy('Name').get();
+		const documents2 = snapshot2.docs.map(doc => ({
+			id: doc.id,
+			...doc.data(),
+		}));
+		setVendorCount(snapshot.size + snapshot2.size);
+		setVendors([...documents, ...documents2]);
 	}
 
 	const getZipCount = async () => {
