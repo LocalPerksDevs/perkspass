@@ -83,7 +83,6 @@ const Dashboard = () => {
 	const [userCount, setUserCount] = useState(0);
 	const [vendorCount, setVendorCount] = useState(0);
 	const [vendors, setVendors] = useState([]);
-	//const [zipCodeData, setZipCodeData] = useState({});
 
 	const logout = async () => {
 		await signOut(auth);
@@ -92,13 +91,12 @@ const Dashboard = () => {
 
 	const isUserAdmin = async () => {
 		const snapshot = await db.collection("Admins").get();
+		getZipCount();
 		if (snapshot.docs[0].data().IDs.includes(auth.currentUser.uid)) {
-			getZipCount();
 			getVendorsAdmin();
 			document.getElementById("add-user").classList.remove('hide');
 			document.getElementById("refresh").classList.remove('hide');
 		} else {
-			getZipCount();
 			getVendors();
 		}
 	}
@@ -176,28 +174,35 @@ const Dashboard = () => {
 
 	// NEW VERSION, UPDATES ZipCount WITH NEW USERS INSTEAD OF REPLACING ENTIRE COLLECTION
 	const getZipCodesNew = async () => {
+		const snapshotZ = await db.collection("ZipCount").get();
+		const documents = snapshotZ.docs.map(doc => ({
+			id: doc.id,
+			...doc.data(),
+		}));
+		console.log(documents[0].Data);
+
 		const snapshot = await db.collection("Users").get();
-		let counter = userCount;
+		//let counter = userCount;
+		let counter = documents[0].Data['Total'];
 		snapshot.forEach((doc) => {
 			counter += 1;
 			if (doc.data().ZipCode) {
 				let zip = parseInt(doc.data().ZipCode);
-				if (zipCodeCount.Data[zip] >= 1) {
-					zipCodeCount.Data[zip] += 1;
+				if (documents[0].Data[zip] >= 1) {
+					documents[0].Data[zip] += 1;
 				} else {
-					zipCodeCount.Data[zip] = 1;
+					documents[0].Data[zip] = 1;
 				}
 			}
 			doc.ref.delete(); // REMOVE USER FROM COLLECTION, MORE EFFICIENT WITH READS THIS WAY
 		})
 		let jsn = {};
-		Object.entries(zipCodeCount.Data).forEach(([key, value]) => {
+		Object.entries(documents[0].Data).forEach(([key, value]) => {
 			if (key === "Total") {
 				jsn["Total"] = counter;
 			} else {
 				jsn[key] = value;
 			}
-			
 		});
 		const ZipRef = db.collection("ZipCount");
 		const docSnapshot = await ZipRef.limit(1).get();
@@ -208,11 +213,6 @@ const Dashboard = () => {
 		resetUserTable();
 		getZipCount();
 	}
-
-	/*const countUsersAdmin = async () => {
-		const snapshot = await db.collection("Users").get();
-		setUserCount(snapshot.size);
-	}*/
 
 	const getVendorsAdmin = async () => {
 		const snapshot = await db.collection("Establishments").orderBy('Name').get();
