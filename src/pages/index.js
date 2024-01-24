@@ -63,7 +63,7 @@ const Home = () => {
 					</div>
 				</div>
 			</div>
-			<img id ="overlay" className='overlay' alt="overlay"></img>
+			<img id ="overlay" className='overlay' alt="overlay" src="https://firebasestorage.googleapis.com/v0/b/localperkstest.appspot.com/o/black.png?alt=media&token=e4687602-ccbc-4002-bab9-c00db14365dd"></img>
 			<div className="sidebar" id="sidebar">
 				<div className='col ml24'>
 					<div className='end' onClick={hideSidebar}>

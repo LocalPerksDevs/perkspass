@@ -5,6 +5,7 @@ import { signOut } from '../../node_modules/firebase/auth/';
 import { auth, db } from '../firebase-config';
 
 const Dashboard = () => {
+
 	const [zipCodeCount, setZipCodeCount] = useState({});
 
 	useEffect(() => {
@@ -95,6 +96,7 @@ const Dashboard = () => {
 		if (snapshot.docs[0].data().IDs.includes(auth.currentUser.uid)) {
 			getVendorsAdmin();
 			document.getElementById("add-user").classList.remove('hide');
+			document.getElementById("add-user2").classList.remove('hide');
 			document.getElementById("refresh").classList.remove('hide');
 		} else {
 			getVendors();
@@ -327,6 +329,24 @@ const Dashboard = () => {
 		}
 	}
 
+	function showSidebar() {
+		document.getElementById("overlay").style.display = "block";
+		document.getElementById("sidebar").style.display = "flex";
+	}
+
+	function hideSidebar() {
+		document.getElementById("overlay").style.display = "none";
+		document.getElementById("sidebar").style.display = "none";
+	}
+
+	window.onresize = resize;
+
+	function resize() {
+		if(window.innerWidth > 760 ) {
+			hideSidebar();
+		}
+	}
+
 	return (
 		<div>
 			<div className='topbar space'>
@@ -334,17 +354,22 @@ const Dashboard = () => {
 					<img src='https://firebasestorage.googleapis.com/v0/b/localperkstest.appspot.com/o/perkspass.png?alt=media&token=899760db-0c70-4284-9425-f45543329990&_gl=1*1gkdcls*_ga*MTkxMzE3MzM5Mi4xNjg5MTE2MzM4*_ga_CW55HF8NVT*MTY5NjI4MDc4Ni44Ni4xLjE2OTYyODA4MDAuNDYuMC4w' to="/" alt="PerksPass Logo"></img>
 				</NavLink>
 				<div className='row center'>
-					<NavLink to="/add-user" className="hide" id="add-user">
-						<p className='link'>Add User</p>
-					</NavLink>
-					<NavLink to="/add-vendor">
-						<p className='link'>Add Vendor</p>
-					</NavLink>
-					<div className="profile row center" onClick={() => {document.getElementById("profile").style.visibility === "visible" ? 
-					document.getElementById("profile").style.visibility = "hidden" :
-					document.getElementById("profile").style.visibility = "visible"}}>
-						<i className="fa-solid fa-user mr8"></i>
-						<p>{userEmail}</p>
+					<div className='bars' onClick={() => { showSidebar()}}>
+						<i className="fas fa-bars mr40"></i>
+					</div>
+					<div className='row menu'>
+						<NavLink to="/add-user" className="hide" id="add-user">
+							<p className='link'>Add User</p>
+						</NavLink>
+						<NavLink to="/add-vendor">
+							<p className='link'>Add Vendor</p>
+						</NavLink>
+						<div className="profile row center" onClick={() => {document.getElementById("profile").style.visibility === "visible" ? 
+							document.getElementById("profile").style.visibility = "hidden" :
+							document.getElementById("profile").style.visibility = "visible"}}>
+							<i className="fa-solid fa-user mr8"></i>
+							<p>{userEmail}</p>
+						</div>
 					</div>
 					<div id="profile" className='center' onClick={logout}>
 						<p style={{margin: 0}} className='link'>Sign Out</p>
@@ -353,7 +378,7 @@ const Dashboard = () => {
 
 			</div>
 			<div className='col center' id="rel">
-				<h1>Affiliate Dashboard</h1>
+				<h1 id="title">Affiliate Dashboard</h1>
 				<h2 className='hide' id="UserCount">Users: {userCount}</h2>
 				<h2 id="VendorCount">Vendors: {vendorCount}</h2>
 				<i id="download" className="fas fa-download" onClick={() => createCSV()}></i>
@@ -414,6 +439,36 @@ const Dashboard = () => {
 						))}
 					</tbody>
 				</table>
+			</div>
+			<img id ="overlay" className='overlay' alt="overlay" src="https://firebasestorage.googleapis.com/v0/b/localperkstest.appspot.com/o/blank.png?alt=media&token=16e2351b-e608-4471-8c5d-a3011930346f"></img>
+			<div className="sidebar light" id="sidebar">
+				<div className='col ml24'>
+					<div className='end' onClick={() => { hideSidebar() }}>
+						<i className='fa-solid fa-x end'></i>
+					</div>
+					<div className='link'>
+						<NavLink to="/add-user" className="hide" id="add-user2">
+							<p>Add User</p>
+						</NavLink>
+					</div>
+					<div className='link'>
+						<NavLink to="/add-vendor">
+							<p>Add Vendor</p>
+						</NavLink>
+					</div>
+					<div className="link mt24">
+						<div className='row center'>
+							<i className="fa-solid fa-user mr8"></i>
+							<p>{userEmail}</p>
+						</div>
+					</div>
+					<div className='link' onClick={logout}>
+						<p>Sign Out</p>
+					</div>
+				</div>
+				<div className='center mb40'>
+					<img src="https://firebasestorage.googleapis.com/v0/b/localperkstest.appspot.com/o/PerksPassWhite.png?alt=media&token=de1bf556-55f7-4ce1-906f-99f8b7edd2cc" alt="Perks Pass Logo"></img>
+				</div>
 			</div>
 		</div>
 	);
