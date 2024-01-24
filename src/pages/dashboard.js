@@ -332,11 +332,17 @@ const Dashboard = () => {
 	function showSidebar() {
 		document.getElementById("overlay").style.display = "block";
 		document.getElementById("sidebar").style.display = "flex";
+		document.body.style.position = "fixed";
+		document.body.style.width = "100%";
+		document.body.style.height = "100%";
 	}
 
 	function hideSidebar() {
 		document.getElementById("overlay").style.display = "none";
 		document.getElementById("sidebar").style.display = "none";
+		document.body.style.position = "initial";
+		document.body.style.width = "initial";
+		document.body.style.height = "initial";
 	}
 
 	window.onresize = resize;
