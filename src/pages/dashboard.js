@@ -333,8 +333,8 @@ const Dashboard = () => {
 		document.getElementById("overlay").style.display = "block";
 		document.getElementById("sidebar").style.display = "flex";
 		document.body.style.position = "fixed";
-		document.body.style.width = "100%";
-		document.body.style.height = "100%";
+		document.body.style.width = "100vw";
+		document.body.style.height = "100vh";
 	}
 
 	function hideSidebar() {
