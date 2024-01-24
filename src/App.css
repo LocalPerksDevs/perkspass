@@ -839,6 +839,12 @@ i.fas.fa-download:hover {
   transform: scale(1.1);
 }
 
+#white-logo {
+  position: absolute;
+  bottom: 40px;
+  right: 25%;
+}
+
 @media (max-height: 786px) {
   .screenshot {
     margin-top: 6vh;

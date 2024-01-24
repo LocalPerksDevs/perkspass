@@ -471,9 +471,9 @@ const Dashboard = () => {
 					<div className='link' onClick={logout}>
 						<p>Sign Out</p>
 					</div>
-				</div>
-				<div className='center mb40'>
-					<img src="https://firebasestorage.googleapis.com/v0/b/localperkstest.appspot.com/o/PerksPassWhite.png?alt=media&token=de1bf556-55f7-4ce1-906f-99f8b7edd2cc" alt="Perks Pass Logo"></img>
+					<div className='center' id="white-logo">
+						<img src="https://firebasestorage.googleapis.com/v0/b/localperkstest.appspot.com/o/PerksPassWhite.png?alt=media&token=de1bf556-55f7-4ce1-906f-99f8b7edd2cc" alt="Perks Pass Logo"></img>
+					</div>
 				</div>
 			</div>
 		</div>
