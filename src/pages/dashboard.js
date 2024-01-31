@@ -84,6 +84,8 @@ const Dashboard = () => {
 	const [userCount, setUserCount] = useState(0);
 	const [vendorCount, setVendorCount] = useState(0);
 	const [vendors, setVendors] = useState([]);
+	const [sortColumn, setSortColumn] = useState("Name");
+	const [sortAsc, setSortAsc] = useState(true);
 
 	const logout = async () => {
 		await signOut(auth);
@@ -353,6 +355,76 @@ const Dashboard = () => {
 		}
 	}
 
+	/*// Wrapper to call correct sort method
+	function sort(name) {
+		if (name === "Name") {
+			if (sortColumn === "Name" && sortAsc) {
+				sortNameDesc();
+				setSortAsc(false);
+			} else {
+				sortNameAsc();
+				setSortAsc(true);
+				setSortColumn(name);
+			}
+		} else if (name === "City") {
+			if (sortColumn === "City" && sortAsc) {
+				sortCityDesc();
+				setSortAsc(false);
+			} else {
+				sortCityAsc();
+				setSortAsc(true);
+				setSortColumn(name);
+			}
+		}
+		changeSortIcon(name);
+	}*/
+
+	// Wrapper to call correct sort method
+	function sort(name) {
+		if (name === sortColumn) {
+			if (sortAsc) {
+				const sorted = vendors.slice().sort((a,b) => {
+					return b[name].localeCompare(a[name]);
+				});
+				setVendors(sorted);
+				changeSortIcon(name, true);
+			} else {
+				const sorted = vendors.slice().sort((a,b) => {
+					return a[name].localeCompare(b[name]);
+				});
+				setVendors(sorted);
+				changeSortIcon(name, false);
+			}
+		} else {
+			resetSortStatus(sortColumn);
+			setSortColumn(name);
+			const sorted = vendors.slice().sort((a,b) => {
+				return a[name].localeCompare(b[name]);
+			});
+			setVendors(sorted);
+			changeSortIcon(name, false);
+		}
+	}
+
+	function changeSortIcon(name, sortDesc) {
+		document.getElementById(name).classList.remove("fa-sort");
+		if (sortDesc) {
+			document.getElementById(name).classList.remove("fa-sort-up");
+			document.getElementById(name).classList.add("fa-sort-down");
+			setSortAsc(false);
+		} else {
+			document.getElementById(name).classList.remove("fa-sort-down");
+			document.getElementById(name).classList.add("fa-sort-up");
+			setSortAsc(true);
+		}
+	}
+
+	function resetSortStatus(name) {
+		document.getElementById(name).classList.remove("fa-sort-up");
+		document.getElementById(name).classList.remove("fa-sort-down");
+		document.getElementById(name).classList.add("fa-sort");
+	}
+
 	return (
 		<div>
 			<div className='topbar space'>
@@ -410,14 +482,14 @@ const Dashboard = () => {
 				<table>
 					<thead>
 						<tr>
-							<th className='name'>NAME</th>
+							<th className='name sort' onClick={() => { sort("Name") }}>NAME&nbsp;<i id="Name" className="fa-solid fa-sort-up"></i></th>
 							<th>STATUS</th>
 							<th>POS SETUP?</th>
 							<th>TERMS SIGNED?</th>
-							<th>CITY</th>
-							<th>STATE</th>
-							<th>CATEGORY</th>
-							<th>TYPE</th>
+							<th className='sort' onClick={() => { sort("City") }}>CITY&nbsp;<i id="City" className="fa-solid fa-sort"></i></th>
+							<th className='sort' onClick={() => { sort("State") }}>STATE&nbsp;<i id="State" className='fa-solid fa-sort'></i></th>
+							<th className="sort" onClick={() => { sort("Category") }}>CATEGORY&nbsp;<i id="Category" className='fa-solid fa-sort'></i></th>
+							<th className='sort' onClick={() => { sort("TypeOfThing")} }>TYPE&nbsp;<i id="TypeOfThing" className='fa-solid fa-sort'></i></th>
 							<th>DISCOUNT</th>
 							<th>PROMO CODE</th>
 							<th className='phone'>PHONE</th>

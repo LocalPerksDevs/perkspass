@@ -38,7 +38,11 @@ input::placeholder {
 
 label {
   margin-bottom: 8px;
-} 
+}
+
+th.sort {
+  cursor: pointer;
+}
 
 .col input[type="file"] {
   border: none;
