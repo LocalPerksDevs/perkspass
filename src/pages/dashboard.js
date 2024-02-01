@@ -288,42 +288,42 @@ const Dashboard = () => {
 			}
 			downloadCSVFile(csvContent, "Users.csv");
 		} else {
-			csvContent = "Active, Address, Affiliate, App Launch Date, Category, City, Contact Email," +
-			" Contact Name, Contact Phone, Contract Ends, Customer Phone, Disclaimer, Discount," + 
-			" Name, Notes, Latitude, Longitude, Online Ordering, POS Name, POS Setup, Promo Code, Reminder Email, Reminder Phone," + 
-			" Local Perks Fee, Secondary Affiliate, State, Terms Signed, Type of Thing, Website, Zip\n";
+			csvContent = '"Active", "Address", "Affiliate", "App Launch Date", "Category", "City", "State", "Zip", "Contact Email",' +
+			' "Contact Name", "Contact Phone", "Contract Ends", "Customer Phone", "Disclaimer", "Discount",' + 
+			' "Name", "Notes", "Latitude", "Longitude", "Online Ordering", "POS Name", "POS Setup", "Promo Code", "Reminder Email", "Reminder Phone",' + 
+			' "Local Perks Fee", "Secondary Affiliate", "Terms Signed", "Type of Thing", "Website"\n';
 
 			vendors.map(doc => {
-				csvContent += doc.Active ? "Yes, " : "No, ";
-				csvContent += doc.Address ? `"${doc.Address}", ` : "N/A, ";
-				csvContent += affiliates[doc.AffiliateID] ? `"${affiliates[doc.AffiliateID]}", ` : "N/A, ";
-				csvContent += doc.AppLaunchDate ? doc.AppLaunchDate.toDate().toDateString() + ", " : "N/A, ";
-				csvContent += doc.Category ? `"${doc.Category}", ` : "N/A, ";
-				csvContent += doc.City ? `"${doc.City}", ` : "N/A, ";
-				csvContent += doc.ContactEmail ? `"${doc.ContactEmail}", ` : "N/A, ";
-				csvContent += doc.ContactName ? `"${doc.ContactName}", ` : "N/A, ";
-				csvContent += doc.ContactPhone ? `"${doc.ContactPhone}", ` : "N/A, ";
-				csvContent += doc.ContractEnds ? doc.ContractEnds.toDate().toDateString() + ", " : "N/A, ";
-				csvContent += doc.Phone ? `"${doc.Phone}", ` : "N/A, ";
-				csvContent += doc.Disclaimer ? `"${doc.Disclaimer}", ` : "N/A, ";
-				csvContent += doc.Discount ? doc.Discount + ", " : "N/A, ";
-				csvContent += doc.Name ? `"${doc.Name}", ` : "N/A, ";
-				csvContent += doc.Notes ? `"${doc.Notes}", ` : "N/A, ";
-				csvContent += doc.latLon._lat ? doc.latLon._lat + ", " : "N/A, ";
-				csvContent += doc.latLon._long ? doc.latLon._long + ", " : "N/A, ";
-				csvContent += doc.OnlineOrdering ? "Yes, " : "No, ";
-				csvContent += doc.POSName ? `"${doc.POSName}", ` : "N/A, ";
-				csvContent += doc.POSSetup ? "Yes, " : "No, ";
-				csvContent += doc.PromoCode ? `"${doc.PromoCode}", ` : "N/A, ";
-				csvContent += doc.ReminderEmail ? `"${doc.ReminderEmail}", ` : "N/A, ";
-				csvContent += doc.ReminderPhone ? `"${doc.ReminderPhone}", ` : "N/A, ";
-				csvContent += doc.Fee ? `"${doc.Fee}", ` : "N/A, ";
-				csvContent += doc.SecondaryAffiliate ? `"${doc.SecondaryAffiliate}", ` : "N/A, ";
-				csvContent += doc.State ? `"${doc.State}", ` : "N/A, ";
-				csvContent += doc.TermsSigned ? "Yes, " : "No, ";
-				csvContent += doc.TypeOfThing ? `"${doc.TypeOfThing}", ` : "N/A, ";
-				csvContent += doc.Website ? `"${doc.Website}", ` : "N/A, ";
-				csvContent += doc.Zip ? `"${doc.Zip}", ` : "N/A, ";
+				csvContent += doc.Active ? `"Yes", ` : `"No", `;
+				csvContent += doc.Address ? `"${doc.Address}", ` : `"N/A", `;
+				csvContent += affiliates[doc.AffiliateID] ? `"${affiliates[doc.AffiliateID]}", ` : `"N/A", `;
+				csvContent += doc.AppLaunchDate ? `"${doc.AppLaunchDate.toDate().toDateString()}", ` : `"N/A", `;
+				csvContent += doc.Category ? `"${doc.Category}", ` : `"N/A", `;
+				csvContent += doc.City ? `"${doc.City}", ` : `"N/A", `;
+				csvContent += doc.State ? `"${doc.State}", ` : `"N/A", `;
+				csvContent += doc.Zip ? `"${doc.Zip}", ` : `"N/A", `;
+				csvContent += doc.ContactEmail ? `"${doc.ContactEmail}", ` : `"N/A", `;
+				csvContent += doc.ContactName ? `"${doc.ContactName}", ` : `"N/A", `;
+				csvContent += doc.ContactPhone ? `"${doc.ContactPhone}", ` : `"N/A", `;
+				csvContent += doc.ContractEnds ? `"${doc.ContractEnds.toDate().toDateString()}", ` : `"N/A", `;
+				csvContent += doc.Phone ? `"${doc.Phone}", ` : `"N/A", `;
+				csvContent += doc.Disclaimer ? `"${doc.Disclaimer}", ` : `"N/A", `;
+				csvContent += doc.Discount ? `"${doc.Discount}", ` : `"N/A", `;
+				csvContent += doc.Name ? `"${doc.Name}", ` : `"N/A", `;
+				csvContent += doc.Notes ? `"${doc.Notes}", ` : `"N/A", `;
+				csvContent += doc.latLon._lat ? `"${doc.latLon._lat}", ` : `"N/A", `;
+				csvContent += doc.latLon._long ? `"${doc.latLon._long}", ` : `"N/A", `;
+				csvContent += doc.OnlineOrdering ? `"Yes", ` : `"No", `;
+				csvContent += doc.POSName ? `"${doc.POSName}", ` : `"N/A", `;
+				csvContent += doc.POSSetup ? `"Yes", ` : `"No", `;
+				csvContent += doc.PromoCode ? `"${doc.PromoCode}", ` : `"N/A", `;
+				csvContent += doc.ReminderEmail ? `"${doc.ReminderEmail}", ` : `"N/A", `;
+				csvContent += doc.ReminderPhone ? `"${doc.ReminderPhone}", ` : `"N/A", `;
+				csvContent += doc.Fee ? `"${doc.Fee}", ` : `"N/A", `;
+				csvContent += affiliates[doc.SecondaryAffiliate] ? `"${affiliates[doc.SecondaryAffiliate]}", ` : `"N/A", `;
+				csvContent += doc.TermsSigned ? `"Yes", ` : `"No", `;
+				csvContent += doc.TypeOfThing ? `"${doc.TypeOfThing}", ` : `"N/A", `;
+				csvContent += doc.Website ? `"${doc.Website}", ` : `"N/A", `;
 				csvContent += "\n";
 			});
 
