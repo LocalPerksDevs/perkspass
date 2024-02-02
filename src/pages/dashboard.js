@@ -482,7 +482,7 @@ const Dashboard = () => {
 				<table>
 					<thead>
 						<tr>
-							<th className='name sort' onClick={() => { sort("Name") }}>NAME&nbsp;<i id="Name" className="fa-solid fa-sort-up"></i></th>
+							<th className='sort' onClick={() => { sort("Name") }}>NAME&nbsp;<i id="Name" className="fa-solid fa-sort-up"></i></th>
 							<th>STATUS</th>
 							<th>POS SETUP?</th>
 							<th>TERMS SIGNED?</th>
@@ -491,9 +491,7 @@ const Dashboard = () => {
 							<th className="sort" onClick={() => { sort("Category") }}>CATEGORY&nbsp;<i id="Category" className='fa-solid fa-sort'></i></th>
 							<th className='sort' onClick={() => { sort("TypeOfThing")} }>TYPE&nbsp;<i id="TypeOfThing" className='fa-solid fa-sort'></i></th>
 							<th>DISCOUNT</th>
-							<th>PROMO CODE</th>
-							<th className='phone'>PHONE</th>
-							<th className='name'>AFFILIATE</th>
+							<th className=''>AFFILIATE</th>
 							<th className=''>SECONDARY AFFILIATE</th>
 						</tr>
 					</thead>
@@ -509,8 +507,6 @@ const Dashboard = () => {
 								<td>{doc.Category}</td>
 								<td>{doc.TypeOfThing}</td>
 								<td>{doc.Discount}</td>
-								<td>{doc.PromoCode}</td>
-								<td>{doc.Phone}</td>
 								<td>{affiliates[doc.AffiliateID]}</td>
 								<td>{!affiliates[doc.SecondaryAffiliate] ? "None" : affiliates[doc.SecondaryAffiliate]}</td>
 							</tr>
