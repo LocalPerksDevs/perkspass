@@ -63,6 +63,7 @@ const Dashboard = () => {
 		document.getElementById("user_tab").classList.remove("inactive");
 		document.getElementById("UserCount").classList.remove("hide");
 		document.getElementById("VendorCount").classList.add("hide");
+		document.getElementById("search").classList.add("hide");
 
 		//userZip();
 	}
@@ -76,6 +77,7 @@ const Dashboard = () => {
 		document.getElementById("user_tab").classList.add("inactive");
 		document.getElementById("UserCount").classList.add("hide");
 		document.getElementById("VendorCount").classList.remove("hide");
+		document.getElementById("search").classList.remove("hide");
 	}
 	const navigate = useNavigate();
 
@@ -84,6 +86,7 @@ const Dashboard = () => {
 	const [userCount, setUserCount] = useState(0);
 	const [vendorCount, setVendorCount] = useState(0);
 	const [vendors, setVendors] = useState([]);
+	const [vendorsCP, setVendorsCP] = useState([]);
 	const [sortColumn, setSortColumn] = useState("Name");
 	const [sortAsc, setSortAsc] = useState(true);
 
@@ -121,6 +124,7 @@ const Dashboard = () => {
 		}));
 		setVendorCount(snapshot.size + snapshot2.size);
 		setVendors([...documents, ...documents2]);
+		setVendorsCP([...documents, ...documents2]);
 	}
 
 	const getZipCount = async () => {
@@ -226,6 +230,7 @@ const Dashboard = () => {
 		}));
 		setVendorCount(snapshot.size);
 		setVendors(documents);
+		setVendorsCP([...documents]);
 	}
 
 	const getAffiliates = async () => {
@@ -379,6 +384,17 @@ const Dashboard = () => {
 		changeSortIcon(name);
 	}*/
 
+	function vendorSearch(val) {
+		if (val !== '') {
+			const filteredVendors = vendorsCP.filter(vendor => 
+				vendor.Name.toLowerCase().includes(val.toLowerCase())
+			);
+			setVendors(filteredVendors);
+		} else {
+			setVendors([...vendorsCP]);
+		}
+	}
+
 	// Wrapper to call correct sort method
 	function sort(name) {
 		if (name === sortColumn) {
@@ -463,6 +479,9 @@ const Dashboard = () => {
 				<div id="tabs" className='row'>
 					<h2 className='active' id="vend_tab" onClick={() => showVendorTable()}>Vendors</h2>
 					<h2 className='ml24 inactive' id="user_tab" onClick={() => showUserTable()}>Users</h2>
+				</div>
+				<div id="search" className='search'>
+					<input type='text' placeholder='Search by Name' onChange={(e) => vendorSearch(e.target.value)}></input>
 				</div>
 				
 			</div>

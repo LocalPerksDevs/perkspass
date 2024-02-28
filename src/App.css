@@ -623,6 +623,18 @@ div.error, input.error {
   margin-top: 24px;
 }
 
+.search {
+  position: absolute;
+  top: 70px;
+  left: 2vw;
+}
+
+.search input {
+  width: 240px;
+  height: 35px;
+  border-color: #ABABAB;
+}
+
 .sidebar i.fa-x {
   font-size: 20px;
   color: #FFFFFF;
@@ -911,7 +923,6 @@ i.fas.fa-download:hover {
     display: block;
     overflow: scroll;
     height: 80vh;
-    margin-left: 8px;
     margin-top: 24px;
     position: relative;
   }
@@ -922,7 +933,7 @@ i.fas.fa-download:hover {
   }
 
   #title {
-    padding-top: 60px;
+    padding-top: 110px;
   }
 
   .vendor-profile {
