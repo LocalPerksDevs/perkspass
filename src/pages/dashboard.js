@@ -390,8 +390,10 @@ const Dashboard = () => {
 				vendor.Name.toLowerCase().includes(val.toLowerCase())
 			);
 			setVendors(filteredVendors);
+			setVendorCount(filteredVendors.length);
 		} else {
 			setVendors([...vendorsCP]);
+			setVendorCount([...vendorsCP].length);
 		}
 	}
 
@@ -441,6 +443,40 @@ const Dashboard = () => {
 		document.getElementById(name).classList.add("fa-sort");
 	}
 
+	function allFilter() {
+		document.getElementById("all").classList.add("active");
+		document.getElementById("active").classList.remove("active");
+		document.getElementById("inactive").classList.remove("active");
+		filterVendors("all");
+	}
+
+	function activeFilter() {
+		document.getElementById("active").classList.add("active");
+		document.getElementById("inactive").classList.remove("active");
+		document.getElementById("all").classList.remove("active");
+		filterVendors(true);
+	}
+
+	function inactiveFilter() {
+		document.getElementById("active").classList.remove("active");
+		document.getElementById("inactive").classList.add("active");
+		document.getElementById("all").classList.remove("active");
+		filterVendors(false);
+	}
+
+	function filterVendors(isActive) {
+		if (isActive === "all") {
+			setVendors([...vendorsCP]);
+			setVendorCount([...vendorsCP].length);
+		} else {
+			const filteredVendors = vendorsCP.filter(vendor => 
+				vendor.Active == isActive
+			);
+			setVendors(filteredVendors);
+			setVendorCount(filteredVendors.length);
+		}
+	}
+
 	return (
 		<div>
 			<div className='topbar space'>
@@ -480,10 +516,12 @@ const Dashboard = () => {
 					<h2 className='active' id="vend_tab" onClick={() => showVendorTable()}>Vendors</h2>
 					<h2 className='ml24 inactive' id="user_tab" onClick={() => showUserTable()}>Users</h2>
 				</div>
-				<div id="search" className='search'>
+				<div id="search" className='search row'>
 					<input type='text' placeholder='Search by Name' onChange={(e) => vendorSearch(e.target.value)}></input>
+					<p className='active filtLab' id='all' onClick={() => allFilter()}>All</p>
+					<p className='filtLab' id='active' onClick={() => activeFilter()}>Active</p>
+					<p className='filtLab' id='inactive' onClick={() => inactiveFilter()}>Inactive</p>
 				</div>
-				
 			</div>
 			<div className='table user hide'>
 				<table id="userTable">

@@ -253,7 +253,7 @@ textarea {
   flex-direction: column;*/
   align-items: center;
   overflow-y: scroll;
-  height: 65vh;
+  height: 70vh;
   width: 98vw;
   position: relative;
 }
@@ -633,6 +633,32 @@ div.error, input.error {
   width: 240px;
   height: 35px;
   border-color: #ABABAB;
+  margin-bottom: 0px;
+}
+
+.search p {
+  font-size: 17px;
+  font-weight: 500;
+  color: #ABABAB;
+  cursor: pointer;
+}
+
+.search p.active {
+  color: #000000;
+}
+
+.search p:hover {
+  transform: scale(1.1);
+}
+
+.search.row {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.search.row p, .search.row input {
+  margin-right: 16px;
 }
 
 .sidebar i.fa-x {
@@ -865,6 +891,7 @@ i.fas.fa-download:hover {
   width: 98%;
 }
 
+
 @media (max-height: 786px) {
   .screenshot {
     margin-top: 6vh;
@@ -922,7 +949,7 @@ i.fas.fa-download:hover {
   .table {
     display: block;
     overflow: scroll;
-    height: 80vh;
+    height: 53vh;
     margin-top: 24px;
     position: relative;
   }
