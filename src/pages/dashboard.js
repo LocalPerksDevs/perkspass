@@ -101,7 +101,9 @@ const Dashboard = () => {
 		if (snapshot.docs[0].data().IDs.includes(auth.currentUser.uid)) {
 			getVendorsAdmin();
 			document.getElementById("add-user").classList.remove('hide');
+			document.getElementById("receipts").classList.remove('hide');
 			document.getElementById("add-user2").classList.remove('hide');
+			document.getElementById("receipts2").classList.remove('hide');
 			document.getElementById("refresh").classList.remove('hide');
 		} else {
 			getVendors();
@@ -494,6 +496,9 @@ const Dashboard = () => {
 						<NavLink to="/add-vendor">
 							<p className='link'>Add Vendor</p>
 						</NavLink>
+						<NavLink to="/receipts" className="hide" id="receipts">
+							<p className='link'>Receipts</p>
+						</NavLink>
 						<div className="profile row center" onClick={() => {document.getElementById("profile").style.visibility === "visible" ? 
 							document.getElementById("profile").style.visibility = "hidden" :
 							document.getElementById("profile").style.visibility = "visible"}}>
@@ -585,6 +590,11 @@ const Dashboard = () => {
 					<div className='link'>
 						<NavLink to="/add-vendor">
 							<p>Add Vendor</p>
+						</NavLink>
+					</div>
+					<div className='link'>
+						<NavLink to="/receipts" className="hide" id="receipts2">
+							<p>Receipts</p>
 						</NavLink>
 					</div>
 					<div className="link mt24">

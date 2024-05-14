@@ -258,9 +258,13 @@ textarea {
   position: relative;
 }
 
-.table.user {
+.table.user, .table.receipts {
   display: flex;
   flex-direction: column;
+}
+
+.table.receipts table {
+  min-width: 400px;
 }
 
 .App {
