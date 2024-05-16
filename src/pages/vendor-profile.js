@@ -302,7 +302,12 @@ const VendorProfile = () => {
                                 </div>
                                 <div className="col">
                                     <p className="label">TYPE</p>
-                                    <input name="type" className="vendor-input" defaultValue={contact.typeOfThing} onChange={handleChange}></input>
+                                    <p className="vendor-select">{contact.typeOfThing}</p>
+                                    <select name="typeOfThing" id="typeOfThing" className="vendor-input vs hide" value={contact.typeOfThing} onChange={handleChange}>
+								        <option value="Food">Food</option>
+								        <option value="Service">Service</option>
+                                        <option value="Entertainment">Entertainment</option>
+							        </select>
                                 </div>
                             </div>
                         </div>
