@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { app, db, auth } from '../firebase-config';
-import { getStorage, ref, getDownloadURL, uploadBytes } from "../../node_modules/firebase/storage";
+/*import { getStorage, ref, getDownloadURL, uploadBytes } from "../../node_modules/firebase/storage";
 import axios from '../axios';
-import firebase from "../../node_modules/firebase/compat/app";
+import firebase from "../../node_modules/firebase/compat/app";*/
 
 const Receipts = () => {
 
@@ -22,7 +22,7 @@ const Receipts = () => {
 
 	const getReceipts = async () => {
 		const snapshot = await db.collection("Receipts")/*.orderBy('verified', 'asc')*/
-		.orderBy('establishment_name').get();
+		.orderBy('created_date', 'desc').get();
 		const documents = snapshot.docs.map(doc => ({
 			id: doc.id,
 			...doc.data(),
@@ -70,6 +70,25 @@ const Receipts = () => {
 		setReceipts(updatedReceipts);
 	  };
 
+	  function yyyymmdd(date) {
+        var y = date.getFullYear().toString();
+        var m = (date.getMonth() + 1).toString();
+        var d = date.getDate().toString();
+        (d.length == 1) && (d = '0' + d);
+        (m.length == 1) && (m = '0' + m);
+        var yyyymmdd = y + "-" + m +  "-" + d;
+        return yyyymmdd;
+    }
+
+	function mmddyyyy(date) {
+        var y = date.getFullYear().toString();
+        var m = (date.getMonth() + 1).toString();
+        var d = date.getDate().toString();
+        (d.length == 1) && (d = '0' + d);
+        (m.length == 1) && (m = '0' + m);
+        return m + "/" + d + "/" + y;
+    }
+
     return (
         <div>
             <div className="topbar space">
@@ -92,18 +111,22 @@ const Receipts = () => {
 					<thead>
 						<tr>
 							<th>VENDOR NAME&nbsp;<i id="Name" className=""></i></th>
+							<th>VENDOR LOCATION</th>
+							<th>DATE RECEIVED</th>
 							<th>IMAGE</th>
 							<th>VERIFIED?</th>
 						</tr>
 					</thead>
 					<tbody>
 						{receipts.map(doc => (
-								<tr key={doc.id}>
-									<td>{doc.establishment_name}</td>
-									<td><a href={doc.url} target="_blank">Image of Receipt</a></td>
-									<td><input type="checkbox" checked={doc.verified} onChange={() => updateFirestoreDocument(doc.id, !doc.verified)}></input></td>
-								</tr>
-							))}
+							<tr key={doc.id}>
+								<td>{doc.establishment_name}</td>
+								<td>{doc.establishment_city + ', ' + doc.establishment_state}</td>
+								<td>{mmddyyyy(doc.created_date.toDate())}</td>
+								<td><a href={doc.url} target="_blank">Image of Receipt</a></td>
+								<td><input type="checkbox" checked={doc.verified} onChange={() => updateFirestoreDocument(doc.id, !doc.verified)}></input></td>
+							</tr>
+						))}
 					</tbody>
 				</table>
 			</div>
