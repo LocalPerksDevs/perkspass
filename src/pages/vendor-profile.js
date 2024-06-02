@@ -105,6 +105,8 @@ const VendorProfile = () => {
                 ContractEnds: !contact.contractEnds ? null : contact.contractEnds,
                 Disclaimer: !contact.disclaimer ? "" : contact.disclaimer.trim(),
                 Discount: !contact.discount ? "" : contact.discount.trim(),
+                discountInstructions: !contact.discountInstructions ? "Show Discount Code to Employee" : contact.discountInstructions,
+                discountInstructionsSmall: !contact.discountInstructionsSmall ? "They have a PerksPass discount button in the register." : contact.discountInstructionsSmall,
                 Fee: !contact.fee ? "" : contact.fee.trim(),
                 latLon: new firebase.firestore.GeoPoint(Number(contact.latitude), Number(contact.longitude)),
                 LogoURL: contact.logoURL,
@@ -174,6 +176,8 @@ const VendorProfile = () => {
                     contractEnds: !snapshot.data().ContractEnds ? null : yyyymmdd(snapshot.data().ContractEnds.toDate()),
                     disclaimer: !snapshot.data().Disclaimer ? "None" : snapshot.data().Disclaimer,
                     discount: snapshot.data().Discount,
+                    discountInstructions: !snapshot.data().discountInstructions ? "N/A" : snapshot.data().discountInstructions,
+                    discountInstructionsSmall: !snapshot.data().discountInstructionsSmall ? "N/A" : snapshot.data().discountInstructionsSmall,
                     fee: !snapshot.data().Fee ? "N/A" : snapshot.data().Fee,
                     latitude: snapshot.data().latLon._lat,
                     longitude: snapshot.data().latLon._long,
@@ -187,12 +191,12 @@ const VendorProfile = () => {
                     promoCode: snapshot.data().PromoCode,
                     reminderEmail: !snapshot.data().ReminderEmail ? "N/A" : snapshot.data().ReminderEmail,
                     reminderPhone: !snapshot.data().ReminderPhone ? "N/A" : snapshot.data().ReminderPhone,
+                    secondaryAffiliate: !snapshot.data().SecondaryAffiliate ? "None" : snapshot.data().SecondaryAffiliate,
                     state: snapshot.data().State,
                     termsSigned: snapshot.data().TermsSigned === true ? "Yes" : "No",
                     typeOfThing: snapshot.data().TypeOfThing,
                     website: !snapshot.data().Website ? "" : snapshot.data().Website,
-                    zip: !snapshot.data().Zip ? "N/A" : snapshot.data().Zip,
-                    secondaryAffiliate: !snapshot.data().SecondaryAffiliate ? "None" : snapshot.data().SecondaryAffiliate
+                    zip: !snapshot.data().Zip ? "N/A" : snapshot.data().Zip
                 };
             });
         }
@@ -202,8 +206,8 @@ const VendorProfile = () => {
         active: "false", address: "", affiliateID: "",
         appLaunchDate: null, category: "", city: "", contactEmail: "",
         contactName: "", contactPhone: "", contractEnds: "",
-        disclaimer: "", discount: "", fee: "", logoURL: "", 
-        name: "", notes: "", onlineOrdering: "true", posCall: "",
+        disclaimer: "", discount: "", discountInstructions: "", discountInstructionsSmall: "",
+        fee: "", logoURL: "", name: "", notes: "", onlineOrdering: "true", posCall: "",
         posName: "", posSetup: "", phone: "", promoCode: "", reminderEmail: "",
         reminderPhone: "", state: "",
         termsSigned: "", typeOfThing: "", website: "", zip: "", secondaryAffiliate: ""
@@ -440,6 +444,18 @@ const VendorProfile = () => {
                                 <div className="col">
                                     <p className="label">POS NAME</p>
                                     <input name="posName" className="vendor-input" defaultValue={contact.posName} onChange={handleChange}></input>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="row m24">
+                                <div className="col">
+                                    <p className="label">DISCOUNT INSTRUCTIONS TOP</p>
+                                    <input name="discountInstructions" className="vendor-input" defaultValue={contact.discountInstructions} onChange={handleChange}></input>
+                                </div>
+                                <div className="col">
+                                    <p className="label">DISCOUNT INSTRUCTIONS BOTTOM</p>
+                                    <input name="discountInstructionsSmall" className="vendor-input" defaultValue={contact.discountInstructionsSmall} onChange={handleChange}></input>
                                 </div>
                             </div>
                         </div>

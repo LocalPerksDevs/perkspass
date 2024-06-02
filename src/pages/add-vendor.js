@@ -122,6 +122,8 @@ const AddVendor = () => {
 			City: contact.city.trim(),
 			State: contact.state.trim(),
 			Discount: contact.discount.trim(),
+			discountInstructions: "Show Discount Code to Employee",
+			discountInstructionsSmall: "They have a PerksPass discount button in the register.",
 			Disclaimer: contact.disclaimer.trim(),
 			OnlineOrdering: contact.onlineOrdering,
 			PromoCode: "PerksPass",
