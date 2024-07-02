@@ -530,7 +530,7 @@ const AddVendor = () => {
 					<p>Before you fill out this form <b>MAKE SURE TO DO THIS:</b></p>
 					<ol>
 						<li>Fill out <a href="https://vendoragreement.paperform.co/" target="_blank">this short form.</a></li>
-						<li>Have vendor share <a href="https://forms.gle/UETkzVpXmB9BtCv59" target="_blank">this training form</a> with all employees that take payments (only if there is a discount button in register).</li>
+						<li>Have vendor share <a href="https://perkspassvendoremployeetraining.paperform.co" target="_blank">this training form</a> with all employees that take payments (only if there is a discount button in register).</li>
 					</ol>
 					<p>Once this form is submitted it will:</p>
 					<ol>
