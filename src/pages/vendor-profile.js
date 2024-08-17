@@ -105,7 +105,7 @@ const VendorProfile = () => {
                 ContractEnds: !contact.contractEnds ? null : contact.contractEnds,
                 Disclaimer: !contact.disclaimer ? "" : contact.disclaimer.trim(),
                 Discount: !contact.discount ? "" : contact.discount.trim(),
-                discountInstructions: !contact.discountInstructions ? "Show Discount Code to Employee" : contact.discountInstructions,
+                discountInstructions: !contact.discountInstructions ? "Show This Screen to an Employee" : contact.discountInstructions,
                 discountInstructionsSmall: !contact.discountInstructionsSmall ? "They have a PerksPass discount button in the register." : contact.discountInstructionsSmall,
                 Fee: !contact.fee ? "" : contact.fee.trim(),
                 latLon: new firebase.firestore.GeoPoint(Number(contact.latitude), Number(contact.longitude)),
