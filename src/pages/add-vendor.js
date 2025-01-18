@@ -7,7 +7,7 @@ import firebase from "../../node_modules/firebase/compat/app";
 
 const AddVendor = () => {
 
-	const title = "Local Perks Vendor Onboarding Form";
+	const title = "Perks Pass Vendor Onboarding Form";
 
 	useEffect(() => {
 		if (!auth.currentUser) {
@@ -29,7 +29,8 @@ const AddVendor = () => {
 		phone: "", promoCode: "", state: "", zip: "", appLaunchDate: "",
 		typeOfThing: "Food", website: "", contractEnds: "", disclaimer: "",
 		contactName: "", contactEmail: "", contactNumber: "",
-		fee: "", terms: "true", notes: "", posName: "", secondaryAffiliate: ""
+		fee: "", terms: "true", notes: "", posName: "", secondaryAffiliate: "",
+		goldpass: ""
 	});
 
 	const [affiliates, setAffiliates] = useState({});
@@ -114,6 +115,7 @@ const AddVendor = () => {
 
 
 		db.collection("Establishments").add({
+			Goldpass: contact.goldpass,
 			Name: contact.name.trim(),
 			Phone: contact.phone,
 			Address: contact.address.trim(),
@@ -537,6 +539,16 @@ const AddVendor = () => {
 						<li>Send the e-signature vendor agreement to your email for you to sign first and then to theirs, with the custom fields from the form.</li>
 						<li>Send an email to the vendor requesting the creation of a promotional code in their Point of Sale (POS) system, include our <a href="https://qx78hjqq.paperform.co/" target="_blank">POS form</a> for completion and provide them with clear instructions on when and where to send the monthly report.</li>
 					</ol>
+				</div>
+				<div className="form" id="goldpass-form">
+					<div className="col center">
+						<label htmlFor="goldpass" className="mt24 label">For Perks Pass or Gold Pass?</label>
+							<select name="goldpass" id="goldpass" value={contact.goldpass} onChange={handleChange}>
+								<option value="PerksPass" id="PerksPass">PerksPass Only</option>
+								<option value="GoldPass" id="GoldPass">GoldPass Only</option>
+								<option value="Both" id="Both">Both</option>
+							</select>
+					</div>
 				</div>
 				<div className='logoForm' id="logo-form">
 					<div className='col center'>

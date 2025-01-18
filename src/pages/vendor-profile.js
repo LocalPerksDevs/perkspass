@@ -108,6 +108,7 @@ const VendorProfile = () => {
                 discountInstructions: !contact.discountInstructions ? "Show This Screen to an Employee" : contact.discountInstructions,
                 discountInstructionsSmall: !contact.discountInstructionsSmall ? "They have a PerksPass discount button in the register." : contact.discountInstructionsSmall,
                 Fee: !contact.fee ? "" : contact.fee.trim(),
+                Goldpass: !contact.goldpass ? "" : contact.goldpass.trim(),
                 latLon: new firebase.firestore.GeoPoint(Number(contact.latitude), Number(contact.longitude)),
                 LogoURL: contact.logoURL,
                 Name: !contact.name ? "" : contact.name.trim(),
@@ -179,6 +180,7 @@ const VendorProfile = () => {
                     discountInstructions: !snapshot.data().discountInstructions ? "N/A" : snapshot.data().discountInstructions,
                     discountInstructionsSmall: !snapshot.data().discountInstructionsSmall ? "N/A" : snapshot.data().discountInstructionsSmall,
                     fee: !snapshot.data().Fee ? "N/A" : snapshot.data().Fee,
+                    goldpass: snapshot.data().Goldpass,
                     latitude: snapshot.data().latLon._lat,
                     longitude: snapshot.data().latLon._long,
                     logoURL: snapshot.data().LogoURL,
@@ -210,7 +212,8 @@ const VendorProfile = () => {
         fee: "", logoURL: "", name: "", notes: "", onlineOrdering: "true", posCall: "",
         posName: "", posSetup: "", phone: "", promoCode: "", reminderEmail: "",
         reminderPhone: "", state: "",
-        termsSigned: "", typeOfThing: "", website: "", zip: "", secondaryAffiliate: ""
+        termsSigned: "", typeOfThing: "", website: "", zip: "", secondaryAffiliate: "",
+        goldpass: ""
     });
 
     const handleChange = (event) => {
@@ -290,8 +293,13 @@ const VendorProfile = () => {
                         </div>
                         <div className="row m24">
                             <div className="col">
-                                <p className="label">CATEGORY</p>
-                                <input name="category" className="vendor-input" defaultValue={contact.category} onChange={handleChange}></input>
+                                <p className="label">PERKS PASS OR GOLD PASS?</p>
+                                <p className="vendor-select">{contact.goldpass}</p>
+                                <select name="goldpass" id="goldpass" className="vendor-input vs hide" value={contact.goldpass} onChange={handleChange}>
+                                    <option value="PerksPass" id="PerksPass">PerksPass Only</option>
+                                    <option value="GoldPass" id="GoldPass">GoldPass Only</option>
+                                    <option value="Both" id="Both">Both</option>
+                                </select>
                             </div>
                             <div className="col">
                                 <p className="label">ADDRESS</p>
@@ -434,12 +442,8 @@ const VendorProfile = () => {
                         <div className="col">
                             <div className="row m24">
                                 <div className="col">
-                                    <p className="label">TERMS SIGNED?</p>
-                                    <p className="vendor-select">{contact.termsSigned}</p>
-                                    <select name="termsSigned" id="termsSigned" className="vendor-input vs hide" value={contact.termsSigned} onChange={handleChange}>
-								        <option value="Yes">Yes</option>
-								        <option value="No">No</option>
-							        </select>
+                                    <p className="label">CATEGORY</p>
+                                    <input name="category" className="vendor-input" defaultValue={contact.category} onChange={handleChange}></input>
                                 </div>
                                 <div className="col">
                                     <p className="label">POS NAME</p>
@@ -472,7 +476,14 @@ const VendorProfile = () => {
 							        </select>
                                 </div>
                                 <div className="col">
-                                    &nbsp;
+                                    <div className="col">
+                                        <p className="label">TERMS SIGNED?</p>
+                                        <p className="vendor-select">{contact.termsSigned}</p>
+                                        <select name="termsSigned" id="termsSigned" className="vendor-input vs hide" value={contact.termsSigned} onChange={handleChange}>
+								            <option value="Yes">Yes</option>
+								            <option value="No">No</option>
+							            </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -542,7 +542,7 @@ div.error, input.error {
   padding-inline-start: 16px;
 }
 
-.logoForm, .lat-lon-form {
+.logoForm, .lat-lon-form, #goldpass-form {
   margin-bottom: 40px;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
