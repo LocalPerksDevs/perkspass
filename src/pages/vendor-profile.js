@@ -47,6 +47,18 @@ const VendorProfile = () => {
         document.getElementById("logo").classList.remove('hide');
     }
 
+    /*const updateGoldpassField = async () => {
+        db.collection("Establishments").get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                doc.ref.update({Goldpass: "PerksPass"});
+            });
+        })
+        .catch((error) => {
+            console.log("ERROR getting documents: ", error);
+        });    
+    }*/
+
     const getAffiliates = async () => {
 		const snapshot = await db.collection("Affiliates").get();
 		const a = {};
