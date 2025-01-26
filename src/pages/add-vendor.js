@@ -30,7 +30,10 @@ const AddVendor = () => {
 		typeOfThing: "Food", website: "", contractEnds: "", disclaimer: "",
 		contactName: "", contactEmail: "", contactNumber: "",
 		fee: "", terms: "true", notes: "", posName: "", secondaryAffiliate: "",
-		goldpass: ""
+		goldpass: "", locations: 1, deal_1_name: "", deal_1_desc: "",
+		deal_1_value: "", deal_2_name: "", deal_2_desc: "", deal_2_value: "",
+		deal_3_name: "", deal_3_desc: "", deal_3_value: "", deal_4_name: "",
+		deal_4_desc: "", deal_4_value: ""
 	});
 
 	const [affiliates, setAffiliates] = useState({});
@@ -115,6 +118,19 @@ const AddVendor = () => {
 
 
 		db.collection("Establishments").add({
+			Deal_1_Name: contact.deal_1_name.trim(),
+			Deal_1_Desc: contact.deal_1_desc.trim(),
+			Deal_1_Value: contact.deal_1_value.trim(),
+			Deal_2_Name: contact.deal_1_name.trim(),
+			Deal_2_Desc: contact.deal_1_desc.trim(),
+			Deal_2_Value: contact.deal_1_value.trim(),
+			Deal_3_Name: contact.deal_1_name.trim(),
+			Deal_3_Desc: contact.deal_1_desc.trim(),
+			Deal_3_Value: contact.deal_1_value.trim(),
+			Deal_4_Name: contact.deal_1_name.trim(),
+			Deal_4_Desc: contact.deal_1_desc.trim(),
+			Deal_4_Value: contact.deal_1_value.trim(),
+			Locations: contact.locations,
 			Goldpass: contact.goldpass,
 			Name: contact.name.trim(),
 			Phone: contact.phone,
@@ -179,16 +195,44 @@ const AddVendor = () => {
 
 
 	function ClearInputs() {
+		contact.deal_1_name = '';
+		document.getElementsByName("deal_1_name")[0].value = "";
+		contact.deal_1_desc = '';
+		document.getElementsByName("deal_1_desc")[0].value = "";
+		contact.deal_1_value = '';
+		document.getElementsByName("deal_1_value")[0].value = "";
+		contact.deal_2_name = '';
+		document.getElementsByName("deal_2_name")[0].value = "";
+		contact.deal_2_desc = '';
+		document.getElementsByName("deal_2_desc")[0].value = "";
+		contact.deal_2_value = '';
+		document.getElementsByName("deal_2_value")[0].value = "";
+		contact.deal_3_name = '';
+		document.getElementsByName("deal_3_name")[0].value = "";
+		contact.deal_3_desc = '';
+		document.getElementsByName("deal_3_desc")[0].value = "";
+		contact.deal_3_value = '';
+		document.getElementsByName("deal_3_value")[0].value = "";
+		contact.deal_4_name = '';
+		document.getElementsByName("deal_4_name")[0].value = "";
+		contact.deal_4_desc = '';
+		document.getElementsByName("deal_4_desc")[0].value = "";
+		contact.deal_4_value = '';
+		document.getElementsByName("deal_4_value")[0].value = "";
 		contact.name = '';
 		document.getElementsByName("name")[0].value = "";
 		contact.phone = '';
 		document.getElementsByName("phone")[0].value = "";
 		contact.address = '';
+		document.getElementsByName("locations")[0].value = 1;
+		contact.locations = 1;
 		document.getElementsByName("address")[0].value = "";
 		contact.category = '';
 		document.getElementsByName("category")[0].value = "";
 		contact.typeOfThing = 'Food';
 		document.getElementsByName("typeOfThing")[0].value = "Food";
+		contact.goldpass = 'PerksPass';
+		document.getElementsByName("goldpass")[0].value = "PerksPass";
 		contact.city = '';
 		document.getElementsByName("city")[0].value = "";
 		contact.state = '';
@@ -543,11 +587,37 @@ const AddVendor = () => {
 				<div className="form" id="goldpass-form">
 					<div className="col center">
 						<label htmlFor="goldpass" className="mt24 label">For Perks Pass or Gold Pass?</label>
-							<select name="goldpass" id="goldpass" value={contact.goldpass} onChange={handleChange}>
-								<option value="PerksPass" id="PerksPass">PerksPass Only</option>
-								<option value="GoldPass" id="GoldPass">GoldPass Only</option>
-								<option value="Both" id="Both">Both</option>
-							</select>
+						<select name="goldpass" id="goldpass" value={contact.goldpass} onChange={handleChange}>
+							<option value="PerksPass" id="PerksPass">PerksPass Only</option>
+							<option value="GoldPass" id="GoldPass">GoldPass Only</option>
+							<option value="Both" id="Both">Both</option>
+						</select>
+						<p className="label">Number of Locations</p>
+						<input type="number" className="mb0" name="locations" value={contact.locations} onChange={handleChange} min="1"></input>
+						<p className="label">Deal 1 Name</p>
+						<input type="text" placeholder="Deal 1 Name" name="deal_1_name" value={contact.deal_1_name} onChange={handleChange}></input>
+						<p className="label">Deal 1 Description</p>
+						<input type="text" placeholder="Deal 1 Description" name="deal_1_desc" value={contact.deal_1_desc} onChange={handleChange}></input>
+						<p className="label">Deal 1 Value</p>
+						<input type="text" placeholder="Deal 1 Value" name="deal_1_value" value={contact.deal_1_value} onChange={handleChange}></input>
+						<p className="label">Deal 2 Name</p>
+						<input type="text" placeholder="Deal 2 Name" name="deal_2_name" value={contact.deal_2_name} onChange={handleChange}></input>
+						<p className="label">Deal 2 Description</p>
+						<input type="text" placeholder="Deal 2 Description" name="deal_2_desc" value={contact.deal_2_desc} onChange={handleChange}></input>
+						<p className="label">Deal 2 Value</p>
+						<input type="text" placeholder="Deal 2 Value" name="deal_2_value" value={contact.deal_2_value} onChange={handleChange}></input>
+						<p className="label">Deal 3 Name</p>
+						<input type="text" placeholder="Deal 3 Name" name="deal_3_name" value={contact.deal_3_name} onChange={handleChange}></input>
+						<p className="label">Deal 3 Description</p>
+						<input type="text" placeholder="Deal 3 Description" name="deal_3_desc" value={contact.deal_3_desc} onChange={handleChange}></input>
+						<p className="label">Deal 3 Value</p>
+						<input type="text" placeholder="Deal 3 Value" name="deal_3_value" value={contact.deal_3_value} onChange={handleChange}></input>
+						<p className="label">Deal 4 Name</p>
+						<input type="text" placeholder="Deal 4 Name" name="deal_4_name" value={contact.deal_4_name} onChange={handleChange}></input>
+						<p className="label">Deal 4 Description</p>
+						<input type="text" placeholder="Deal 4 Description" name="deal_4_desc" value={contact.deal_4_desc} onChange={handleChange}></input>
+						<p className="label">Deal 4 Value</p>
+						<input type="text" placeholder="Deal 4 Value" name="deal_4_value" value={contact.deal_4_value} onChange={handleChange}></input>
 					</div>
 				</div>
 				<div className='logoForm' id="logo-form">
