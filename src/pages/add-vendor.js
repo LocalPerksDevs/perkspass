@@ -30,7 +30,7 @@ const AddVendor = () => {
 		typeOfThing: "Food", website: "", contractEnds: "", disclaimer: "",
 		contactName: "", contactEmail: "", contactNumber: "",
 		fee: "", terms: "true", notes: "", posName: "", secondaryAffiliate: "",
-		goldpass: "", locations: 1, deal_1_name: "", deal_1_desc: "",
+		goldpass: "", deal_1_name: "", deal_1_desc: "",
 		deal_1_value: "", deal_2_name: "", deal_2_desc: "", deal_2_value: "",
 		deal_3_name: "", deal_3_desc: "", deal_3_value: "", deal_4_name: "",
 		deal_4_desc: "", deal_4_value: ""
@@ -50,6 +50,16 @@ const AddVendor = () => {
 	let response = null;
 
 	const storage = getStorage(app);
+
+	const goldpass = (event) => {
+		if (document.getElementById("goldpass").value == "PerksPass") {
+			document.getElementById("goldpass_deals").classList.add("hidden");
+		} else {
+			document.getElementById("goldpass_deals").classList.remove("hidden");
+		}
+		
+		handleChange(event);
+	}
 
 	const handleChange = (event) => {
 		event.preventDefault();
@@ -130,7 +140,6 @@ const AddVendor = () => {
 			Deal_4_Name: contact.deal_1_name.trim(),
 			Deal_4_Desc: contact.deal_1_desc.trim(),
 			Deal_4_Value: contact.deal_1_value.trim(),
-			Locations: contact.locations,
 			Goldpass: contact.goldpass,
 			Name: contact.name.trim(),
 			Phone: contact.phone,
@@ -224,8 +233,6 @@ const AddVendor = () => {
 		contact.phone = '';
 		document.getElementsByName("phone")[0].value = "";
 		contact.address = '';
-		document.getElementsByName("locations")[0].value = 1;
-		contact.locations = 1;
 		document.getElementsByName("address")[0].value = "";
 		contact.category = '';
 		document.getElementsByName("category")[0].value = "";
@@ -587,37 +594,37 @@ const AddVendor = () => {
 				<div className="form" id="goldpass-form">
 					<div className="col center">
 						<label htmlFor="goldpass" className="mt24 label">For Perks Pass or Gold Pass?</label>
-						<select name="goldpass" id="goldpass" value={contact.goldpass} onChange={handleChange}>
+						<select name="goldpass" id="goldpass" value={contact.goldpass} onChange={goldpass}>
 							<option value="PerksPass" id="PerksPass">PerksPass Only</option>
 							<option value="GoldPass" id="GoldPass">GoldPass Only</option>
 							<option value="Both" id="Both">Both</option>
 						</select>
-						<p className="label">Number of Locations</p>
-						<input type="number" className="mb0" name="locations" value={contact.locations} onChange={handleChange} min="1"></input>
-						<p className="label">Deal 1 Name</p>
-						<input type="text" placeholder="Deal 1 Name" name="deal_1_name" value={contact.deal_1_name} onChange={handleChange}></input>
-						<p className="label">Deal 1 Description</p>
-						<input type="text" placeholder="Deal 1 Description" name="deal_1_desc" value={contact.deal_1_desc} onChange={handleChange}></input>
-						<p className="label">Deal 1 Value</p>
-						<input type="text" placeholder="Deal 1 Value" name="deal_1_value" value={contact.deal_1_value} onChange={handleChange}></input>
-						<p className="label">Deal 2 Name</p>
-						<input type="text" placeholder="Deal 2 Name" name="deal_2_name" value={contact.deal_2_name} onChange={handleChange}></input>
-						<p className="label">Deal 2 Description</p>
-						<input type="text" placeholder="Deal 2 Description" name="deal_2_desc" value={contact.deal_2_desc} onChange={handleChange}></input>
-						<p className="label">Deal 2 Value</p>
-						<input type="text" placeholder="Deal 2 Value" name="deal_2_value" value={contact.deal_2_value} onChange={handleChange}></input>
-						<p className="label">Deal 3 Name</p>
-						<input type="text" placeholder="Deal 3 Name" name="deal_3_name" value={contact.deal_3_name} onChange={handleChange}></input>
-						<p className="label">Deal 3 Description</p>
-						<input type="text" placeholder="Deal 3 Description" name="deal_3_desc" value={contact.deal_3_desc} onChange={handleChange}></input>
-						<p className="label">Deal 3 Value</p>
-						<input type="text" placeholder="Deal 3 Value" name="deal_3_value" value={contact.deal_3_value} onChange={handleChange}></input>
-						<p className="label">Deal 4 Name</p>
-						<input type="text" placeholder="Deal 4 Name" name="deal_4_name" value={contact.deal_4_name} onChange={handleChange}></input>
-						<p className="label">Deal 4 Description</p>
-						<input type="text" placeholder="Deal 4 Description" name="deal_4_desc" value={contact.deal_4_desc} onChange={handleChange}></input>
-						<p className="label">Deal 4 Value</p>
-						<input type="text" placeholder="Deal 4 Value" name="deal_4_value" value={contact.deal_4_value} onChange={handleChange}></input>
+						<div id="goldpass_deals" className="hidden">
+							<p className="label">Deal 1 Name</p>
+							<input type="text" placeholder="Deal 1 Name" name="deal_1_name" value={contact.deal_1_name} onChange={handleChange}></input>
+							<p className="label">Deal 1 Description</p>
+							<input type="text" placeholder="Deal 1 Description" name="deal_1_desc" value={contact.deal_1_desc} onChange={handleChange}></input>
+							<p className="label">Deal 1 Value</p>
+							<input type="text" placeholder="Deal 1 Value" name="deal_1_value" value={contact.deal_1_value} onChange={handleChange}></input>
+							<p className="label">Deal 2 Name</p>
+							<input type="text" placeholder="Deal 2 Name" name="deal_2_name" value={contact.deal_2_name} onChange={handleChange}></input>
+							<p className="label">Deal 2 Description</p>
+							<input type="text" placeholder="Deal 2 Description" name="deal_2_desc" value={contact.deal_2_desc} onChange={handleChange}></input>
+							<p className="label">Deal 2 Value</p>
+							<input type="text" placeholder="Deal 2 Value" name="deal_2_value" value={contact.deal_2_value} onChange={handleChange}></input>
+							<p className="label">Deal 3 Name</p>
+							<input type="text" placeholder="Deal 3 Name" name="deal_3_name" value={contact.deal_3_name} onChange={handleChange}></input>
+							<p className="label">Deal 3 Description</p>
+							<input type="text" placeholder="Deal 3 Description" name="deal_3_desc" value={contact.deal_3_desc} onChange={handleChange}></input>
+							<p className="label">Deal 3 Value</p>
+							<input type="text" placeholder="Deal 3 Value" name="deal_3_value" value={contact.deal_3_value} onChange={handleChange}></input>
+							<p className="label">Deal 4 Name</p>
+							<input type="text" placeholder="Deal 4 Name" name="deal_4_name" value={contact.deal_4_name} onChange={handleChange}></input>
+							<p className="label">Deal 4 Description</p>
+							<input type="text" placeholder="Deal 4 Description" name="deal_4_desc" value={contact.deal_4_desc} onChange={handleChange}></input>
+							<p className="label">Deal 4 Value</p>
+							<input type="text" placeholder="Deal 4 Value" name="deal_4_value" value={contact.deal_4_value} onChange={handleChange}></input>
+						</div>
 					</div>
 				</div>
 				<div className='logoForm' id="logo-form">

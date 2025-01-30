@@ -451,6 +451,7 @@ div.error, input.error {
 
 .hidden {
   visibility: hidden;
+  display: none;
 }
 
 .vendor-profile select.vendor-input.update.disabled {
@@ -803,6 +804,11 @@ i.fas.fa-download {
 
 i.fas.fa-download:hover {
   scale: 1.2;
+}
+
+#goldpass_deals {
+  width: 100%;
+  text-align: center;
 }
 
 #logo-img {
