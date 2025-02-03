@@ -115,6 +115,18 @@ const VendorProfile = () => {
                 ContactName: !contact.contactName ? "" : contact.contactName.trim(),
                 ContactPhone: !contact.contactPhone ? "" : contact.contactPhone.trim(),
                 ContractEnds: !contact.contractEnds ? null : contact.contractEnds,
+                Deal_1_Name: !contact.deal_1_name ? "" : contact.deal_1_name.trim(),
+                Deal_1_Desc: !contact.deal_1_desc ? "" : contact.deal_1_desc.trim(),
+                Deal_1_Value: !contact.deal_1_value ? "" : contact.deal_1_value.trim(),
+                Deal_2_Name: !contact.deal_2_name ? "" : contact.deal_2_name.trim(),
+                Deal_2_Desc: !contact.deal_2_desc ? "" : contact.deal_2_desc.trim(),
+                Deal_2_Value: !contact.deal_2_value ? "" : contact.deal_2_value.trim(),
+                Deal_3_Name: !contact.deal_3_name ? "" : contact.deal_3_name.trim(),
+                Deal_3_Desc: !contact.deal_3_desc ? "" : contact.deal_3_desc.trim(),
+                Deal_3_Value: !contact.deal_3_value ? "" : contact.deal_3_value.trim(),
+                Deal_4_Name: !contact.deal_4_name ? "" : contact.deal_4_name.trim(),
+                Deal_4_Desc: !contact.deal_4_desc ? "" : contact.deal_4_desc.trim(),
+                Deal_4_Value: !contact.deal_4_value ? "" : contact.deal_4_value.trim(),
                 Disclaimer: !contact.disclaimer ? "" : contact.disclaimer.trim(),
                 Discount: !contact.discount ? "" : contact.discount.trim(),
                 discountInstructions: !contact.discountInstructions ? "Show This Screen to an Employee" : contact.discountInstructions,
@@ -187,6 +199,18 @@ const VendorProfile = () => {
                     contactName: !snapshot.data().ContactName ? "N/A" : snapshot.data().ContactName,
                     contactPhone: !snapshot.data().ContactPhone ? "N/A" : snapshot.data().ContactPhone,
                     contractEnds: !snapshot.data().ContractEnds ? null : yyyymmdd(snapshot.data().ContractEnds.toDate()),
+                    deal_1_name: !snapshot.data().Deal_1_Name ? "N/A" : snapshot.data().Deal_1_Name,
+                    deal_1_desc: !snapshot.data().Deal_1_Desc ? "N/A" : snapshot.data().Deal_1_Desc,
+                    deal_1_value: !snapshot.data().Deal_1_Value ? "N/A" : snapshot.data().Deal_1_Value,
+                    deal_2_name: !snapshot.data().Deal_2_Name ? "N/A" : snapshot.data().Deal_2_Name,
+                    deal_2_desc: !snapshot.data().Deal_2_Desc ? "N/A" : snapshot.data().Deal_2_Desc,
+                    deal_2_value: !snapshot.data().Deal_2_Value ? "N/A" : snapshot.data().Deal_2_Value,
+                    deal_3_name: !snapshot.data().Deal_3_Name ? "N/A" : snapshot.data().Deal_3_Name,
+                    deal_3_desc: !snapshot.data().Deal_3_Desc ? "N/A" : snapshot.data().Deal_3_Desc,
+                    deal_3_value: !snapshot.data().Deal_3_Value ? "N/A" : snapshot.data().Deal_3_Value,
+                    deal_4_name: !snapshot.data().Deal_4_Name ? "N/A" : snapshot.data().Deal_4_Name,
+                    deal_4_desc: !snapshot.data().Deal_4_Desc ? "N/A" : snapshot.data().Deal_4_Desc,
+                    deal_4_value: !snapshot.data().Deal_4_Value ? "N/A" : snapshot.data().Deal_4_Value,
                     disclaimer: !snapshot.data().Disclaimer ? "None" : snapshot.data().Disclaimer,
                     discount: snapshot.data().Discount,
                     discountInstructions: !snapshot.data().discountInstructions ? "N/A" : snapshot.data().discountInstructions,
@@ -219,7 +243,10 @@ const VendorProfile = () => {
     const [contact, setContact] = useState({
         active: "false", address: "", affiliateID: "",
         appLaunchDate: null, category: "", city: "", contactEmail: "",
-        contactName: "", contactPhone: "", contractEnds: "",
+        contactName: "", contactPhone: "", contractEnds: "", deal_1_name: "",
+        deal_1_desc: "", deal_1_value: "", deal_2_name: "", deal_2_desc: "",
+        deal_2_value: "", deal_3_name: "", deal_3_desc: "", deal_3_value: "",
+        deal_4_name: "", deal_4_desc: "", deal_4_value: "",
         disclaimer: "", discount: "", discountInstructions: "", discountInstructionsSmall: "",
         fee: "", logoURL: "", name: "", notes: "", onlineOrdering: "true", posCall: "",
         posName: "", posSetup: "", phone: "", promoCode: "", reminderEmail: "",
@@ -504,6 +531,85 @@ const VendorProfile = () => {
                                 <div className="col">
                                     <p className="label">DISCLAIMER</p>
                                     <textarea name="disclaimer"  rows="5" cols="25" className="vendor-input" defaultValue={contact.disclaimer} onChange={handleChange}></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="row m24">
+                                <div className="col">
+                                    <p className="label gold-pass-deals">GOLD PASS DEALS</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="row m24">
+                                <div className="col">
+                                    <p className="label">DEAL 1 NAME</p>
+                                    <input name="deal_1_name" className="vendor-input" value={contact.deal_1_name} onChange={handleChange}></input>
+                                </div>
+                                <div className="col">
+                                    <p className="label">DEAL 1 DESCRIPTION</p>
+                                    <input name="deal_1_desc" className="vendor-input" value={contact.deal_1_desc} onChange={handleChange}></input>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="row m24">
+                                <div className="col">
+                                    <p className="label">DEAL 1 VALUE</p>
+                                    <input name="deal_1_value" className="vendor-input" value={contact.deal_1_value} onChange={handleChange}></input>
+                                </div>
+                                <div className="col">
+                                    <p className="label">DEAL 2 NAME</p>
+                                    <input name="deal_2_name" className="vendor-input" value={contact.deal_2_name} onChange={handleChange}></input>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="row m24">
+                                <div className="col">
+                                    <p className="label">DEAL 2 DESCRIPTION</p>
+                                    <input name="deal_2_desc" className="vendor-input" value={contact.deal_2_desc} onChange={handleChange}></input>
+                                </div>
+                                <div className="col">
+                                    <p className="label">DEAL 2 VALUE</p>
+                                    <input name="deal_2_value" className="vendor-input" value={contact.deal_2_value} onChange={handleChange}></input>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="row m24">
+                                <div className="col">
+                                    <p className="label">DEAL 3 NAME</p>
+                                    <input name="deal_3_name" className="vendor-input" value={contact.deal_3_name} onChange={handleChange}></input>
+                                </div>
+                                <div className="col">
+                                    <p className="label">DEAL 3 DESCRIPTION</p>
+                                    <input name="deal_3_desc" className="vendor-input" value={contact.deal_3_desc} onChange={handleChange}></input>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="row m24">
+                                <div className="col">
+                                    <p className="label">DEAL 3 VALUE</p>
+                                    <input name="deal_3_value" className="vendor-input" value={contact.deal_3_value} onChange={handleChange}></input>
+                                </div>
+                                <div className="col">
+                                    <p className="label">DEAL 4 NAME</p>
+                                    <input name="deal_4_name" className="vendor-input" value={contact.deal_4_name} onChange={handleChange}></input>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="row m24">
+                                <div className="col">
+                                    <p className="label">DEAL 4 DESCRIPTION</p>
+                                    <input name="deal_4_desc" className="vendor-input" value={contact.deal_4_desc} onChange={handleChange}></input>
+                                </div>
+                                <div className="col">
+                                    <p className="label">DEAL 4 VALUE</p>
+                                    <input name="deal_4_value" className="vendor-input" value={contact.deal_4_value} onChange={handleChange}></input>
                                 </div>
                             </div>
                         </div>
