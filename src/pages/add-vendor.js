@@ -4,16 +4,29 @@ import { app, db, auth } from '../firebase-config';
 import { getStorage, ref, getDownloadURL, uploadBytes } from "../../node_modules/firebase/storage";
 import axios from '../axios';
 import firebase from "../../node_modules/firebase/compat/app";
+import GoldPassSum from "../components/GoldpassSum.js";
 
 const AddVendor = () => {
 
 	const title = "Perks Pass Vendor Onboarding Form";
+	const [sum, setSum] = useState(null);
+	const [goldpassSumInstance, setGoldpassSumInstance] = useState(null);
 
 	useEffect(() => {
 		if (!auth.currentUser) {
 			navigate("/sign-in");
 		} else {
 			getAffiliates();
+			const instance = new GoldPassSum(db);
+			setGoldpassSumInstance(instance);
+
+			const fetchSum = async () => {
+				const fetchedSum = await instance.getSum();
+				if (fetchedSum !== null) {
+					setSum(fetchedSum);
+				}
+			};
+			fetchSum();
 		}
 	}, []);
 
