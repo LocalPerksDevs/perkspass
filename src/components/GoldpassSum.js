@@ -2,6 +2,7 @@
 //import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 const sumID = "KX2KzdXXujVlGPcXET8V";
+let sum = 0;
 
 class GoldpassSum {
 
@@ -14,7 +15,8 @@ class GoldpassSum {
             const snapshot = await this.db.collection('GoldpassSum').doc(sumID).get();
 
             if (snapshot.exists) {
-                console.log("Sum: ", snapshot.data().Sum);
+                sum = snapshot.data().Sum;
+                console.log("Sum: ", sum);
                 return snapshot.data().Sum;
             } else {
                 console.error("Error: Document not found");
@@ -24,6 +26,26 @@ class GoldpassSum {
             console.error("Error fetching sum:", error);
             return null;
         }
+    }
+
+    async updateSum(amount) {
+        const snapshot = await this.db.collection('GoldpassSum').doc(sumID);
+
+        try {
+            snapshot.update({
+                Sum: amount
+            });
+        } catch (error) {
+            console.error('Error updating sum: ', error);
+        }
+    }
+
+    async calcNewSum(oldAmount, newAmount) {
+        await this.getSum();
+        let change = newAmount - oldAmount;
+        let newSum = sum + change;
+        await this.updateSum(newSum);
+        //console.log("Sum is now: " + sum);
     }
 }
 

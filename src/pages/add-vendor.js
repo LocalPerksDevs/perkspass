@@ -19,14 +19,6 @@ const AddVendor = () => {
 			getAffiliates();
 			const instance = new GoldPassSum(db);
 			setGoldpassSumInstance(instance);
-
-			const fetchSum = async () => {
-				const fetchedSum = await instance.getSum();
-				if (fetchedSum !== null) {
-					setSum(fetchedSum);
-				}
-			};
-			fetchSum();
 		}
 	}, []);
 
@@ -44,9 +36,9 @@ const AddVendor = () => {
 		contactName: "", contactEmail: "", contactNumber: "",
 		fee: "", terms: "true", notes: "", posName: "", secondaryAffiliate: "",
 		goldpass: "", deal_1_name: "", deal_1_desc: "",
-		deal_1_value: "", deal_2_name: "", deal_2_desc: "", deal_2_value: "",
-		deal_3_name: "", deal_3_desc: "", deal_3_value: "", deal_4_name: "",
-		deal_4_desc: "", deal_4_value: ""
+		deal_1_value: 0, deal_2_name: "", deal_2_desc: "", deal_2_value: 0,
+		deal_3_name: "", deal_3_desc: "", deal_3_value: 0, deal_4_name: "",
+		deal_4_desc: "", deal_4_value: 0
 	});
 
 	const [affiliates, setAffiliates] = useState({});
@@ -76,10 +68,54 @@ const AddVendor = () => {
 
 	const handleChange = (event) => {
 		event.preventDefault();
-		const { name, value } = event.target;
+		const { name, value, type } = event.target;
+
+		let newValue = value;
+
+		if (type === "number") {
+			newValue = parseFloat(value) || 0;
+			newValue = roundToTwoDecimals(newValue);
+		}
+
 		setContact((prev) => {
-			return { ...prev, [name]: value };
+			return { ...prev, [name]: newValue };
 		});
+	}
+
+	async function updateSum() {
+
+		const currentSum = await goldpassSumInstance.getSum();
+		setSum(currentSum);
+
+		let newSum = currentSum;
+
+		if (contact.deal_1_value > 0) {
+			newSum += contact.deal_1_value;
+			setSum(newSum);
+		}
+
+		if (contact.deal_2_value > 0) {
+			newSum += contact.deal_2_value;
+			setSum(newSum);
+		}
+
+		if (contact.deal_3_value > 0) {
+			newSum += contact.deal_3_value;
+			setSum(newSum);
+		}
+
+		if (contact.deal_4_value > 0) {
+			newSum += contact.deal_4_value;
+			setSum(newSum);
+		}
+
+		if (newSum > currentSum) {
+			await goldpassSumInstance.updateSum(newSum);
+		}
+	}
+
+	function roundToTwoDecimals(num) {
+		return Math.round(num * 100) / 100;
 	}
 
 	const getAffiliates = async () => {
@@ -139,20 +175,22 @@ const AddVendor = () => {
 		LON = parseFloat(pa.innerText.substring(pa.innerText.lastIndexOf(' ')));
 		latLong = new firebase.firestore.GeoPoint(Number(LAT), Number(LON));
 
+		// CALCULATE NEW GOLDPASS SUM
+		updateSum();
 
 		db.collection("Establishments").add({
 			Deal_1_Name: contact.deal_1_name.trim(),
 			Deal_1_Desc: contact.deal_1_desc.trim(),
-			Deal_1_Value: contact.deal_1_value.trim(),
-			Deal_2_Name: contact.deal_1_name.trim(),
-			Deal_2_Desc: contact.deal_1_desc.trim(),
-			Deal_2_Value: contact.deal_1_value.trim(),
-			Deal_3_Name: contact.deal_1_name.trim(),
-			Deal_3_Desc: contact.deal_1_desc.trim(),
-			Deal_3_Value: contact.deal_1_value.trim(),
-			Deal_4_Name: contact.deal_1_name.trim(),
-			Deal_4_Desc: contact.deal_1_desc.trim(),
-			Deal_4_Value: contact.deal_1_value.trim(),
+			Deal_1_Value: contact.deal_1_value > 0 ? contact.deal_1_value : "",
+			Deal_2_Name: contact.deal_2_name.trim(),
+			Deal_2_Desc: contact.deal_2_desc.trim(),
+			Deal_2_Value: contact.deal_2_value > 0 ? contact.deal_2_value : "",
+			Deal_3_Name: contact.deal_3_name.trim(),
+			Deal_3_Desc: contact.deal_3_desc.trim(),
+			Deal_3_Value: contact.deal_3_value > 0 ? contact.deal_3_value : "",
+			Deal_4_Name: contact.deal_4_name.trim(),
+			Deal_4_Desc: contact.deal_4_desc.trim(),
+			Deal_4_Value: contact.deal_4_value > 0 ? contact.deal_4_value : "",
 			Goldpass: contact.goldpass,
 			Name: contact.name.trim(),
 			Phone: contact.phone,
@@ -221,26 +259,26 @@ const AddVendor = () => {
 		document.getElementsByName("deal_1_name")[0].value = "";
 		contact.deal_1_desc = '';
 		document.getElementsByName("deal_1_desc")[0].value = "";
-		contact.deal_1_value = '';
-		document.getElementsByName("deal_1_value")[0].value = "";
+		contact.deal_1_value = 0;
+		document.getElementsByName("deal_1_value")[0].value = 0;
 		contact.deal_2_name = '';
 		document.getElementsByName("deal_2_name")[0].value = "";
 		contact.deal_2_desc = '';
 		document.getElementsByName("deal_2_desc")[0].value = "";
-		contact.deal_2_value = '';
-		document.getElementsByName("deal_2_value")[0].value = "";
+		contact.deal_2_value = 0;
+		document.getElementsByName("deal_2_value")[0].value = 0;
 		contact.deal_3_name = '';
 		document.getElementsByName("deal_3_name")[0].value = "";
 		contact.deal_3_desc = '';
 		document.getElementsByName("deal_3_desc")[0].value = "";
-		contact.deal_3_value = '';
-		document.getElementsByName("deal_3_value")[0].value = "";
+		contact.deal_3_value = 0;
+		document.getElementsByName("deal_3_value")[0].value = 0;
 		contact.deal_4_name = '';
 		document.getElementsByName("deal_4_name")[0].value = "";
 		contact.deal_4_desc = '';
 		document.getElementsByName("deal_4_desc")[0].value = "";
-		contact.deal_4_value = '';
-		document.getElementsByName("deal_4_value")[0].value = "";
+		contact.deal_4_value = 0;
+		document.getElementsByName("deal_4_value")[0].value = 0;
 		contact.name = '';
 		document.getElementsByName("name")[0].value = "";
 		contact.phone = '';
@@ -618,25 +656,25 @@ const AddVendor = () => {
 							<p className="label">Deal 1 Description</p>
 							<input type="text" placeholder="Deal 1 Description" name="deal_1_desc" value={contact.deal_1_desc} onChange={handleChange}></input>
 							<p className="label">Deal 1 Value</p>
-							<input type="text" placeholder="Deal 1 Value" name="deal_1_value" value={contact.deal_1_value} onChange={handleChange}></input>
+							<input type="number" placeholder="Deal 1 Value" name="deal_1_value" value={contact.deal_1_value} onChange={handleChange} step="0.01" min="0"></input>
 							<p className="label">Deal 2 Name</p>
 							<input type="text" placeholder="Deal 2 Name" name="deal_2_name" value={contact.deal_2_name} onChange={handleChange}></input>
 							<p className="label">Deal 2 Description</p>
 							<input type="text" placeholder="Deal 2 Description" name="deal_2_desc" value={contact.deal_2_desc} onChange={handleChange}></input>
 							<p className="label">Deal 2 Value</p>
-							<input type="text" placeholder="Deal 2 Value" name="deal_2_value" value={contact.deal_2_value} onChange={handleChange}></input>
+							<input type="number" placeholder="Deal 2 Value" name="deal_2_value" value={contact.deal_2_value} onChange={handleChange} step="0.01" min="0"></input>
 							<p className="label">Deal 3 Name</p>
 							<input type="text" placeholder="Deal 3 Name" name="deal_3_name" value={contact.deal_3_name} onChange={handleChange}></input>
 							<p className="label">Deal 3 Description</p>
 							<input type="text" placeholder="Deal 3 Description" name="deal_3_desc" value={contact.deal_3_desc} onChange={handleChange}></input>
 							<p className="label">Deal 3 Value</p>
-							<input type="text" placeholder="Deal 3 Value" name="deal_3_value" value={contact.deal_3_value} onChange={handleChange}></input>
+							<input type="number" placeholder="Deal 3 Value" name="deal_3_value" value={contact.deal_3_value} onChange={handleChange} step="0.01" min="0"></input>
 							<p className="label">Deal 4 Name</p>
 							<input type="text" placeholder="Deal 4 Name" name="deal_4_name" value={contact.deal_4_name} onChange={handleChange}></input>
 							<p className="label">Deal 4 Description</p>
 							<input type="text" placeholder="Deal 4 Description" name="deal_4_desc" value={contact.deal_4_desc} onChange={handleChange}></input>
 							<p className="label">Deal 4 Value</p>
-							<input type="text" placeholder="Deal 4 Value" name="deal_4_value" value={contact.deal_4_value} onChange={handleChange}></input>
+							<input type="number" placeholder="Deal 4 Value" name="deal_4_value" value={contact.deal_4_value} onChange={handleChange} step="0.01" min="0"></input>
 						</div>
 					</div>
 				</div>
