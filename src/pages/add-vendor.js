@@ -5,6 +5,9 @@ import { getStorage, ref, getDownloadURL, uploadBytes } from "../../node_modules
 import axios from '../axios';
 import firebase from "../../node_modules/firebase/compat/app";
 import GoldPassSum from "../components/GoldpassSum.js";
+//import Deal from "../components/Deal.js";
+import GoldpassForm from "../components/GoldpassForm.js"
+
 
 const AddVendor = () => {
 
@@ -38,7 +41,7 @@ const AddVendor = () => {
 		goldpass: "", deal_1_name: "", deal_1_desc: "",
 		deal_1_value: 0, deal_2_name: "", deal_2_desc: "", deal_2_value: 0,
 		deal_3_name: "", deal_3_desc: "", deal_3_value: 0, deal_4_name: "",
-		deal_4_desc: "", deal_4_value: 0
+		deal_4_desc: "", deal_4_value: 0, deals: []
 	});
 
 	const [affiliates, setAffiliates] = useState({});
@@ -56,7 +59,7 @@ const AddVendor = () => {
 
 	const storage = getStorage(app);
 
-	const goldpass = (event) => {
+	/*const goldpass = (event) => {
 		if (document.getElementById("goldpass").value == "PerksPass") {
 			document.getElementById("goldpass_deals").classList.add("hidden");
 		} else {
@@ -64,9 +67,9 @@ const AddVendor = () => {
 		}
 		
 		handleChange(event);
-	}
+	}*/
 
-	const handleChange = (event) => {
+	const handleChange = (event, index) => {
 		event.preventDefault();
 		const { name, value, type } = event.target;
 
@@ -78,9 +81,21 @@ const AddVendor = () => {
 		}
 
 		setContact((prev) => {
+			if (index != undefined) {
+				const updatedDeals = prev.deals.map((deal, i) =>
+					i === index ? { ...deal, [name]: newValue } : deal
+				);
+				return { ...prev, deals: updatedDeals };
+			}
 			return { ...prev, [name]: newValue };
 		});
 	}
+
+	const goldpassFormProps = {
+		con: contact,
+		setC: setContact,
+		hc: handleChange
+	};
 
 	async function updateSum() {
 
@@ -642,42 +657,9 @@ const AddVendor = () => {
 						<li>Send an email to the vendor requesting the creation of a promotional code in their Point of Sale (POS) system, include our <a href="https://qx78hjqq.paperform.co/" target="_blank">POS form</a> for completion and provide them with clear instructions on when and where to send the monthly report.</li>
 					</ol>
 				</div>
-				<div className="form" id="goldpass-form">
-					<div className="col center">
-						<label htmlFor="goldpass" className="mt24 label">For Perks Pass or Gold Pass?</label>
-						<select name="goldpass" id="goldpass" value={contact.goldpass} onChange={goldpass}>
-							<option value="PerksPass" id="PerksPass">PerksPass Only</option>
-							<option value="GoldPass" id="GoldPass">GoldPass Only</option>
-							<option value="Both" id="Both">Both</option>
-						</select>
-						<div id="goldpass_deals" className="hidden">
-							<p className="label">Deal 1 Name</p>
-							<input type="text" placeholder="Deal 1 Name" name="deal_1_name" value={contact.deal_1_name} onChange={handleChange}></input>
-							<p className="label">Deal 1 Description</p>
-							<input type="text" placeholder="Deal 1 Description" name="deal_1_desc" value={contact.deal_1_desc} onChange={handleChange}></input>
-							<p className="label">Deal 1 Value</p>
-							<input type="number" placeholder="Deal 1 Value" name="deal_1_value" value={contact.deal_1_value} onChange={handleChange} step="0.01" min="0"></input>
-							<p className="label">Deal 2 Name</p>
-							<input type="text" placeholder="Deal 2 Name" name="deal_2_name" value={contact.deal_2_name} onChange={handleChange}></input>
-							<p className="label">Deal 2 Description</p>
-							<input type="text" placeholder="Deal 2 Description" name="deal_2_desc" value={contact.deal_2_desc} onChange={handleChange}></input>
-							<p className="label">Deal 2 Value</p>
-							<input type="number" placeholder="Deal 2 Value" name="deal_2_value" value={contact.deal_2_value} onChange={handleChange} step="0.01" min="0"></input>
-							<p className="label">Deal 3 Name</p>
-							<input type="text" placeholder="Deal 3 Name" name="deal_3_name" value={contact.deal_3_name} onChange={handleChange}></input>
-							<p className="label">Deal 3 Description</p>
-							<input type="text" placeholder="Deal 3 Description" name="deal_3_desc" value={contact.deal_3_desc} onChange={handleChange}></input>
-							<p className="label">Deal 3 Value</p>
-							<input type="number" placeholder="Deal 3 Value" name="deal_3_value" value={contact.deal_3_value} onChange={handleChange} step="0.01" min="0"></input>
-							<p className="label">Deal 4 Name</p>
-							<input type="text" placeholder="Deal 4 Name" name="deal_4_name" value={contact.deal_4_name} onChange={handleChange}></input>
-							<p className="label">Deal 4 Description</p>
-							<input type="text" placeholder="Deal 4 Description" name="deal_4_desc" value={contact.deal_4_desc} onChange={handleChange}></input>
-							<p className="label">Deal 4 Value</p>
-							<input type="number" placeholder="Deal 4 Value" name="deal_4_value" value={contact.deal_4_value} onChange={handleChange} step="0.01" min="0"></input>
-						</div>
-					</div>
-				</div>
+				<GoldpassForm 
+					{...goldpassFormProps}
+				/>
 				<div className='logoForm' id="logo-form">
 					<div className='col center'>
 						<label htmlFor="logo" className='mt24 label'>Upload the company logo</label>
