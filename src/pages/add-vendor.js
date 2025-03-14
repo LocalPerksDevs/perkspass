@@ -38,10 +38,7 @@ const AddVendor = () => {
 		typeOfThing: "Food", website: "", contractEnds: "", disclaimer: "",
 		contactName: "", contactEmail: "", contactNumber: "",
 		fee: "", terms: "true", notes: "", posName: "", secondaryAffiliate: "",
-		goldpass: "", deal_1_name: "", deal_1_desc: "",
-		deal_1_value: 0, deal_2_name: "", deal_2_desc: "", deal_2_value: 0,
-		deal_3_name: "", deal_3_desc: "", deal_3_value: 0, deal_4_name: "",
-		deal_4_desc: "", deal_4_value: 0, deals: []
+		goldpass: "", deals: []
 	});
 
 	const [affiliates, setAffiliates] = useState({});
@@ -69,7 +66,7 @@ const AddVendor = () => {
 		handleChange(event);
 	}*/
 
-	const handleChange = (event, index) => {
+	const handleChange = (event, index = null) => {
 		event.preventDefault();
 		const { name, value, type } = event.target;
 
@@ -194,18 +191,6 @@ const AddVendor = () => {
 		updateSum();
 
 		db.collection("Establishments").add({
-			Deal_1_Name: contact.deal_1_name.trim(),
-			Deal_1_Desc: contact.deal_1_desc.trim(),
-			Deal_1_Value: contact.deal_1_value > 0 ? contact.deal_1_value : "",
-			Deal_2_Name: contact.deal_2_name.trim(),
-			Deal_2_Desc: contact.deal_2_desc.trim(),
-			Deal_2_Value: contact.deal_2_value > 0 ? contact.deal_2_value : "",
-			Deal_3_Name: contact.deal_3_name.trim(),
-			Deal_3_Desc: contact.deal_3_desc.trim(),
-			Deal_3_Value: contact.deal_3_value > 0 ? contact.deal_3_value : "",
-			Deal_4_Name: contact.deal_4_name.trim(),
-			Deal_4_Desc: contact.deal_4_desc.trim(),
-			Deal_4_Value: contact.deal_4_value > 0 ? contact.deal_4_value : "",
 			Goldpass: contact.goldpass,
 			Name: contact.name.trim(),
 			Phone: contact.phone,
@@ -249,6 +234,16 @@ const AddVendor = () => {
 		}).catch((err) => {
 			message = "Error " + err.message;
 		});
+
+		for (const deal of contact.deals) {
+			db.collection("EstablishmentDeals").add({
+				Name: deal.deal_name,
+				Description: deal.deal_desc,
+				Amount: deal.deal_value
+			})
+		}
+
+		setContact((prev) => ({ ...prev, deals: [] }));
 	}
 
 	function ResetForm() {
@@ -270,30 +265,6 @@ const AddVendor = () => {
 
 
 	function ClearInputs() {
-		contact.deal_1_name = '';
-		document.getElementsByName("deal_1_name")[0].value = "";
-		contact.deal_1_desc = '';
-		document.getElementsByName("deal_1_desc")[0].value = "";
-		contact.deal_1_value = 0;
-		document.getElementsByName("deal_1_value")[0].value = 0;
-		contact.deal_2_name = '';
-		document.getElementsByName("deal_2_name")[0].value = "";
-		contact.deal_2_desc = '';
-		document.getElementsByName("deal_2_desc")[0].value = "";
-		contact.deal_2_value = 0;
-		document.getElementsByName("deal_2_value")[0].value = 0;
-		contact.deal_3_name = '';
-		document.getElementsByName("deal_3_name")[0].value = "";
-		contact.deal_3_desc = '';
-		document.getElementsByName("deal_3_desc")[0].value = "";
-		contact.deal_3_value = 0;
-		document.getElementsByName("deal_3_value")[0].value = 0;
-		contact.deal_4_name = '';
-		document.getElementsByName("deal_4_name")[0].value = "";
-		contact.deal_4_desc = '';
-		document.getElementsByName("deal_4_desc")[0].value = "";
-		contact.deal_4_value = 0;
-		document.getElementsByName("deal_4_value")[0].value = 0;
 		contact.name = '';
 		document.getElementsByName("name")[0].value = "";
 		contact.phone = '';

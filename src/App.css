@@ -449,7 +449,7 @@ div.error, input.error {
   display: none !important;
 }
 
-.hidden {
+.hidden, .button.hidden {
   visibility: hidden;
   display: none;
 }

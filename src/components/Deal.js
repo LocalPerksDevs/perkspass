@@ -1,12 +1,12 @@
 const Deal = (props) => {
     return (
         <div>
-            <p className="label">Deal Name</p>
-            <input type="text" placeholder="Deal Name" name="deal_name" value={props.name} onChange={props.handleChange}></input>
-            <p className="label">Deal Description</p>
-            <input type="text" placeholder="Deal Description" name="deal_desc" value={props.desc} onChange={props.handleChange}></input>
-            <p className="label">Deal Value</p>
-            <input type="number" placeholder="Deal Value" name="deal_value" value={props.value} onChange={props.handleChange} step="0.01" min="0"></input>
+            <p className="label">Deal {props.index + 1} Name</p>
+            <input type="text" placeholder={"Deal " + (props.index + 1) + " Name"} name="deal_name" value={props.deal.deal_name} onChange={(event) => props.handleChange(event, props.index)}></input>
+            <p className="label">Deal {props.index + 1} Description</p>
+            <input type="text" placeholder={"Deal " + (props.index + 1) + " Description"} name="deal_desc" value={props.deal.deal_desc} onChange={(event) => props.handleChange(event, props.index)}></input>
+            <p className="label">Deal {props.index + 1} Value</p>
+            <input type="number" name="deal_value" value={props.deal.deal_value} onChange={(event) => props.handleChange(event, props.index)} step="0.01" min="0"></input>
         </div>
     )
 }
