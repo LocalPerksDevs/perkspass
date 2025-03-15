@@ -5,7 +5,6 @@ import { getStorage, ref, getDownloadURL, uploadBytes } from "../../node_modules
 import axios from '../axios';
 import firebase from "../../node_modules/firebase/compat/app";
 import GoldPassSum from "../components/GoldpassSum.js";
-//import Deal from "../components/Deal.js";
 import GoldpassForm from "../components/GoldpassForm.js"
 
 
@@ -55,16 +54,6 @@ const AddVendor = () => {
 	let response = null;
 
 	const storage = getStorage(app);
-
-	/*const goldpass = (event) => {
-		if (document.getElementById("goldpass").value == "PerksPass") {
-			document.getElementById("goldpass_deals").classList.add("hidden");
-		} else {
-			document.getElementById("goldpass_deals").classList.remove("hidden");
-		}
-		
-		handleChange(event);
-	}*/
 
 	const handleChange = (event, index = null) => {
 		event.preventDefault();
@@ -188,7 +177,7 @@ const AddVendor = () => {
 		latLong = new firebase.firestore.GeoPoint(Number(LAT), Number(LON));
 
 		// CALCULATE NEW GOLDPASS SUM
-		updateSum();
+		//updateSum();
 
 		db.collection("Establishments").add({
 			Goldpass: contact.goldpass,
@@ -230,18 +219,22 @@ const AddVendor = () => {
 			document.getElementsByClassName("form")[0].classList.add('hide');
 			document.getElementsByClassName("local-perks")[0].classList.add('hide');
 			document.getElementById('logo-form').classList.add('hide');
-			document.getElementById('lat-lon-form').classList.add('hide')
+			document.getElementById('lat-lon-form').classList.add('hide');
+			document.getElementById('companyInfo').classList.add('hide');
+			for (const deal of contact.deals) {
+				db.collection("EstablishmentDeals").add({
+					Name: deal.deal_name,
+					Description: deal.deal_desc,
+					Amount: deal.deal_value,
+					Establishment_Ref: db.doc(`Establishments/${docRef.id}`),
+					Enabled: false,
+					Created_At: firebase.firestore.FieldValue.serverTimestamp(),
+					Updated_At: firebase.firestore.FieldValue.serverTimestamp()
+				})
+			}
 		}).catch((err) => {
 			message = "Error " + err.message;
 		});
-
-		for (const deal of contact.deals) {
-			db.collection("EstablishmentDeals").add({
-				Name: deal.deal_name,
-				Description: deal.deal_desc,
-				Amount: deal.deal_value
-			})
-		}
 
 		setContact((prev) => ({ ...prev, deals: [] }));
 	}
@@ -261,6 +254,7 @@ const AddVendor = () => {
 		document.getElementById("success").classList.add('hide');
 		document.getElementById("lat-btn").classList.remove("hide");
 		document.getElementsByClassName("local-perks")[0].classList.remove('hide');
+		document.getElementById('companyInfo').classList.remove('hide');
 	}
 
 
