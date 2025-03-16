@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { app, db, auth } from '../firebase-config';
 import firebase from "../../node_modules/firebase/compat/app";
 import { getStorage, ref, getDownloadURL, uploadBytes } from "../../node_modules/firebase/storage";
+import VendorProfileDeals from "../components/VendorProfileDeals.js";
 
 const VendorProfile = () => {
 
@@ -115,18 +116,6 @@ const VendorProfile = () => {
                 ContactName: !contact.contactName ? "" : contact.contactName.trim(),
                 ContactPhone: !contact.contactPhone ? "" : contact.contactPhone.trim(),
                 ContractEnds: !contact.contractEnds ? null : contact.contractEnds,
-                Deal_1_Name: !contact.deal_1_name ? "" : contact.deal_1_name.trim(),
-                Deal_1_Desc: !contact.deal_1_desc ? "" : contact.deal_1_desc.trim(),
-                Deal_1_Value: !contact.deal_1_value ? "" : contact.deal_1_value.trim(),
-                Deal_2_Name: !contact.deal_2_name ? "" : contact.deal_2_name.trim(),
-                Deal_2_Desc: !contact.deal_2_desc ? "" : contact.deal_2_desc.trim(),
-                Deal_2_Value: !contact.deal_2_value ? "" : contact.deal_2_value.trim(),
-                Deal_3_Name: !contact.deal_3_name ? "" : contact.deal_3_name.trim(),
-                Deal_3_Desc: !contact.deal_3_desc ? "" : contact.deal_3_desc.trim(),
-                Deal_3_Value: !contact.deal_3_value ? "" : contact.deal_3_value.trim(),
-                Deal_4_Name: !contact.deal_4_name ? "" : contact.deal_4_name.trim(),
-                Deal_4_Desc: !contact.deal_4_desc ? "" : contact.deal_4_desc.trim(),
-                Deal_4_Value: !contact.deal_4_value ? "" : contact.deal_4_value.trim(),
                 Disclaimer: !contact.disclaimer ? "" : contact.disclaimer.trim(),
                 Discount: !contact.discount ? "" : contact.discount.trim(),
                 discountInstructions: !contact.discountInstructions ? "Show This Screen to an Employee" : contact.discountInstructions,
@@ -155,6 +144,8 @@ const VendorProfile = () => {
             } catch (error) {
                 console.error('Error updating document: ', error);
             }
+
+            updateAllDeals(contact.deals);
       };
 
     useEffect(() => {
@@ -168,6 +159,7 @@ const VendorProfile = () => {
 
             if (vendorID) {
                 getVendorData();
+                getDeals(vendorID);
             }
         }
     }, []);
@@ -199,19 +191,6 @@ const VendorProfile = () => {
                     contactName: !snapshot.data().ContactName ? "N/A" : snapshot.data().ContactName,
                     contactPhone: !snapshot.data().ContactPhone ? "N/A" : snapshot.data().ContactPhone,
                     contractEnds: !snapshot.data().ContractEnds ? null : yyyymmdd(snapshot.data().ContractEnds.toDate()),
-                    deal_1_name: !snapshot.data().Deal_1_Name ? "N/A" : snapshot.data().Deal_1_Name,
-                    deal_1_desc: !snapshot.data().Deal_1_Desc ? "N/A" : snapshot.data().Deal_1_Desc,
-                    deal_1_value: !snapshot.data().Deal_1_Value ? "N/A" : snapshot.data().Deal_1_Value,
-                    deal_2_name: !snapshot.data().Deal_2_Name ? "N/A" : snapshot.data().Deal_2_Name,
-                    deal_2_desc: !snapshot.data().Deal_2_Desc ? "N/A" : snapshot.data().Deal_2_Desc,
-                    deal_2_value: !snapshot.data().Deal_2_Value ? "N/A" : snapshot.data().Deal_2_Value,
-                    deal_3_name: !snapshot.data().Deal_3_Name ? "N/A" : snapshot.data().Deal_3_Name,
-                    deal_3_desc: !snapshot.data().Deal_3_Desc ? "N/A" : snapshot.data().Deal_3_Desc,
-                    deal_3_value: !snapshot.data().Deal_3_Value ? "N/A" : snapshot.data().Deal_3_Value,
-                    deal_4_name: !snapshot.data().Deal_4_Name ? "N/A" : snapshot.data().Deal_4_Name,
-                    deal_4_desc: !snapshot.data().Deal_4_Desc ? "N/A" : snapshot.data().Deal_4_Desc,
-                    deal_4_value: !snapshot.data().Deal_4_Value ? "N/A" : snapshot.data().Deal_4_Value,
-                    disclaimer: !snapshot.data().Disclaimer ? "None" : snapshot.data().Disclaimer,
                     discount: snapshot.data().Discount,
                     discountInstructions: !snapshot.data().discountInstructions ? "N/A" : snapshot.data().discountInstructions,
                     discountInstructionsSmall: !snapshot.data().discountInstructionsSmall ? "N/A" : snapshot.data().discountInstructionsSmall,
@@ -240,13 +219,28 @@ const VendorProfile = () => {
         }
     }
 
+    const getDeals = async (vendorID) => {
+        const establishmentRef = db.doc(`Establishments/${vendorID}`);
+        //console.log("Generated Establishment Reference:", establishmentRef.path);
+
+        const querySnapshot = await db.collection("EstablishmentDeals").where("Establishment_Ref", "==", establishmentRef).get();
+
+        const deals = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            deal_name: doc.data().Name,
+            deal_desc: doc.data().Description,
+            deal_value: doc.data().Amount,
+            deal_enabled: doc.data().Enabled
+        }));
+
+        //console.log("Deals for Establishment:", deals);
+        setContact(prev => ({ ...prev, deals}));
+    }
+
     const [contact, setContact] = useState({
         active: "false", address: "", affiliateID: "",
         appLaunchDate: null, category: "", city: "", contactEmail: "",
-        contactName: "", contactPhone: "", contractEnds: "", deal_1_name: "",
-        deal_1_desc: "", deal_1_value: "", deal_2_name: "", deal_2_desc: "",
-        deal_2_value: "", deal_3_name: "", deal_3_desc: "", deal_3_value: "",
-        deal_4_name: "", deal_4_desc: "", deal_4_value: "",
+        contactName: "", contactPhone: "", contractEnds: "", deals: [],
         disclaimer: "", discount: "", discountInstructions: "", discountInstructionsSmall: "",
         fee: "", logoURL: "", name: "", notes: "", onlineOrdering: "true", posCall: "",
         posName: "", posSetup: "", phone: "", promoCode: "", reminderEmail: "",
@@ -255,13 +249,45 @@ const VendorProfile = () => {
         goldpass: ""
     });
 
-    const handleChange = (event) => {
+    function roundToTwoDecimals(num) {
+		return Math.round(num * 100) / 100;
+	}
+
+    const handleChange = (event, index = null) => {
 		event.preventDefault();
-		const { name, value } = event.target;
+		const { name, value, type } = event.target;
+
+		let newValue = value;
+
+		if (type === "number") {
+			newValue = parseFloat(value) || 0;
+			newValue = roundToTwoDecimals(newValue);
+		}
+
+		setContact((prev) => {
+			if (index != undefined) {
+				const updatedDeals = prev.deals.map((deal, i) =>
+					i === index ? { ...deal, [name]: newValue } : deal
+				);
+				return { ...prev, deals: updatedDeals };
+			}
+			return { ...prev, [name]: newValue };
+		});
+	}
+
+    /*const handleChange = (event, index = null) => {
+		event.preventDefault();
+		const { name, value, type } = event.target;
 		setContact((prev) => {
 			return { ...prev, [name]: value };
 		});
-	}
+	}*/
+
+    const vendorProfileDealsProps = {
+		con: contact,
+		setC: setContact,
+		hc: handleChange
+	};
 
     const uploadFile = async () => {
 		if (!imageUpload) return;
@@ -286,6 +312,34 @@ const VendorProfile = () => {
                 console.error('Error updating document: ', error);
             }
 	}
+
+    const updateAllDeals = async (deals) => {
+        if (!deals || deals.length === 0) {
+          console.log("No deals to update.");
+          return;
+        }
+      
+        const batch = db.batch(); // Create a Firestore batch operation
+      
+        deals.forEach(deal => {
+          const dealRef = db.collection("EstablishmentDeals").doc(deal.id);
+          
+          batch.update(dealRef, {
+            Name: deal.deal_name,
+            Description: deal.deal_desc,
+            Amount: deal.deal_value,
+            Enabled: deal.deal_enabled === "true" ? true : false,
+            Updated_At: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        });
+      
+        try {
+          await batch.commit(); // Commit all updates in one transaction
+          console.log("All deals updated successfully.");
+        } catch (error) {
+          console.error("Error updating deals:", error);
+        }
+      };
 
     return (
         <div>
@@ -534,7 +588,10 @@ const VendorProfile = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="col">
+                        <VendorProfileDeals 
+                            {...vendorProfileDealsProps}
+                        />
+                        {/*<div className="col">
                             <div className="row m24">
                                 <div className="col">
                                     <p className="label gold-pass-deals">GOLD PASS DEALS</p>
@@ -612,7 +669,7 @@ const VendorProfile = () => {
                                     <input name="deal_4_value" className="vendor-input" value={contact.deal_4_value} onChange={handleChange}></input>
                                 </div>
                             </div>
-                        </div>
+                        </div>*/}
                     </div>
                 </div>
             </div>
