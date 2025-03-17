@@ -717,7 +717,7 @@ div.error, input.error {
   max-width: 1130px;
 }
 
-.vendor-profile {
+.vendor-profile, .add-deal {
   border: solid 1px #E1E1E1;
   border-radius: 4px;
   width: 90%;
@@ -727,6 +727,30 @@ div.error, input.error {
   margin-bottom: 40px;
   position: relative;
   box-sizing: border-box;
+}
+
+.add-deal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.add-deal-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.add-deal .row {
+  width: 100%;
+  justify-content: center;
+  gap: 40px;
+}
+
+.add-deal .row .button {
+  width: 240px;
 }
 
 .vendor-profile .vendor-name {

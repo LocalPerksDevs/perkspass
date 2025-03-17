@@ -1,6 +1,6 @@
 const Deal = (props) => {
     return (
-        <div>
+        <div className={props.className}>
             <p className="label">Deal {props.index + 1} Name</p>
             <input type="text" placeholder={"Deal " + (props.index + 1) + " Name"} name="deal_name" value={props.deal.deal_name} onChange={(event) => props.handleChange(event, props.index)}></input>
             <p className="label">Deal {props.index + 1} Description</p>

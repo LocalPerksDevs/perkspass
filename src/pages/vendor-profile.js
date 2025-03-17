@@ -286,7 +286,8 @@ const VendorProfile = () => {
     const vendorProfileDealsProps = {
 		con: contact,
 		setC: setContact,
-		hc: handleChange
+		hc: handleChange,
+        vendorID: vendorID
 	};
 
     const uploadFile = async () => {

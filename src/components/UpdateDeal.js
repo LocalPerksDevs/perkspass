@@ -20,7 +20,7 @@ const UpdateDeal = (props) => {
                         <input input type="number" name="deal_value" className="vendor-input" value={props.deal.deal_value} onChange={(event) => props.handleChange(event, props.index)} step="0.01" min="0"></input>
                     </div>
                     <div className="col">
-                    <p className="label">DEAL {props.index + 1} Enabled?</p>
+                    <p className="label">DEAL {props.index + 1} ENABLED?</p>
                         <p className="vendor-select">{props.deal.deal_enabled ? "Yes" : "No"}</p>
                         <select name="deal_enabled" id="deal_enabled" className="vendor-input vs hide" value={props.deal.deal_enabled ? "true" : "false"} onChange={(event) => props.handleChange(event, props.index)}>
                             <option value="true">Yes</option>

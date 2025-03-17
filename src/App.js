@@ -10,6 +10,7 @@ import AddUser from './pages/add-user';
 import VendorProfile from './pages/vendor-profile';
 import Privacy from './pages/privacy';
 import Receipts from './pages/receipts';
+import AddDeal from './pages/add-deal';
 
 function App() {
 	document.title = "PerksPass";
@@ -24,6 +25,7 @@ function App() {
 				<Route path='/vendor-profile/:id' element={<VendorProfile />} />
 				<Route path='/privacy' element={<Privacy />} />
 				<Route path='/receipts' element={<Receipts />} />
+				<Route path='/add-deal/:id' element={<AddDeal />} />
 			</Routes>
 		</Router>
 	);

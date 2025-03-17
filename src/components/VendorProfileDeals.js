@@ -1,6 +1,9 @@
+import { NavLink, useNavigate } from "react-router-dom";
 import UpdateDeal from "./UpdateDeal.js";
 
 const VendorProfileDeals = (props) => {
+    const navigate = useNavigate();
+
     return (
         <>
             <div className="col">
@@ -18,6 +21,15 @@ const VendorProfileDeals = (props) => {
                     handleChange={props.hc}
                 />
             ))}
+            <div className="col">
+                <div className="row m24">
+                    <div className="col">
+                        <button className="button vp-button" id="addDealBtn" onClick={() => navigate(`/add-deal/${props.vendorID}`)}>Add A New Deal</button>
+                    </div>
+                    <div className="col">
+                    </div>
+                </div>
+            </div>
         </>
     )
 }
