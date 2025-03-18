@@ -502,6 +502,7 @@ div.error, input.error {
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
+  font-family: 'Open Sans', sans-serif;
 }
 
 .button:hover, button:hover {

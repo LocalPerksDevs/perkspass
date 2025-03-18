@@ -24,6 +24,7 @@ const AddDeal = () => {
     const [contact, setContact] = useState([{
         name: ""
     }])
+    const [msg, setMsg] = useState("Deal successfully added!");
 
     const getVendorData = async () => {
         const snapshot = await db.collection("Establishments").doc(vendorID).get();
@@ -68,6 +69,10 @@ const AddDeal = () => {
 		return Math.round(num * 100) / 100;
 	}
 
+    const isValidDeal = (deal) => {
+        return deal.deal_name && deal.deal_desc;
+    }
+
     const addDeal = () => {
         setDeals((prev) => [
             ...prev,
@@ -76,6 +81,12 @@ const AddDeal = () => {
 
     const addDealsToFirebase = (event) => {
         event.preventDefault();
+
+        const allDealsValid = deals.every(isValidDeal);
+        if (!allDealsValid) {
+            console.error("Error: Some deals are missing required fields");
+            return;
+        }
 
         for (const deal of deals) {
             db.collection("EstablishmentDeals").add({
@@ -88,6 +99,16 @@ const AddDeal = () => {
                 Updated_At: firebase.firestore.FieldValue.serverTimestamp()
             })
         }
+
+        document.getElementById("user-message").classList.remove("hide");
+        document.getElementById("add-deal-form").classList.add("hide");
+
+        setDeals([{deal_name: "", deal_desc: "", deal_value: 0 }]);
+    }
+
+    function resetForm() {
+        document.getElementById("user-message").classList.add("hide");
+        document.getElementById("add-deal-form").classList.remove("hide");
     }
 
     return (
@@ -107,6 +128,10 @@ const AddDeal = () => {
                     Add New Deal For {contact.name}
                 </h1>
             </div>
+            <div id="user-message" className="message center col hide">
+					<p>{msg}</p>
+					<button id="user-btn" className="mt24" onClick={resetForm}>Add Another Deal</button>
+			</div>
             <div className="col center App" id="add-deal-form">
                 <div className="add-deal">
                     {deals.map((deal, index) => (

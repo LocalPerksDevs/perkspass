@@ -7,6 +7,8 @@ import { onAuthStateChanged } from '../../node_modules/firebase/auth/';
 
 const AddUser = () => {
 
+    const navigate = useNavigate();
+
     const isUserAdmin = async () => {
 		const snapshot = await db.collection("Admins").get();
 		if (snapshot.docs[0].data().IDs.includes(auth.currentUser.uid)) {
@@ -17,15 +19,22 @@ const AddUser = () => {
 	}
 
 	useEffect(() => {
-		if (!auth.currentUser) {
-			navigate("/sign-in");
-		}
 
-        if (!isUserAdmin()) {
-            navigate("/dashboard");
-        }
-        setMsg("Success! User was signed up!");
-	}, []);
+        const checkAdminStatus = async () => {
+            if (!auth.currentUser) {
+                navigate("/sign-in");
+                return;
+            }
+		
+            const isAdmin = await isUserAdmin();
+            if (!isAdmin) {
+                navigate("/dashboard");
+            }
+            setMsg("Success! User was signed up!");
+        };
+
+        checkAdminStatus();
+	}, [navigate]);
 
     function resetForm() {
         setEmail('');
@@ -108,7 +117,6 @@ const AddUser = () => {
     const [name, setName] = useState("");
     const [admin, setAdmin] = useState(false);
     const [userObj, setUserObj] = useState({});
-    const navigate = useNavigate();
     const [msg, setMsg] = useState("");
     const [emailMsg, setEmailMsg] = useState("");
     const [passwordMsg, setPasswordMsg] = useState("");
