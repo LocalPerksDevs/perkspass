@@ -4,6 +4,7 @@ import { app, db, auth } from '../firebase-config';
 import firebase from "../../node_modules/firebase/compat/app";
 import { getStorage, ref, getDownloadURL, uploadBytes } from "../../node_modules/firebase/storage";
 import VendorProfileDeals from "../components/VendorProfileDeals.js";
+import GoldPassSum from "../components/GoldpassSum.js";
 
 const VendorProfile = () => {
 
@@ -12,6 +13,7 @@ const VendorProfile = () => {
     const [imageUpload, setImageUpload] = useState();
 
     const [affiliates, setAffiliates] = useState({});
+    const [goldpassSumInstance, setGoldpassSumInstance] = useState(null);
 
     const navigate = useNavigate();
     const storage = getStorage(app);
@@ -146,6 +148,7 @@ const VendorProfile = () => {
             }
 
             updateAllDeals(contact.deals);
+            goldpassSumInstance.updateSum();
       };
 
     useEffect(() => {
@@ -160,6 +163,8 @@ const VendorProfile = () => {
             if (vendorID) {
                 getVendorData();
                 getDeals(vendorID);
+                const instance = new GoldPassSum(db);
+			    setGoldpassSumInstance(instance);
             }
         }
     }, []);

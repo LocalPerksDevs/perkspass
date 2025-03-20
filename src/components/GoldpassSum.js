@@ -28,13 +28,21 @@ class GoldpassSum {
         }
     }
 
-    async updateSum(amount) {
-        const snapshot = await this.db.collection('GoldpassSum').doc(sumID);
-
+    async updateSum() {
         try {
-            snapshot.update({
-                Sum: amount
+            const snapshot = await this.db.collection('EstablishmentDeals').get();
+
+            let newSum = 0;
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                if (data.Amount) {
+                    newSum += data.Amount;
+                }
             });
+
+            newSum = Math.round(newSum * 100) / 100;
+            const sumSnapshot = await this.db.collection("GoldpassSum").doc(sumID);
+            sumSnapshot.update({Sum: newSum});
         } catch (error) {
             console.error('Error updating sum: ', error);
         }

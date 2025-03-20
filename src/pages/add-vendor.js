@@ -83,38 +83,6 @@ const AddVendor = () => {
 		hc: handleChange
 	};
 
-	async function updateSum() {
-
-		const currentSum = await goldpassSumInstance.getSum();
-		setSum(currentSum);
-
-		let newSum = currentSum;
-
-		if (contact.deal_1_value > 0) {
-			newSum += contact.deal_1_value;
-			setSum(newSum);
-		}
-
-		if (contact.deal_2_value > 0) {
-			newSum += contact.deal_2_value;
-			setSum(newSum);
-		}
-
-		if (contact.deal_3_value > 0) {
-			newSum += contact.deal_3_value;
-			setSum(newSum);
-		}
-
-		if (contact.deal_4_value > 0) {
-			newSum += contact.deal_4_value;
-			setSum(newSum);
-		}
-
-		if (newSum > currentSum) {
-			await goldpassSumInstance.updateSum(newSum);
-		}
-	}
-
 	function roundToTwoDecimals(num) {
 		return Math.round(num * 100) / 100;
 	}
@@ -176,9 +144,6 @@ const AddVendor = () => {
 		LON = parseFloat(pa.innerText.substring(pa.innerText.lastIndexOf(' ')));
 		latLong = new firebase.firestore.GeoPoint(Number(LAT), Number(LON));
 
-		// CALCULATE NEW GOLDPASS SUM
-		//updateSum();
-
 		db.collection("Establishments").add({
 			Goldpass: contact.goldpass,
 			Name: contact.name.trim(),
@@ -237,6 +202,7 @@ const AddVendor = () => {
 		});
 
 		setContact((prev) => ({ ...prev, deals: [] }));
+		goldpassSumInstance.updateSum();
 	}
 
 	function ResetForm() {

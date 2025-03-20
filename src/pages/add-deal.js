@@ -4,8 +4,11 @@ import '../App.css';
 import { auth, db } from '../firebase-config';
 import Deal from '../components/Deal.js';
 import firebase from "../../node_modules/firebase/compat/app";
+import GoldPassSum from "../components/GoldpassSum.js";
 
 const AddDeal = () => {
+
+    const [goldpassSumInstance, setGoldpassSumInstance] = useState(null);
 
     useEffect(() => {
 		if (!auth.currentUser) {
@@ -14,6 +17,8 @@ const AddDeal = () => {
 
         if (vendorID) {
             getVendorData();
+            const instance = new GoldPassSum(db);
+			setGoldpassSumInstance(instance);
         }
 
 	}, []);
@@ -104,6 +109,7 @@ const AddDeal = () => {
         document.getElementById("add-deal-form").classList.add("hide");
 
         setDeals([{deal_name: "", deal_desc: "", deal_value: 0 }]);
+        goldpassSumInstance.updateSum();
     }
 
     function resetForm() {
