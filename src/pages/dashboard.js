@@ -7,6 +7,9 @@ import { auth, db } from '../firebase-config';
 const Dashboard = () => {
 
 	const [zipCodeCount, setZipCodeCount] = useState({});
+	const [deals, setDeals] = useState([]);
+	const [dealCount, setDealCount] = useState(0);
+	const [dealSum, setDealSum] = useState(0.00);
 
 	useEffect(() => {
 		if (!auth.currentUser) {
@@ -15,6 +18,8 @@ const Dashboard = () => {
 			isUserAdmin();
 			getCurrentUser();
 			getAffiliates();
+			getDeals();
+			getDealSum();
 		}
 	}, []);
 
@@ -54,15 +59,35 @@ const Dashboard = () => {
 		}
 	}
 
+	const showDealTable = () => {
+		document.getElementsByClassName("table user")[0].classList.add("hide");
+		document.getElementsByClassName("table vendor")[0].classList.add("hide");
+		document.getElementsByClassName("table deals")[0].classList.remove("hide");
+		document.getElementById("vend_tab").classList.remove("active");
+		document.getElementById("vend_tab").classList.add("inactive");
+		document.getElementById("user_tab").classList.remove("active");
+		document.getElementById("user_tab").classList.add("inactive");
+		document.getElementById("deal_tab").classList.remove("inactive");
+		document.getElementById("deal_tab").classList.add("active");
+		document.getElementById("UserCount").classList.add("hide");
+		document.getElementById("VendorCount").classList.add("hide");
+		document.getElementById("DealCount").classList.remove("hide");
+		document.getElementById("search").classList.add("hide");
+	}
+
 	const showUserTable = () => {
 		document.getElementsByClassName("table user")[0].classList.remove("hide");
 		document.getElementsByClassName("table vendor")[0].classList.add("hide");
+		document.getElementsByClassName("table deals")[0].classList.add("hide");
 		document.getElementById("vend_tab").classList.remove("active");
 		document.getElementById("vend_tab").classList.add("inactive");
 		document.getElementById("user_tab").classList.add("active");
 		document.getElementById("user_tab").classList.remove("inactive");
+		document.getElementById("deal_tab").classList.remove("active");
+		document.getElementById("deal_tab").classList.add("inactive");
 		document.getElementById("UserCount").classList.remove("hide");
 		document.getElementById("VendorCount").classList.add("hide");
+		document.getElementById("DealCount").classList.add("hide");
 		document.getElementById("search").classList.add("hide");
 
 		//userZip();
@@ -70,13 +95,17 @@ const Dashboard = () => {
 
 	const showVendorTable = () => {
 		document.getElementsByClassName("table user")[0].classList.add("hide");
+		document.getElementsByClassName("table deals")[0].classList.add("hide");
 		document.getElementsByClassName("table vendor")[0].classList.remove("hide");
 		document.getElementById("vend_tab").classList.add("active");
 		document.getElementById("vend_tab").classList.remove("inactive");
 		document.getElementById("user_tab").classList.remove("active");
 		document.getElementById("user_tab").classList.add("inactive");
+		document.getElementById("deal_tab").classList.remove("active");
+		document.getElementById("deal_tab").classList.add("inactive");
 		document.getElementById("UserCount").classList.add("hide");
 		document.getElementById("VendorCount").classList.remove("hide");
+		document.getElementById("DealCount").classList.add("hide");
 		document.getElementById("search").classList.remove("hide");
 	}
 	const navigate = useNavigate();
@@ -93,6 +122,11 @@ const Dashboard = () => {
 	const logout = async () => {
 		await signOut(auth);
 		navigate("/sign-in");
+	}
+
+	const getEstablishmentName = (vendorID) => {
+		const vendor = vendors.find(vendor => vendor.id === vendorID);
+		return vendor ? vendor.Name : 'N/A';
 	}
 
 	const isUserAdmin = async () => {
@@ -140,6 +174,29 @@ const Dashboard = () => {
 		});
 
 		userZip(documents);
+	}
+
+	const getDeals = async () => {
+		const snapshot = await db.collection("EstablishmentDeals").get();
+		const tempDeals = snapshot.docs.map(doc => ({
+			id: doc.id,
+			...doc.data(),
+		}));
+
+		tempDeals.sort((a, b) => {
+			if (a.Establishment_Ref.id < b.Establishment_Ref.id) return -1;
+			if (a.Establishment_Ref.id > b.Establishment_Ref.id) return 1;
+			return 0;
+		});
+
+		setDeals(tempDeals);
+		setDealCount(tempDeals.length);
+	}
+
+	const getDealSum = async () => {
+		const snapshot = await db.collection("GoldpassSum").get();
+		const tempSum = snapshot.docs[0].data().Sum;
+		setDealSum(tempSum);
 	}
 
 	/*const deleteAllUsers = async () => {
@@ -514,12 +571,14 @@ const Dashboard = () => {
 			</div>
 			<div className='col center' id="rel">
 				<h1 id="title">Affiliate Dashboard</h1>
+				<h2 className='hide' id="DealCount">Deals: {dealCount}&nbsp;&nbsp;Sum: ${dealSum}</h2>
 				<h2 className='hide' id="UserCount">Users: {userCount}</h2>
 				<h2 id="VendorCount">Vendors: {vendorCount}</h2>
 				<i id="download" className="fas fa-download" onClick={() => createCSV()}></i>
 				<div id="tabs" className='row'>
 					<h2 className='active' id="vend_tab" onClick={() => showVendorTable()}>Vendors</h2>
 					<h2 className='ml24 inactive' id="user_tab" onClick={() => showUserTable()}>Users</h2>
+					<h2 className='ml24 inactive' id="deal_tab" onClick={() => showDealTable()}>Deals</h2>
 				</div>
 				<div id="search" className='search row'>
 					<input type='text' placeholder='Search by Name' onChange={(e) => vendorSearch(e.target.value)}></input>
@@ -527,6 +586,30 @@ const Dashboard = () => {
 					<p className='filtLab' id='active' onClick={() => activeFilter()}>Active</p>
 					<p className='filtLab' id='inactive' onClick={() => inactiveFilter()}>Inactive</p>
 				</div>
+			</div>
+			<div className='table deals hide'>
+				<table id="dealTable">
+					<thead>
+						<tr>
+							<th>VENDOR NAME</th>
+							<th>NAME</th>
+							<th>DESCRIPTION</th>
+							<th>AMOUNT</th>
+							<th>ENABLED</th>
+						</tr>
+					</thead>
+					<tbody>
+						{deals.map(deal => (
+							<tr key={deal.id} onClick={() => navigate("/" + "vendor-profile/" + deal.Establishment_Ref.id)}>
+								<td>{getEstablishmentName(deal.Establishment_Ref.id)}</td>
+								<td>{deal.Name}</td>
+								<td>{deal.Description}</td>
+								<td>{"$" + deal.Amount}</td>
+								<td>{deal.Enabled ? "Yes" : "No"}</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
 			</div>
 			<div className='table user hide'>
 				<table id="userTable">
