@@ -269,6 +269,10 @@ const VendorProfile = () => {
 			newValue = roundToTwoDecimals(newValue);
 		}
 
+        if (name === "deal_enabled") {
+            newValue = value === "true";
+        }
+
 		setContact((prev) => {
 			if (index != undefined) {
 				const updatedDeals = prev.deals.map((deal, i) =>
@@ -334,7 +338,7 @@ const VendorProfile = () => {
             Name: deal.deal_name,
             Description: deal.deal_desc,
             Amount: deal.deal_value,
-            Enabled: deal.deal_enabled === "true" ? true : false,
+            Enabled: deal.deal_enabled,
             Updated_At: firebase.firestore.FieldValue.serverTimestamp()
           });
         });

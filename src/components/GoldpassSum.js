@@ -35,7 +35,7 @@ class GoldpassSum {
             let newSum = 0;
             snapshot.forEach((doc) => {
                 const data = doc.data();
-                if (data.Amount) {
+                if (data.Amount && data.Enabled) {
                     newSum += data.Amount;
                 }
             });
