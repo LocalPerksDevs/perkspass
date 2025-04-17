@@ -11,6 +11,7 @@ import VendorProfile from './pages/vendor-profile';
 import Privacy from './pages/privacy';
 import Receipts from './pages/receipts';
 import AddDeal from './pages/add-deal';
+import GoldpassDashboard from './pages/goldpass-dashboard';
 
 function App() {
 	document.title = "PerksPass";
@@ -26,6 +27,7 @@ function App() {
 				<Route path='/privacy' element={<Privacy />} />
 				<Route path='/receipts' element={<Receipts />} />
 				<Route path='/add-deal/:id' element={<AddDeal />} />
+				<Route path='/goldpass-dashboard' element={<GoldpassDashboard />} />
 			</Routes>
 		</Router>
 	);

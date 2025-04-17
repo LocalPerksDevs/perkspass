@@ -134,8 +134,10 @@ const Dashboard = () => {
 		getZipCount();
 		if (snapshot.docs[0].data().IDs.includes(auth.currentUser.uid)) {
 			getVendorsAdmin();
+			//document.getElementById("gold-pass-dash").classList.remove('hide');
 			document.getElementById("add-user").classList.remove('hide');
 			document.getElementById("receipts").classList.remove('hide');
+			//document.getElementById("gold-pass-dash2").classList.remove('hide');
 			document.getElementById("add-user2").classList.remove('hide');
 			document.getElementById("receipts2").classList.remove('hide');
 			document.getElementById("refresh").classList.remove('hide');
@@ -547,6 +549,11 @@ const Dashboard = () => {
 						<i className="fas fa-bars mr40"></i>
 					</div>
 					<div className='row menu'>
+						{/* 
+						<NavLink to="/goldpass-dashboard" className="" id="gold-pass-dash">
+							<p className='link'>Goldpass Dashboard</p>
+						</NavLink>
+						*/}
 						<NavLink to="/add-user" className="hide" id="add-user">
 							<p className='link'>Add User</p>
 						</NavLink>
@@ -665,6 +672,13 @@ const Dashboard = () => {
 					<div className='end' onClick={() => { hideSidebar() }}>
 						<i className='fa-solid fa-x end'></i>
 					</div>
+					{/* 
+					<div className='link'>
+						<NavLink to="/goldpass-dashboard" className="" id="gold-pass-dash2">
+							<p className='link'>Goldpass Dashboard</p>
+						</NavLink>
+					</div>
+					*/}
 					<div className='link'>
 						<NavLink to="/add-user" className="hide" id="add-user2">
 							<p>Add User</p>

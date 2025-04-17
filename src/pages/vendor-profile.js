@@ -196,6 +196,7 @@ const VendorProfile = () => {
                     contactName: !snapshot.data().ContactName ? "N/A" : snapshot.data().ContactName,
                     contactPhone: !snapshot.data().ContactPhone ? "N/A" : snapshot.data().ContactPhone,
                     contractEnds: !snapshot.data().ContractEnds ? null : yyyymmdd(snapshot.data().ContractEnds.toDate()),
+                    disclaimer: !snapshot.data().Disclaimer ? "N/A" : snapshot.data().Disclaimer,
                     discount: snapshot.data().Discount,
                     discountInstructions: !snapshot.data().discountInstructions ? "N/A" : snapshot.data().discountInstructions,
                     discountInstructionsSmall: !snapshot.data().discountInstructionsSmall ? "N/A" : snapshot.data().discountInstructionsSmall,
