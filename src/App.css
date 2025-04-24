@@ -258,7 +258,7 @@ textarea {
   position: relative;
 }
 
-.table.user, .table.receipts, .table.deals, .table.entities {
+.table.user, .table.receipts, .table.deals, .table.entities, .table.subscribers {
   display: flex;
   flex-direction: column;
 }
