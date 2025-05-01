@@ -97,15 +97,25 @@ const VendorProfile = () => {
     const saveClick = async () => {
         hideBorders();
         const establishmentRef = db.collection('Establishments').doc(vendorID);
-        let date = new Date(contact.appLaunchDate);
-		date.setDate(date.getDate() + 1);
-		date.setHours(0, 0, 0, 0);
-		contact.appLaunchDate = date;
 
-        let date2 = new Date(contact.contractEnds);
-		date2.setDate(date2.getDate() + 1);
-		date2.setHours(0, 0, 0, 0);
-		contact.contractEnds = date2;
+        if (contact.appLaunchDate) {
+            let date = new Date(contact.appLaunchDate);
+		    date.setDate(date.getDate() + 1);
+		    date.setHours(0, 0, 0, 0);
+		    contact.appLaunchDate = date;
+        } else {
+            contact.appLaunchDate = null;
+        }
+
+        if (contact.contractEnds) {
+            let date2 = new Date(contact.contractEnds);
+            date2.setDate(date2.getDate() + 1);
+            date2.setHours(0, 0, 0, 0);
+            contact.contractEnds = date2;
+        } else {
+            contact.contractEnds = null;
+        }
+        
 
         try {
             await establishmentRef.update({
@@ -147,7 +157,7 @@ const VendorProfile = () => {
                 console.error('Error updating document: ', error);
             }
 
-            updateAllDeals(contact.deals);
+            await updateAllDeals(contact.deals);
             goldpassSumInstance.updateSum();
       };
 
@@ -264,6 +274,7 @@ const VendorProfile = () => {
 		const { name, value, type } = event.target;
 
 		let newValue = value;
+        console.log("newValue is: " + newValue);
 
 		if (type === "number") {
 			newValue = parseFloat(value) || 0;
