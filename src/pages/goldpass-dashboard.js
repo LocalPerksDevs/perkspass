@@ -7,8 +7,10 @@ import { auth, db } from '../firebase-config';
 const GoldpassDashboard = () => {
 
     const [entityTransactions, setEntityTransactions] = useState([]);
+    const [entityTransactionsCP, setEntityTransactionsCP] = useState([]);
     const [entityMembers, setEntityMembers] = useState([]);
     const [subscribers, setSubscribers] = useState([]);
+    const [subscribersCP, setSubscribersCP] = useState([]);
     const [passesSold, setPassesSold] = useState(0);
     const [numSubscribers, setNumSubscribers] = useState(0);
 
@@ -44,13 +46,16 @@ const GoldpassDashboard = () => {
 	}, [navigate]);
 
     const getEntityTransactions = async () => {
-		const snapshot = await db.collection("EntityTransactions").get();
+		const snapshot = await db.collection("EntityTransactions")
+        .orderBy("created_at", "desc")
+        .get();
         const documents = snapshot.docs.map(doc => ({
 			id: doc.id,
 			...doc.data(),
 		}));
 
         setEntityTransactions(documents);
+        setEntityTransactionsCP([...documents]);
         setPassesSold(snapshot.size);
 	}
 
@@ -72,6 +77,7 @@ const GoldpassDashboard = () => {
 			...doc.data(),
 		}));
         setSubscribers(documents);
+        setSubscribersCP([...documents]);
         setNumSubscribers(snapshot.size);
     }
 
@@ -84,6 +90,8 @@ const GoldpassDashboard = () => {
 		document.getElementById("sub_tab").classList.add("inactive");
         document.getElementById("SubscriberCount").classList.add("hide");
 		document.getElementById("EntityCount").classList.remove("hide");
+        document.getElementById("entity-search").classList.remove("hide");
+        document.getElementById("subscriber-search").classList.add("hide");
 	}
 
     const showSubscribersTable = () => {
@@ -95,6 +103,8 @@ const GoldpassDashboard = () => {
 		document.getElementById("sub_tab").classList.remove("inactive");
         document.getElementById("SubscriberCount").classList.remove("hide");
 		document.getElementById("EntityCount").classList.add("hide");
+        document.getElementById("entity-search").classList.add("hide");
+        document.getElementById("subscriber-search").classList.remove("hide");
 	}
 
     function formatPhoneNumber(raw) {
@@ -111,7 +121,37 @@ const GoldpassDashboard = () => {
         const [, country, area, prefix, line] = match;
         // 3) Build formatted string
         return `${country} (${area}) ${prefix}-${line}`;
-      }
+    }
+
+    function entitySearch(val) {
+		if (val !== '') {
+			const filteredEntities = entityTransactionsCP.filter(entity => {
+                const memberId = entity.member_ref?.id;
+                const memberName = entityMembers[memberId] || '';
+                return memberName.toLowerCase().includes(val.toLowerCase());
+            });
+
+			setEntityTransactions(filteredEntities);
+            setPassesSold(filteredEntities.length);
+		} else {
+			setEntityTransactions([...entityTransactionsCP]);
+			setPassesSold([...entityTransactionsCP].length);
+		}
+	}
+
+    function subscriberSearch(val) {
+		if (val !== '') {
+			const filteredSubscribers = subscribersCP.filter(sub => {
+                return sub.customer_name.toLowerCase().includes(val.toLowerCase());
+            });
+
+			setSubscribers(filteredSubscribers);
+            setNumSubscribers(filteredSubscribers.length);
+		} else {
+            setSubscribers([...subscribersCP]);
+            setNumSubscribers([...subscribersCP].length);
+		}
+	}
 
     return (
         <div>
@@ -133,6 +173,10 @@ const GoldpassDashboard = () => {
 					<h2 className='active' id="ent_tab" onClick={() => showEntitiesTable()}>Entities</h2>
 					<h2 className='ml24 inactive' id="sub_tab" onClick={() => showSubscribersTable()}>Subscribers</h2>
 				</div>
+                <div id="search" className='search row'>
+					<input type='text' id="entity-search" placeholder='Search by Name' onChange={(e) => entitySearch(e.target.value)}></input>
+                    <input type='text' id="subscriber-search" className="hide" id="subscriber-search" placeholder='Search by Sub Name' onChange={(e) => subscriberSearch(e.target.value)}></input>
+				</div>
                 <h2 className='hide' id="SubscriberCount">Subscribers: {numSubscribers}</h2>
 				<h2 id="EntityCount">Passes Sold: {passesSold}</h2>
             </div>
@@ -140,7 +184,7 @@ const GoldpassDashboard = () => {
 				<table id="entititiesTable">
 					<thead>
 						<tr>
-							<th>NAME</th>
+							<th>MEMBER NAME</th>
 							<th>DATE</th>
 							<th>AMOUNT</th>
 						</tr>
