@@ -1,0 +1,928 @@
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap');
+    @import '../node_modules/@fortawesome/fontawesome-free/css/all.css';
+    
+    input, select {
+      box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+    } 
+    
+    body {
+      margin: 0;
+      font-family: 'Open Sans', sans-serif;
+      background-color: #FFFFFF;
+    }
+    
+    img {
+      height: 20px;
+      width: 140px;
+      cursor: pointer;
+    }
+    
+    img.main-text {
+      height: 153px;
+      width: 314px;
+      cursor: initial;
+    }
+    
+    h1 {
+      font-size: 44px;
+      font-weight: 700;
+      line-height: 60px;
+    }
+    
+    input::placeholder {
+      color: #ABABAB;
+    }
+    
+    label {
+      margin-bottom: 8px;
+    } 
+    
+    .col input[type="file"] {
+      border: none;
+      width: 40%;
+      max-width: 250px;
+      padding-left: 0px;
+      margin-top: 12px;
+      height: 25px;
+    }
+    
+    .col input[type="date"] {
+      width: 90%;
+      max-width: 400px;
+    }
+    
+    table {
+      font-family: 'Open Sans', sans-serif;
+      border-collapse: separate;
+      border-spacing: 0px 8px;
+      padding: 0px 12px;
+      border-radius: 4px;
+      background-color: #EFEFEF;
+      margin-left: 24px;
+      margin-right: 24px;
+    }
+    
+    thead th {
+      position: sticky;
+      top: 0px;
+      background-color: #EFEFEF;
+      height: 44px;
+    }
+    
+    thead tr {
+      background-color: #EFEFEF;
+      margin-bottom: 4px;
+      padding-left: 12px;
+    }
+    
+    th {
+      text-align: left;
+      font-size: 13px;
+      font-weight: 600;
+      padding-left: 12px;
+    }
+    tr {
+      height: 60px;
+      background-color: #FFFFFF;
+      margin-bottom: 24px;
+    }
+    td {
+      background-color: transparent;
+      margin: 0;
+      border: none;
+      color: #808080;
+      font-weight: 500;
+      font-size: 13px;
+      padding: 12px;
+    }
+    
+    td, th {
+      min-width: 100px;
+    }
+    
+    tr td:first-child {
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+    
+    tr td:last-child {
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+    
+    table thead {
+      border-spacing: 0px;
+    }
+    
+    h1, h2 {
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+    
+    tr:hover .edit {
+      visibility: visible;
+    }
+    
+    tbody tr {
+      cursor: pointer;
+    }
+    
+    tbody tr:hover {
+      cursor: pointer;
+      background-color: #F2656C;
+    }
+    
+    tbody tr:hover td {
+      color: #FFFFFF;
+    }
+    
+    textarea {
+      font-family: 'Open Sans', sans-serif;
+      border-radius: 4px;
+      padding-top: 10px;
+    }
+    
+    .vendor-profile input.vendor-input,
+    .vendor-profile textarea.vendor-input {
+      border: none;
+      padding-left: 12px;
+      margin-bottom: 0;
+      height: 40px;
+      font-size: 14px;
+      font-weight: 500;
+      width: 100%;
+      pointer-events: none;
+      box-sizing: border-box;
+    }
+    
+    .vendor-profile select.vendor-input {
+      box-sizing: border-box;
+      width: 100%;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    .vendor-profile p.vendor-input {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+    
+    .vendor-profile textarea.vendor-input {
+      pointer-events: all;
+    }
+    
+    .vendor-profile .vendor-input.update,
+    .vendor-profile .vendor-name.update {
+      border: 1px solid #E1E1E1;
+      pointer-events: all;
+    }
+    .edit {
+      visibility: hidden;
+    }
+    
+    .curve {
+      background-image: url('https://firebasestorage.googleapis.com/v0/b/localperkstest.appspot.com/o/CurvedBackground.svg?alt=media&token=96281c0f-debe-416e-b479-468ad2988c62&_gl=1*1162cmo*_ga*MTkxMzE3MzM5Mi4xNjg5MTE2MzM4*_ga_CW55HF8NVT*MTY5NjU0NzQ5MS4xMDQuMS4xNjk2NTQ3NTMxLjIwLjAuMA..');
+      color: #FFFFFF;
+      background-size: 100vw max(700px, 85vh);
+      background-repeat: no-repeat;
+      background-position-x: left;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      overflow: hidden;
+      z-index: -1;
+      padding-left: 40px;
+    }
+    
+    .overlay {
+      display: none;
+    }
+    
+    .label {
+      font-weight: 600;
+    }
+    
+    .sub-label {
+      margin-top: 0px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-left: 24px;
+      margin-right: 24px;
+      text-align: center;
+    }
+    
+    .active {
+      color: #000000;
+    }
+    
+    .inactive {
+      color: #ABABAB;
+    }
+    
+    .vendor-profile .col .col {
+      width: 99%;
+    }
+    
+    .vendor-profile .col .col:first-child {
+      margin-right: 8px;
+    }
+    
+    .vendor-profile .label, .vendor-profile .vendor-input {
+      padding-left: 12px;
+    }
+    
+    .ml24 {
+      margin-left: 24px;
+    }
+    
+    .white {
+      background-color: #FFFFFF;
+      background-image: none;
+    }
+    
+    .table {
+      /*display: flex;*/
+      /*flex-direction: column;*/
+      align-items: center;
+      overflow-y: scroll;
+      height: 65vh;
+      width: 100%;
+      position: relative;
+    }
+    
+    .table.user {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .App {
+      font-family: 'Open Sans', sans-serif;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+    }
+    
+    .App-logo {
+      height: 40vmin;
+      pointer-events: none;
+    }
+    
+    .fa-pencil {
+      cursor:pointer;
+    }
+    
+    .fa-pencil:hover {
+      color: #333333;
+    }
+    
+    @media (prefers-reduced-motion: no-preference) {
+      .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+      }
+    }
+    
+    .App-header {
+      background-color: #282c34;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: calc(10px + 2vmin);
+      color: white;
+    }
+    
+    .App-link {
+      color: #61dafb;
+    }
+    
+    .center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .topbar.left {
+      justify-content: start;
+    }
+    
+    .col {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .col.left {
+      justify-content: center;
+    }
+    
+    .row {
+      display: flex;
+      flex-direction: row;
+    }
+    
+    .col input, .col select {
+      width: 90%;
+      max-width: 400px;
+      margin-bottom: 24px;
+      height: 40px;
+      padding-left: 12px;
+      border-radius: 4px;
+      border: 1px solid #e1e1e1;
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 600;
+      color: #000000;
+    }
+    
+    .col input:active, .col input:focus-visible {
+      border: 1px solid #333333;
+      outline: none;
+    }
+    
+    .topbar {
+      height: 40px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      margin-top: 24px;
+      margin-bottom: 52px;
+      margin-right: 24px;
+      margin-left: 40px;
+    }
+    
+    .space {
+      display: flex;
+      justify-content: space-between;
+      width: 100vw;
+      max-width: 720px;
+    }
+    
+    .space-between {
+      display: flex;
+      justify-content: space-between;
+      margin: 24px 24px;
+    }
+    
+    .topbar.space {
+      margin-right: 40px;
+      max-width: 95vw;
+    }
+    
+    .main-group {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+    
+    }
+    
+    .link {
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #333333;
+      margin-right: 24px;
+    }
+    
+    .phone {
+      min-width: 140px;
+    }
+    
+    .address {
+      min-width: 240px;
+    }
+    
+    .name {
+      min-width: 240px;
+    }
+    
+    .date {
+      min-width: 180px;
+    }
+    
+    .link:hover, .profile:hover, .link-red:hover {
+      transform: scale(1.1);
+    }
+    
+    .link-red {
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #FF969F;
+    }
+    
+    .topbar a {
+      text-decoration: none !important;
+    }
+    
+    .errorMessage {
+      color: #FF0000;
+    }
+    
+    div.error, input.error {
+      border: solid 2px #FF0000;
+    }
+    
+    .right {
+      justify-content: end;
+    }
+    
+    .hide {
+      display: none !important;
+    }
+    
+    .hidden {
+      visibility: hidden;
+    }
+    
+    .vendor-profile select.vendor-input.update.disabled {
+      pointer-events: none;
+    }
+    
+    .mt24 {
+      margin-top: 24px;
+    }
+    
+    .mb24 {
+      margin-bottom: 24px;
+    }
+    
+    .pr24 {
+      padding-right: 24px;
+    }
+    
+    .mr8 {
+      margin-right: 8px;
+    }
+    
+    .m24 {
+      margin: 0 24px;
+    }
+    
+    .row.m24 {
+      margin-bottom: 30px;
+    }
+    
+    .profile {
+      font-size: 14px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    
+    .button, button {
+      height: 40px;
+      border: 1px solid #E1E1E1;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      width: 90%;
+      max-width: 400px;
+      justify-content: center;
+      margin-bottom: 24px;
+      background-color: #E1E1E1;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    
+    .button:hover, button:hover {
+      background-color: #C0C0C0;
+    }
+    
+    .form, .logoForm, .lat-lon-form {
+      background-color: #FFFFFF;
+      border: 1px solid #E1E1E1;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      width: 100%;
+      max-width: 500px;
+    }
+    
+    .local-perks {
+      padding: 0 24px;
+      background-color: #E1E1E1;
+      width: 100%;
+      max-width: 700px;
+      border-radius: 4px;
+      margin-bottom: 40px;
+      margin-top: 24px;
+    }
+    
+    .local-perks li, .local-perks p {
+      text-align: left;
+    }
+    
+    .local-perks li {
+      margin-bottom: 24px;
+    }
+    
+    .local-perks ol {
+      padding-inline-start: 16px;
+    }
+    
+    .logoForm, .lat-lon-form {
+      margin-bottom: 40px;
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+    
+    .subtext {
+      font-size: 21px;
+      line-height: 32px;
+      font-weight: 400;
+      width: 362px;
+      margin-top: 36px;
+    }
+    
+    .mr40 {
+      margin-right: 40px;
+    }
+    
+    .apple-store, .google-store {
+      height: 40px;
+    }
+    
+    .apple-store {
+      width: 120px;
+      margin-top: 40px;
+    }
+    
+    .google-store {
+      width: 135px;
+      margin-top: 28px;
+    }
+    
+    .screenshot {
+      width: 260px;
+      height: 523px;
+      margin-top: min(137px, 20vh);
+      cursor: initial;
+    }
+    
+    .align-center {
+      display: flex;
+      align-items: center;
+    }
+    
+    .cutoff {
+      overflow: hidden;
+    }
+    
+    .bars {
+      display: none;
+    }
+    
+    .sidebar {
+      width: 64vw;
+      height: 100vh;
+      top: 0;
+      right: 0;
+      position: absolute;
+      background-color: #2A2A2A;
+      z-index: 4;
+      justify-content: space-between;
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    
+    .vendor-profile .end {
+      height: auto;
+      margin-top: 0;
+      align-items: flex-start;
+    }
+    
+    .end {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      height: 40px;
+      margin-top: 24px;
+    }
+    
+    .sidebar i {
+      font-size: 20px;
+      color: #FFFFFF;
+      font-weight: 400;
+      display: flex;
+      margin-right: 40px;
+      height: 20px;
+      margin-bottom: 16px;
+    }
+    
+    .sidebar .link {
+      height: 48px;
+      align-items: center;
+      justify-self: start;
+    }
+    
+    .sidebar .link p {
+      color: #FFFFFF;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 32px;
+    }
+    
+    .mb40 {
+      margin-bottom: 40px;
+    }
+    
+    .privacy {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      margin-left: 20vw;
+      font-family: 'Open Sans', sans-serif;
+      margin-bottom: 200px;
+    }
+    
+    .privacy h1 {
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 31.2px;
+    }
+    
+    .privacy p {
+      color: #374151;
+      font-size: 16px;
+      font-weight: 500;
+      max-width: 1130px;
+    }
+    
+    .vendor-profile {
+      border: solid 1px #E1E1E1;
+      border-radius: 4px;
+      width: 90%;
+      max-width: 600px;
+      min-height: 100px;
+      margin-top: 40px;
+      margin-bottom: 40px;
+      position: relative;
+      box-sizing: border-box;
+    }
+    
+    .vendor-profile .vendor-name {
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 16px;
+      border: none;
+      text-align: center;
+      pointer-events: none;
+    }
+    
+    .reset {
+      cursor: pointer;
+    }
+    
+    .reset:hover {
+      transform: scale(1.1);
+    }
+    
+    .even {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+    
+    .w50 {
+      width: 50vw;
+    }
+    
+    .w50p {
+      width: 50%;
+    }
+    
+    .mr12 {
+      margin-right: 12px;
+    }
+    
+    .vendor-category {
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    .col.center h1 {
+      max-width: 50vw;
+    }
+    
+    .vendor-profile .label {
+      font-size: 13px;
+      margin-bottom: 4px;
+      font-weight: 600;
+      color: #787878;
+    }
+    
+    .vendor-profile p {
+      margin-top: 0px;
+    }
+    
+    .vendor-profile .vendor-select {
+      padding-left: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      margin: 0;
+    }
+    
+    .vendor-profile .vs {
+      margin-bottom: 0;
+    }
+    
+    i.fas.fa-download {
+      cursor: pointer;
+    }
+    
+    i.fas.fa-download:hover {
+      scale: 1.2;
+    }
+    
+    #logo-img {
+      height: 88px;
+      width: 88px;
+      border-radius: 100%;
+      border: 1px solid #E1E1E1;
+    }
+    
+    #profile {
+      border: solid 1px #e1e1e1;
+      border-radius: 4px;
+      height: 40px;
+      width: 200px;
+      position: absolute;
+      top: 60px;
+      right: 24px;
+      visibility: hidden;
+      cursor: pointer;
+    }
+    
+    #profile:hover {
+      background-color: #E1E1E1;
+    }
+    
+    #info {
+      height: 56vh;
+      overflow-y: scroll;
+      overflow-x: clip;
+    }
+    
+    #edit, #save {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    #cancel {
+      position: absolute;
+      top: 24px;
+      right: 72px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    #edit:hover, #save:hover, #cancel:hover {
+      scale: 1.1;
+    }
+    
+    #download {
+      position: absolute;
+      bottom: 12px;
+      right: 60px;
+      z-index: 10;
+    }
+    
+    #tabs {
+      position: absolute;
+      top: 0;
+      left: 24px;
+      cursor: pointer;
+    }
+    
+    #tabs h2:hover {
+      transform: scale(1.1);
+    }
+    
+    #rel {
+      position: relative;
+    }
+    
+    #userTable th i {
+      margin-left: 12px;
+      cursor: pointer;
+    }
+    
+    #userTable th i:hover {
+      transform: scale(1.1);
+    }
+    
+    @media (max-height: 786px) {
+      .screenshot {
+        margin-top: 6vh;
+      }
+    }
+    
+    @media (max-width: 760px) {
+      .menu {
+        display: none;
+      }
+    
+      .subtext {
+        width: 172px;
+        margin-top: 180px;
+      }
+    
+      img.main-text {
+        position: absolute;
+      }
+    
+      .screenshot {
+        margin-top: 180px;
+      }
+    
+      .apple-store {
+        width: 120px;
+        margin-top: 30px;
+      }
+    
+      .bars {
+        display: flex;
+        margin-right: 24px;
+      }
+    
+      .bars i {
+        font-size: 24px;
+      }
+    
+      .overlay {
+        display: none;
+        height: 100vh;
+        width: 100vw;
+        opacity: 0.85;
+        background: #000000;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    
+      .table {
+        display: block;
+        overflow: scroll;
+        height: 80vh;
+        margin-left: 8px;
+        margin-top: 24px;
+        position: relative;
+      }
+      
+      #info {
+        height: 50vh;
+        overflow-y: scroll;
+      }
+    
+      .vendor-profile {
+        width: 99%;
+      }
+    }
+    </style>
+    
+    <div class='privacy'>
+        <h1>Local Perks LLC Terms and Conditions</h1>
+        <p>These Terms and Conditions govern your purchase and use of the “GoldPass: Including PerksPass” Mobile Application, a product of Local Perks LLC. By purchasing and/or using the app, you agree to the following terms:</p>
+        <p>1. Billing and Payment</p>
+        <p>1.1. The Gold Pass is billed annually, and your payment method will be charged on or around the date of purchase each year.</p>
+        <p>1.2. Payments are non-refundable, including both the initial purchase and any renewal payments.</p>
+        <p>1.3. The payment method used for your initial purchase will automatically be used for future renewals unless updated in your account settings.</p>
+        <p>2. Price Changes</p>
+        <p>2.1. Local Perks LLC reserves the right to change the price of the Gold Pass from year to year.</p>
+        <p>2.2. Any changes to annual pricing will be communicated to Gold Pass holders via the email address provided at the time of purchase, prior to the next renewal charge.</p>
+        <p>3. Offers and Vendor Participation</p>
+        <p>3.1. The offers included with the Gold Pass are subject to change. Vendors have the right to update or remove their offers as necessary based on the needs of their business.</p>
+        <p>3.2. Offer changes will be reflected in the Gold Pass app in real time.</p>
+        <p>3.3. Local Perks LLC is not responsible if a vendor fails to honor an offer or does not redeem a discount correctly as disclosed in the app. If such issues arise, users are encouraged to notify Local Perks LLC at support@localperks.app or fill out the feedback form in the app, and our team will work with the business to address the situation.</p>
+        <p>4. Renewals and Cancellations</p>
+        <p>4.1. Your Gold Pass subscription will automatically renew each year unless canceled in your account settings prior to the renewal date.</p>
+        <p>4.2. Local Perks LLC does not offer refunds for cancellations that occur after the renewal charge has been processed.</p>
+        <p>5. User Responsibilities</p>
+        <p>5.1. Users are responsible for ensuring their account information, including payment methods and email address, is accurate and up to date.</p>
+        <p>5.2. Users are encouraged to check the Gold Pass app regularly for the latest information on available offers.</p>
+        <p>5.3 Users may have settings on their phone that inhibit their ability to access deals in the app (such as tools to mask their location etc…). Where our app requires location access to display local deals, it is the users responsibility to update their own device settings to help the app function.</p>
+        <p>6. Limitation of Liability</p>
+        <p>6.1. Local Perks LLC makes no guarantees regarding the availability or quality of offers provided by vendors.</p>
+        <p>6.2. Local Perks LLC is not liable for any loss, inconvenience, or damages arising from vendor changes, removals, or failure to honor offers listed in the Gold Pass.</p>
+        <p>7. Communications</p>
+        <p>7.1. By purchasing the Gold Pass, you consent to receive email & sms communications regarding your subscription, including renewal reminders, price changes, and updates to offers or terms.</p>
+        <p>8. Modification of Terms</p>
+        <p>8.1. Local Perks LLC reserves the right to modify these Terms and Conditions at any time. Any updates will be communicated to users via the email address on file and will take effect upon posting.</p>
+        <p>By purchasing and/or using the Gold Pass, you acknowledge that you have read, understood, and agree to these Terms and Conditions.</p>
+        <p>If you have questions or concerns, contact us at <a href="mailto:support@localperks.app">support@localperks.app</a>.</p>
+    </div>
+    
