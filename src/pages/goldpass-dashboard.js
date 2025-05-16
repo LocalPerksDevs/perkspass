@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import '../App.css';
 import { signOut } from '../../node_modules/firebase/auth/';
 import { auth, db } from '../firebase-config';
+import TableHeadSort from '../components/TableHeadSort';
 
 const GoldpassDashboard = () => {
 
@@ -13,6 +14,10 @@ const GoldpassDashboard = () => {
     const [subscribersCP, setSubscribersCP] = useState([]);
     const [passesSold, setPassesSold] = useState(0);
     const [numSubscribers, setNumSubscribers] = useState(0);
+    const [sortColumnEnt, setSortColumnEnt] = useState("DATE");
+    const [sortColumnSub, setSortColumnSub] = useState("DATE PURCHASED");
+    const [sortAscEnt, setSortAscEnt] = useState(false);
+    const [sortAscSub, setSortAscSub] = useState(false);
 
     const navigate = useNavigate();
 
@@ -185,8 +190,28 @@ const GoldpassDashboard = () => {
 					<thead>
 						<tr>
 							<th>MEMBER NAME</th>
-							<th>DATE</th>
-							<th>AMOUNT</th>
+                            <TableHeadSort 
+                                name="DATE"
+                                sortColumn={sortColumnEnt}
+                                sortAsc={sortAscEnt}
+                                setSortAsc={setSortAscEnt}
+                                array={entityTransactions}
+                                setArray={setEntityTransactions}
+                                setSortColumn={setSortColumnEnt}
+                                className="fa-sort-down"
+                                sortName="created_at"
+                            />
+                            <TableHeadSort
+                                name="AMOUNT"
+                                sortColumn={sortColumnEnt}
+                                sortAsc={sortAscEnt}
+                                setSortAsc={setSortAscEnt}
+                                array={entityTransactions}
+                                setArray={setEntityTransactions}
+                                setSortColumn={setSortColumnEnt}
+                                className="fa-sort"
+                                sortName="amount"
+                            />
 						</tr>
 					</thead>
 					<tbody>
@@ -214,7 +239,17 @@ const GoldpassDashboard = () => {
 				<table id="subscribersTable">
 					<thead>
 						<tr>
-							<th>DATE PURCHASED</th>
+							<TableHeadSort 
+                                name="DATE PURCHASED"
+                                sortColumn={sortColumnSub}
+                                sortAsc={sortAscSub}
+                                setSortAsc={setSortAscSub}
+                                array={subscribers}
+                                setArray={setSubscribers}
+                                setSortColumn={setSortColumnSub}
+                                className="fa-sort-down"
+                                sortName="purchase_date"
+                            />
 							<th>NAME</th>
 							<th>PHONE</th>
                             <th>EMAIL</th>
