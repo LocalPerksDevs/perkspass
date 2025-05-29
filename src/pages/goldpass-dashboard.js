@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from "react-router-dom";
 import '../App.css';
+import firebase from "../../node_modules/firebase/compat/app";
 import { signOut } from '../../node_modules/firebase/auth/';
 import { auth, db } from '../firebase-config';
 import TableHeadSort from '../components/TableHeadSort';
@@ -10,6 +11,7 @@ const GoldpassDashboard = () => {
     const [entityTransactions, setEntityTransactions] = useState([]);
     const [entityTransactionsCP, setEntityTransactionsCP] = useState([]);
     const [entityMembers, setEntityMembers] = useState([]);
+    const [entities, setEntities] = useState([]);
     const [subscribers, setSubscribers] = useState([]);
     const [subscribersCP, setSubscribersCP] = useState([]);
     const [passesSold, setPassesSold] = useState(0);
@@ -18,6 +20,10 @@ const GoldpassDashboard = () => {
     const [sortColumnSub, setSortColumnSub] = useState("DATE PURCHASED");
     const [sortAscEnt, setSortAscEnt] = useState(false);
     const [sortAscSub, setSortAscSub] = useState(false);
+    const entityRefsSet = new Set();
+    let entityRefs;
+    let pushUsers;
+    let entityMap = {};
 
     const navigate = useNavigate();
 
@@ -42,9 +48,10 @@ const GoldpassDashboard = () => {
             if (!isAdmin) {
                 navigate("/dashboard");
             }
-            getEntityMembers();
-            getEntityTransactions();
-            getSubscribers();
+            await getEntityMembers();
+            await getEntityTransactions();
+            await getEntities();
+            await getSubscribers();
         };
 
         checkAdminStatus();
@@ -59,6 +66,15 @@ const GoldpassDashboard = () => {
 			...doc.data(),
 		}));
 
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            if (data.entity_ref) {
+                entityRefsSet.add(data.entity_ref);
+            }
+        });
+
+        entityRefs = Array.from(entityRefsSet);
+
         setEntityTransactions(documents);
         setEntityTransactionsCP([...documents]);
         setPassesSold(snapshot.size);
@@ -72,6 +88,58 @@ const GoldpassDashboard = () => {
 		});
 		setEntityMembers(a);
 	}
+
+    /*const getEntities = async () => {
+        const snapshot = await db.collection("PushNotificationUsers").get();
+        const a = {};
+        snapshot.forEach(doc => {
+            let name = "N/A";
+            let ent = "N/A";
+            if (doc.data().entity) {
+                name = doc.data().entity.name ?  doc.data().entity.name : "N/A";
+                ent = doc.data().entity.entity ? doc.data().entity.entity : "N/A";
+            }
+            a[doc.id] = [name,ent];
+        });
+        setEntities(a);
+    }*/
+
+    const fetchEntitiesByIds = async (ids) => {
+        if (!Array.isArray(ids) || ids.length === 0) {
+            return [];
+        }
+
+        const chunks = [];
+        const chunkSize = 10; // Keep it safe & fast
+
+        for (let i = 0; i < ids.length; i += chunkSize) {
+            chunks.push(ids.slice(i, i + chunkSize));
+        }
+
+        const allDocs = [];
+
+        for (const chunk of chunks) {
+            const qSnap = await db.collection("PushNotificationUsers")
+                                .where(firebase.firestore.FieldPath.documentId(), 'in', chunk)
+                                .get();
+            qSnap.forEach(doc => {
+                allDocs.push({ id: doc.id, ...doc.data() });
+            });
+        }
+
+        return allDocs;
+    };
+
+    const getEntities = async () => {
+        pushUsers = await fetchEntitiesByIds(entityRefs);
+        const entityMap = {};
+        pushUsers.forEach(user => {
+            entityMap[user.id] = user;
+        });
+        setEntities(entityMap);
+    }
+
+    
 
     const getSubscribers = async () => {
         const snapshot = await db.collection("revenuecat_customer_subscriptions")
@@ -133,7 +201,16 @@ const GoldpassDashboard = () => {
 			const filteredEntities = entityTransactionsCP.filter(entity => {
                 const memberId = entity.member_ref?.id;
                 const memberName = entityMembers[memberId] || '';
-                return memberName.toLowerCase().includes(val.toLowerCase());
+
+                const entityId = entity.entity_ref?.id;
+                const entityName = entities[entityId]?.entity?.name || '';
+
+                const searchVal = val.toLowerCase();
+
+                return ( 
+                    memberName.toLowerCase().includes(searchVal) ||
+                    entityName.toLowerCase().includes(searchVal)
+                );
             });
 
 			setEntityTransactions(filteredEntities);
@@ -189,6 +266,8 @@ const GoldpassDashboard = () => {
 				<table id="entititiesTable">
 					<thead>
 						<tr>
+                            <th>ENTITY NAME</th>
+                            <th>ENTITY TYPE</th>
 							<th>MEMBER NAME</th>
                             <TableHeadSort 
                                 name="DATE"
@@ -216,6 +295,7 @@ const GoldpassDashboard = () => {
 					</thead>
 					<tbody>
                         {entityTransactions.map(et => {
+                            const entity = entities[et.entity_ref?.id];
                             const jsDate = et.created_at.toDate?.() ?? new Date();
                             const dateStr = jsDate.toLocaleString(undefined, {
                                 year:   'numeric',
@@ -227,6 +307,8 @@ const GoldpassDashboard = () => {
                             });
                             return (
 							<tr key={et.id}>
+                                <td>{entity?.entity?.name || "N/A"}</td>
+                                <td>{entity?.entity?.entity || "N/A"}</td>
 								<td>{entityMembers[et.member_ref.id] ? entityMembers[et.member_ref.id] : "N/A"}</td>
 								<td>{dateStr}</td>
 								<td>{"$" + et.amount}</td>

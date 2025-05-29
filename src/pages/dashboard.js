@@ -24,7 +24,10 @@ const Dashboard = () => {
 	}, []);
 
 	const userZip = (obj) => {
-		if (document.getElementById('userTable').getElementsByTagName('td').length) {
+		const table = document.getElementById('userTable');
+		if (!table) return;
+
+		if (table.getElementsByTagName('td').length) {
 			return
 		}
 		let html = '';
@@ -46,8 +49,6 @@ const Dashboard = () => {
 						tab.appendChild(tr);
 					}
 				});
-			
-				
 		}
 		
 	}
