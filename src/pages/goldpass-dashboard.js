@@ -108,7 +108,6 @@ const GoldpassDashboard = () => {
         if (!Array.isArray(ids) || ids.length === 0) {
             return [];
         }
-
         const chunks = [];
         const chunkSize = 10; // Keep it safe & fast
 
@@ -309,7 +308,7 @@ const GoldpassDashboard = () => {
 							<tr key={et.id}>
                                 <td>{entity?.entity?.name || "N/A"}</td>
                                 <td>{entity?.entity?.entity || "N/A"}</td>
-								<td>{entityMembers[et.member_ref.id] ? entityMembers[et.member_ref.id] : "N/A"}</td>
+                                <td>{et.member_ref?.id && entityMembers[et.member_ref.id] ? entityMembers[et.member_ref.id] : "N/A"}</td>
 								<td>{dateStr}</td>
 								<td>{"$" + et.amount}</td>
 							</tr>
