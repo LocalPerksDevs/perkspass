@@ -454,6 +454,7 @@ const GoldpassDashboard = () => {
                                 <td>{formatPhoneNumber(sub.customer_phone)}</td>
                                 <td>{sub.customer_email}</td>
                                 <td>{sub.status}</td>
+                                <td></td>
                             </tr>
                         )})}
 					</tbody>
