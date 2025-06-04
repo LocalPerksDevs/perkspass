@@ -258,6 +258,13 @@ textarea {
   position: relative;
 }
 
+.sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 2; 
+    text-align: center; /* optional */
+}
+
 .table.user, .table.receipts, .table.deals, .table.entities, .table.subscribers {
   display: flex;
   flex-direction: column;
@@ -898,7 +905,7 @@ i.fas.fa-download:hover {
 }
 
 #download-goldpass {
-  display: flex;
+  position: sticky;
 }
 
 #tabs {

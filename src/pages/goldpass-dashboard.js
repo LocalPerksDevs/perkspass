@@ -382,7 +382,9 @@ const GoldpassDashboard = () => {
                                 className="fa-sort"
                                 sortName="amount"
                             />
-                            <i id="download-goldpass" className="fas fa-download" onClick={() => createCSV()}></i>
+                            <th className='sticky-header'>
+                                <i id="download-goldpass" className="fas fa-download" onClick={() => createCSV()}></i>
+                            </th>
 						</tr>
 					</thead>
 					<tbody>
@@ -404,6 +406,7 @@ const GoldpassDashboard = () => {
                                 <td>{et.member_ref?.id && entityMembers[et.member_ref.id] ? entityMembers[et.member_ref.id] : "N/A"}</td>
 								<td>{dateStr}</td>
 								<td>{"$" + et.amount}</td>
+                                <td></td>
 							</tr>
 						)})}
 					</tbody>
@@ -428,7 +431,9 @@ const GoldpassDashboard = () => {
 							<th>PHONE</th>
                             <th>EMAIL</th>
                             <th>STATUS</th>
-                            <i id="download-goldpass" className="fas fa-download" onClick={() => createCSVSub()}></i>
+                            <th className='sticky-header'>
+                                <i className="fas fa-download" onClick={() => createCSVSub()}></i>
+                            </th>
 						</tr>
 					</thead>
 					<tbody>
