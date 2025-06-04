@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import '../App.css';
 import { signOut } from '../../node_modules/firebase/auth/';
 import { auth, db } from '../firebase-config';
+import { onAuthStateChanged } from "firebase/auth";
 
 const Dashboard = () => {
 
@@ -11,7 +12,7 @@ const Dashboard = () => {
 	const [dealCount, setDealCount] = useState(0);
 	const [dealSum, setDealSum] = useState(0.00);
 
-	useEffect(() => {
+	/*useEffect(() => {
 		if (!auth.currentUser) {
 			navigate("/sign-in");
 		} else {
@@ -21,7 +22,23 @@ const Dashboard = () => {
 			getDeals();
 			getDealSum();
 		}
-	}, []);
+	}, []);*/
+
+	useEffect(() => {
+	const unsubscribe = onAuthStateChanged(auth, (user) => {
+		if (user) {
+			isUserAdmin(user.uid);
+			getCurrentUser();
+			getAffiliates();
+			getDeals();
+			getDealSum();
+		} else {
+			navigate("/sign-in");
+		}
+	});
+
+	return () => unsubscribe();
+}, []);
 
 	const userZip = (obj) => {
 		const table = document.getElementById('userTable');
@@ -130,10 +147,10 @@ const Dashboard = () => {
 		return vendor ? vendor.Name : 'N/A';
 	}
 
-	const isUserAdmin = async () => {
+	const isUserAdmin = async (uid) => {
 		const snapshot = await db.collection("Admins").get();
 		getZipCount();
-		if (snapshot.docs[0].data().IDs.includes(auth.currentUser.uid)) {
+		if (snapshot.docs[0].data().IDs.includes(uid)) {
 			getVendorsAdmin();
 			//document.getElementById("gold-pass-dash").classList.remove('hide');
 			document.getElementById("add-user").classList.remove('hide');

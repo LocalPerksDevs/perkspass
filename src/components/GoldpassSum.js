@@ -28,7 +28,7 @@ class GoldpassSum {
         }
     }
 
-    async updateSum() {
+    /*async updateSum() {
         try {
             const snapshot = await this.db.collection('EstablishmentDeals').get();
 
@@ -43,10 +43,37 @@ class GoldpassSum {
             newSum = Math.round(newSum * 100) / 100;
             const sumSnapshot = await this.db.collection("GoldpassSum").doc(sumID);
             sumSnapshot.update({Sum: newSum});
+
         } catch (error) {
             console.error('Error updating sum: ', error);
         }
-    }
+    }*/
+
+    async updateSum() {
+        const db = this.db;
+
+        try {
+            const dealsSnapshot = await db.collection('EstablishmentDeals').get();
+
+            let newSum = 0;
+            dealsSnapshot.forEach(doc => {
+                const data = doc.data();
+                if (data.Amount && data.Enabled) {
+                    newSum += data.Amount;
+                }
+            });
+
+            newSum = Math.round(newSum * 100) / 100;
+
+            const sumRef = db.collection("GoldpassSum").doc(sumID);
+
+            await db.runTransaction(async (transaction) => {
+                transaction.update(sumRef, { Sum: newSum });
+            });
+        } catch (error) {
+            console.error('Transaction failed: ', error);
+        }
+    }    
 
     async calcNewSum(oldAmount, newAmount) {
         await this.getSum();

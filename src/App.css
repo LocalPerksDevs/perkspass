@@ -897,6 +897,10 @@ i.fas.fa-download:hover {
   z-index: 10;
 }
 
+#download-goldpass {
+  display: flex;
+}
+
 #tabs {
   position: absolute;
   top: 0;

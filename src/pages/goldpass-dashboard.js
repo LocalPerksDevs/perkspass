@@ -234,6 +234,98 @@ const GoldpassDashboard = () => {
 		}
 	}
 
+    function createCSV() {
+        let csvContent = '"ENTITY NAME","ENTITY TYPE","MEMBER NAME","DATE SOLD","AMOUNT"\n';
+
+        entityTransactions.forEach(et => {
+            const entity = entities[et.entity_ref?.id];
+            const jsDate = et.created_at.toDate?.() ?? new Date();
+            const dateStr = jsDate.toLocaleString(undefined, {
+                year: 'numeric',
+                month: 'short',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
+        });
+
+        // Safely get all values and escape quotes
+        const values = [
+            entity?.entity?.name || "N/A",
+            entity?.entity?.entity || "N/A",
+            et.member_ref?.id && entityMembers[et.member_ref.id] ? entityMembers[et.member_ref.id] : "N/A",
+            dateStr,
+            `$${et.amount}`
+        ];
+
+        const quotedRow = values.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",");
+
+            csvContent += quotedRow + "\n";
+        });
+        const now = new Date();
+        const timestamp = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}-${String(now.getMinutes()).padStart(2, '0')}`;
+
+        downloadCSVFile(csvContent, `Entities_${timestamp}.csv`);
+    }
+
+    function createCSVSub() {
+        let csvContent = '"DATE PURCHASED", "NAME", "PHONE", "EMAIL", "STATUS"\n';
+
+        subscribers.map(sub => {
+            const jsDate = sub.purchase_date.toDate?.() ?? new Date();
+            const dateStr = jsDate.toLocaleString(undefined, {
+                year:   'numeric',
+                month:  'short',
+                day:    '2-digit',
+                hour:   '2-digit',
+                minute: '2-digit',
+                hour12: true,
+            });
+
+            const values = [
+                dateStr,
+                sub.customer_name || "N/A",
+                formatPhoneNumber(sub.customer_phone),
+                sub.customer_email,
+                sub.status
+            ]
+
+            const quotedRow = values.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",");
+            csvContent += quotedRow + "\n";
+        });
+        const now = new Date();
+        const timestamp = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}-${String(now.getMinutes()).padStart(2, '0')}`;
+
+        downloadCSVFile(csvContent, `Subscribers_${timestamp}.csv`);
+    }
+
+    function downloadCSVFile(csv_data, csv_name) {
+ 
+		// Create CSV file object and feed
+		// our csv_data into it
+		let CSVFile = new Blob([csv_data], {
+			type: "text/csv"
+		});
+
+		// Create to temporary link to initiate
+		// download process
+		var temp_link = document.createElement('a');
+
+		// Download csv file
+		temp_link.download = csv_name;
+		var url = window.URL.createObjectURL(CSVFile);
+		temp_link.href = url;
+
+		// This link should not be displayed
+		temp_link.style.display = "none";
+		document.body.appendChild(temp_link);
+
+		// Automatically click the link to
+		// trigger download
+		temp_link.click();
+		document.body.removeChild(temp_link);
+	}
+
     return (
         <div>
             <div className="topbar space">
@@ -290,6 +382,7 @@ const GoldpassDashboard = () => {
                                 className="fa-sort"
                                 sortName="amount"
                             />
+                            <i id="download-goldpass" className="fas fa-download" onClick={() => createCSV()}></i>
 						</tr>
 					</thead>
 					<tbody>
@@ -335,6 +428,7 @@ const GoldpassDashboard = () => {
 							<th>PHONE</th>
                             <th>EMAIL</th>
                             <th>STATUS</th>
+                            <i id="download-goldpass" className="fas fa-download" onClick={() => createCSVSub()}></i>
 						</tr>
 					</thead>
 					<tbody>
