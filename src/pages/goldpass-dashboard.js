@@ -14,13 +14,17 @@ const GoldpassDashboard = () => {
     const [entities, setEntities] = useState([]);
     const [subscribers, setSubscribers] = useState([]);
     const [subscribersCP, setSubscribersCP] = useState([]);
+    const [establishments, setEstablishments] = useState([]);
+    const [issues, setIssues] = useState([]);
     const [passesSold, setPassesSold] = useState(0);
     const [numSubscribers, setNumSubscribers] = useState(0);
+    const [numIssues, setNumIssues] = useState(0);
     const [sortColumnEnt, setSortColumnEnt] = useState("DATE");
     const [sortColumnSub, setSortColumnSub] = useState("DATE PURCHASED");
     const [sortAscEnt, setSortAscEnt] = useState(false);
     const [sortAscSub, setSortAscSub] = useState(false);
     const entityRefsSet = new Set();
+    const establishmentRefsSet = new Set();
     let entityRefs;
     let pushUsers;
     let entityMap = {};
@@ -50,8 +54,10 @@ const GoldpassDashboard = () => {
             }
             await getEntityMembers();
             await getEntityTransactions();
-            await getEntities();
             await getSubscribers();
+            await getReportedIssues();
+            await getEntities();
+            await getEstablishments();
         };
 
         checkAdminStatus();
@@ -72,8 +78,6 @@ const GoldpassDashboard = () => {
                 entityRefsSet.add(data.entity_ref);
             }
         });
-
-        entityRefs = Array.from(entityRefsSet);
 
         setEntityTransactions(documents);
         setEntityTransactionsCP([...documents]);
@@ -104,6 +108,32 @@ const GoldpassDashboard = () => {
         setEntities(a);
     }*/
 
+    const getReportedIssues = async () => {
+        const snapshot = await db.collection("ReportedIssue")
+        .orderBy("created_at", "desc")
+        .get();
+        const documents = snapshot.docs.map(doc => {
+            const data = doc.data();
+
+            if (data.userRef) {
+                entityRefsSet.add(data.userRef);
+            }
+
+            if (data.establishmentRef) {
+                establishmentRefsSet.add(data.establishmentRef.id);
+            }
+
+            return {
+                id: doc.id,
+                ...data,
+            };
+        });
+
+        entityRefs = Array.from(entityRefsSet);
+        setIssues(documents);
+        setNumIssues(snapshot.size);
+    }
+
     const fetchEntitiesByIds = async (ids) => {
         if (!Array.isArray(ids) || ids.length === 0) {
             return [];
@@ -129,6 +159,30 @@ const GoldpassDashboard = () => {
         return allDocs;
     };
 
+    const fetchEstablishmentsByIds = async (ids) => {
+    if (!Array.isArray(ids) || ids.length === 0) return [];
+
+    const chunks = [];
+    const chunkSize = 10;
+
+    for (let i = 0; i < ids.length; i += chunkSize) {
+        chunks.push(ids.slice(i, i + chunkSize));
+    }
+
+    const allDocs = [];
+
+    for (const chunk of chunks) {
+        const qSnap = await db.collection("Establishments")
+            .where(firebase.firestore.FieldPath.documentId(), "in", chunk)
+            .get();
+        qSnap.forEach(doc => {
+            allDocs.push({ id: doc.id, ...doc.data() });
+        });
+    }
+
+    return allDocs;
+};
+
     const getEntities = async () => {
         pushUsers = await fetchEntitiesByIds(entityRefs);
         const entityMap = {};
@@ -138,7 +192,15 @@ const GoldpassDashboard = () => {
         setEntities(entityMap);
     }
 
-    
+    const getEstablishments = async () => {
+        const establishmentIds = Array.from(establishmentRefsSet);
+        const est = await fetchEstablishmentsByIds(establishmentIds);
+        const establishmentMap = {};
+        est.forEach(e => {
+            establishmentMap[e.id] = e;
+        });
+        setEstablishments(establishmentMap);
+    }
 
     const getSubscribers = async () => {
         const snapshot = await db.collection("revenuecat_customer_subscriptions")
@@ -156,11 +218,15 @@ const GoldpassDashboard = () => {
     const showEntitiesTable = () => {
 		document.getElementsByClassName("table subscribers")[0].classList.add("hide");
 		document.getElementsByClassName("table entities")[0].classList.remove("hide");
+        document.getElementsByClassName("table issues")[0].classList.add("hide");
 		document.getElementById("ent_tab").classList.add("active");
 		document.getElementById("ent_tab").classList.remove("inactive");
 		document.getElementById("sub_tab").classList.remove("active");
 		document.getElementById("sub_tab").classList.add("inactive");
+        document.getElementById("issues_tab").classList.add("inactive");
+        document.getElementById("issues_tab").classList.remove("active");
         document.getElementById("SubscriberCount").classList.add("hide");
+        document.getElementById("IssuesCount").classList.add("hide");
 		document.getElementById("EntityCount").classList.remove("hide");
         document.getElementById("entity-search").classList.remove("hide");
         document.getElementById("subscriber-search").classList.add("hide");
@@ -169,14 +235,35 @@ const GoldpassDashboard = () => {
     const showSubscribersTable = () => {
 		document.getElementsByClassName("table subscribers")[0].classList.remove("hide");
 		document.getElementsByClassName("table entities")[0].classList.add("hide");
+        document.getElementsByClassName("table issues")[0].classList.add("hide");
 		document.getElementById("ent_tab").classList.remove("active");
 		document.getElementById("ent_tab").classList.add("inactive");
 		document.getElementById("sub_tab").classList.add("active");
 		document.getElementById("sub_tab").classList.remove("inactive");
+        document.getElementById("issues_tab").classList.add("inactive");
+        document.getElementById("issues_tab").classList.remove("active");
         document.getElementById("SubscriberCount").classList.remove("hide");
 		document.getElementById("EntityCount").classList.add("hide");
+        document.getElementById("IssuesCount").classList.add("hide");
         document.getElementById("entity-search").classList.add("hide");
         document.getElementById("subscriber-search").classList.remove("hide");
+	}
+
+    const showIssuesTable = () => {
+		document.getElementsByClassName("table subscribers")[0].classList.add("hide");
+		document.getElementsByClassName("table entities")[0].classList.add("hide");
+        document.getElementsByClassName("table issues")[0].classList.remove("hide");
+		document.getElementById("ent_tab").classList.remove("active");
+		document.getElementById("ent_tab").classList.add("inactive");
+		document.getElementById("sub_tab").classList.remove("active");
+		document.getElementById("sub_tab").classList.add("inactive");
+        document.getElementById("issues_tab").classList.remove("inactive");
+        document.getElementById("issues_tab").classList.add("active");
+        document.getElementById("SubscriberCount").classList.add("hide");
+		document.getElementById("EntityCount").classList.add("hide");
+        document.getElementById("IssuesCount").classList.remove("hide");
+        document.getElementById("entity-search").classList.add("hide");
+        document.getElementById("subscriber-search").classList.add("hide");
 	}
 
     function formatPhoneNumber(raw) {
@@ -345,13 +432,15 @@ const GoldpassDashboard = () => {
                 <div id="tabs" className='row'>
 					<h2 className='active' id="ent_tab" onClick={() => showEntitiesTable()}>Entities</h2>
 					<h2 className='ml24 inactive' id="sub_tab" onClick={() => showSubscribersTable()}>Subscribers</h2>
+                    <h2 className='ml24 inactive' id="issues_tab" onClick={() => showIssuesTable()}>Issues</h2>
 				</div>
                 <div id="search" className='search row'>
 					<input type='text' id="entity-search" placeholder='Search by Name' onChange={(e) => entitySearch(e.target.value)}></input>
-                    <input type='text' id="subscriber-search" className="hide" id="subscriber-search" placeholder='Search by Sub Name' onChange={(e) => subscriberSearch(e.target.value)}></input>
+                    <input type='text' id="subscriber-search" className="hide" placeholder='Search by Sub Name' onChange={(e) => subscriberSearch(e.target.value)}></input>
 				</div>
                 <h2 className='hide' id="SubscriberCount">Subscribers: {numSubscribers}</h2>
 				<h2 id="EntityCount">Passes Sold: {passesSold}</h2>
+                <h2 className='hide' id="IssuesCount">Reported Issues: {numIssues}</h2>
             </div>
             <div className='table entities'>
 				<table id="entititiesTable">
@@ -457,6 +546,43 @@ const GoldpassDashboard = () => {
                                 <td></td>
                             </tr>
                         )})}
+					</tbody>
+				</table>
+			</div>
+             <div className='table issues hide'>
+				<table id="issuesTable">
+					<thead>
+						<tr>
+                            <th>DATE</th>
+							<th>NAME</th>
+                            <th>EMAIL</th>
+                            <th>VENDOR</th>
+                            <th>MESSAGE</th>
+						</tr>
+					</thead>
+					<tbody>
+                        {issues.map(issue => {
+                            const entity = entities[issue.userRef?.id];
+                            const establishment = establishments[issue.establishmentRef?.id];
+                            const jsDate = issue.created_at.toDate?.() ?? new Date();
+                            const dateStr = jsDate.toLocaleString(undefined, {
+                                year:   'numeric',
+                                month:  'short',
+                                day:    '2-digit',
+                                hour:   '2-digit',
+                                minute: '2-digit',
+                                hour12: true,
+                            });
+                            return (
+                                <tr key={issue.id}>
+                                    <td>{dateStr}</td>
+                                    <td>{entity?.display_name || "N/A"}</td>
+                                    <td>{issue.email}</td>
+                                    <td>{establishment?.Name || "N/A"}</td>
+                                    <td>{issue.message}</td>
+                                </tr>
+                            )
+                        })}
 					</tbody>
 				</table>
 			</div>

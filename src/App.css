@@ -265,7 +265,9 @@ textarea {
     text-align: center; /* optional */
 }
 
-.table.user, .table.receipts, .table.deals, .table.entities, .table.subscribers {
+.table.user, .table.receipts, .table.deals, .table.entities, .table.subscribers,
+.table.issues
+{
   display: flex;
   flex-direction: column;
 }
