@@ -1019,4 +1019,11 @@ i.fas.fa-download:hover {
   .vendor-profile {
     width: 99%;
   }
+
+  .table.user, .table.receipts, .table.deals, .table.entities, .table.subscribers,
+  .table.issues
+  {
+    display: block;
+    flex-direction: column;
+  }
 }

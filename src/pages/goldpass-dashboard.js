@@ -426,7 +426,7 @@ const GoldpassDashboard = () => {
 				</div>
             </div>
             <div className="col center" id="rel">
-                <h1>
+                <h1 id="title">
                     Goldpass Dashboard
                 </h1>
                 <div id="tabs" className='row'>
