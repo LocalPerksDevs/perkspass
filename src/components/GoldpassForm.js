@@ -1,5 +1,6 @@
 import Deal from "./Deal.js";
 
+
 const GoldpassForm = (props) => {
     
     const goldpass = (event) => {

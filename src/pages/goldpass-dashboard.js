@@ -291,11 +291,14 @@ const GoldpassDashboard = () => {
                 const entityId = entity.entity_ref?.id;
                 const entityName = entities[entityId]?.entity?.name || '';
 
+                const customerName = entity.customer_name || '';
+
                 const searchVal = val.toLowerCase();
 
                 return ( 
                     memberName.toLowerCase().includes(searchVal) ||
-                    entityName.toLowerCase().includes(searchVal)
+                    entityName.toLowerCase().includes(searchVal) ||
+                    customerName.toLowerCase().includes(searchVal)
                 );
             });
 
@@ -322,7 +325,8 @@ const GoldpassDashboard = () => {
 	}
 
     function createCSV() {
-        let csvContent = '"ENTITY NAME","ENTITY TYPE","MEMBER NAME","DATE SOLD","AMOUNT"\n';
+        let csvContent = '"ENTITY NAME","ENTITY TYPE","MEMBER NAME", "CUSTOMER EMAIL", ' + 
+        '"CUSTOMER PHONE", "CUSTOMER NAME", "DATE SOLD","AMOUNT"\n';
 
         entityTransactions.forEach(et => {
             const entity = entities[et.entity_ref?.id];
@@ -341,6 +345,9 @@ const GoldpassDashboard = () => {
             entity?.entity?.name || "N/A",
             entity?.entity?.entity || "N/A",
             et.member_ref?.id && entityMembers[et.member_ref.id] ? entityMembers[et.member_ref.id] : "N/A",
+            et.customer_email,
+            formatPhoneNumber(et.customer_phone),
+            et.customer_name,
             dateStr,
             `$${et.amount}`
         ];
@@ -449,6 +456,9 @@ const GoldpassDashboard = () => {
                             <th>ENTITY NAME</th>
                             <th>ENTITY TYPE</th>
 							<th>MEMBER NAME</th>
+                            <th>CUSTOMER EMAIL</th>
+                            <th>CUSTOMER PHONE</th>
+                            <th>CUSTOMER NAME</th>
                             <TableHeadSort 
                                 name="DATE"
                                 sortColumn={sortColumnEnt}
@@ -493,6 +503,9 @@ const GoldpassDashboard = () => {
                                 <td>{entity?.entity?.name || "N/A"}</td>
                                 <td>{entity?.entity?.entity || "N/A"}</td>
                                 <td>{et.member_ref?.id && entityMembers[et.member_ref.id] ? entityMembers[et.member_ref.id] : "N/A"}</td>
+                                <td>{et.customer_email}</td>
+                                <td>{formatPhoneNumber(et.customer_phone)}</td>
+                                <td>{et.customer_name}</td>
 								<td>{dateStr}</td>
 								<td>{"$" + et.amount}</td>
                                 <td></td>
