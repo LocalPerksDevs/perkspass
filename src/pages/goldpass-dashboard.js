@@ -82,7 +82,35 @@ const GoldpassDashboard = () => {
         setEntityTransactions(documents);
         setEntityTransactionsCP([...documents]);
         setPassesSold(snapshot.size);
+
+        getStripeCustomerSubscriptions();
 	}
+
+    const getStripeCustomerSubscriptions = async () => {
+        const snapshot = await db.collection("stripe_customer_subscriptions")
+        .where("amount_paid", "==", 0)
+        .get();
+
+        const documents = snapshot.docs.map(doc => {
+            const data = doc.data();
+            const createdAt = data.created_at;
+            return {
+                id: doc.id,
+                entity: null,
+                member_ref: null,
+                customer_email: data.customer_email || "N/A",
+                customer_phone: data.customer_phone || "N/A",
+                customer_name: null,
+                created_at: createdAt,
+                amount: data.amount_paid ?? 0,
+            };
+		});
+
+        setEntityTransactions(prev => {
+            const merged = [...prev, ...documents];
+            return merged.sort((a, b) => b.created_at - a.created_at); // newest → oldest
+        });
+    }
 
     const getEntityMembers = async () => {
 		const snapshot = await db.collection("EntityMembers").get();
