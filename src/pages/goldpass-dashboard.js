@@ -81,12 +81,12 @@ const GoldpassDashboard = () => {
 
         setEntityTransactions(documents);
         setEntityTransactionsCP([...documents]);
-        setPassesSold(snapshot.size);
+        //setPassesSold(snapshot.size);
 
-        getStripeCustomerSubscriptions();
+        getStripeCustomerSubscriptions(documents);
 	}
 
-    const getStripeCustomerSubscriptions = async () => {
+    const getStripeCustomerSubscriptions = async (currentTransactions = []) => {
         const snapshot = await db.collection("stripe_customer_subscriptions")
         .where("amount_paid", "==", 0)
         .get();
@@ -103,13 +103,17 @@ const GoldpassDashboard = () => {
                 customer_name: null,
                 created_at: createdAt,
                 amount: data.amount_paid ?? 0,
+                free: "1 Free Year",
             };
 		});
 
-        setEntityTransactions(prev => {
-            const merged = [...prev, ...documents];
-            return merged.sort((a, b) => b.created_at - a.created_at); // newest → oldest
-        });
+        const merged = [...currentTransactions, ...documents].sort(
+            (a,b) => b.created_at - a.created_at
+        );
+
+        setEntityTransactions(merged);
+        setEntityTransactionsCP([...merged]);
+        setPassesSold(merged.length);
     }
 
     const getEntityMembers = async () => {
@@ -315,6 +319,7 @@ const GoldpassDashboard = () => {
 			const filteredEntities = entityTransactionsCP.filter(entity => {
                 const memberId = entity.member_ref?.id;
                 const memberName = entityMembers[memberId] || '';
+                const free = entity.free || '';
 
                 const entityId = entity.entity_ref?.id;
                 const entityName = entities[entityId]?.entity?.name || '';
@@ -326,7 +331,8 @@ const GoldpassDashboard = () => {
                 return ( 
                     memberName.toLowerCase().includes(searchVal) ||
                     entityName.toLowerCase().includes(searchVal) ||
-                    customerName.toLowerCase().includes(searchVal)
+                    customerName.toLowerCase().includes(searchVal) ||
+                    free.toLowerCase().includes(searchVal)
                 );
             });
 
@@ -526,9 +532,17 @@ const GoldpassDashboard = () => {
                                 minute: '2-digit',
                                 hour12: true,
                             });
+                            let entityName;
+                            if (et.free) {
+                                entityName = "1 Free Year";
+                            } else if (entity?.entity.name) {
+                                entityName = entity?.entity.name;
+                            } else {
+                                entityName = "N/A";
+                            }
                             return (
 							<tr key={et.id}>
-                                <td>{entity?.entity?.name || "N/A"}</td>
+                                <td>{entityName}</td>
                                 <td>{entity?.entity?.entity || "N/A"}</td>
                                 <td>{et.member_ref?.id && entityMembers[et.member_ref.id] ? entityMembers[et.member_ref.id] : "N/A"}</td>
                                 <td>{et.customer_email}</td>
