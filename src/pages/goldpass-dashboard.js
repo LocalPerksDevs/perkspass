@@ -64,9 +64,21 @@ const GoldpassDashboard = () => {
 	}, [navigate]);
 
     const getEntityTransactions = async () => {
-		const snapshot = await db.collection("EntityTransactions")
-        .orderBy("created_at", "desc")
-        .get();
+        /*// 1. Create native Firestore Timestamp objects directly from your dates
+        const startDate = firebase.firestore.Timestamp.fromDate(new Date("2026-03-01T00:00:00Z"));
+        const endDate = firebase.firestore.Timestamp.fromDate(new Date("2026-06-01T00:00:00Z"));
+
+        // 2. Query the root field "created_at", NOT "created_at.seconds"
+        const snapshot = await db.collection("EntityTransactions")
+            .where("created_at", ">=", startDate)
+            .where("created_at", "<", endDate)
+            .orderBy("created_at", "desc")
+            .get();*/
+
+        const snapshot = await db.collection("EntityTransactions")
+            .orderBy("created_at", "desc")
+            .get();    
+
         const documents = snapshot.docs.map(doc => ({
 			id: doc.id,
 			...doc.data(),
@@ -87,8 +99,13 @@ const GoldpassDashboard = () => {
 	}
 
     const getStripeCustomerSubscriptions = async (currentTransactions = []) => {
+        //const startDate = firebase.firestore.Timestamp.fromDate(new Date("2026-03-01T00:00:00Z"));
+        //const endDate = firebase.firestore.Timestamp.fromDate(new Date("2026-06-01T00:00:00Z"));
+
         const snapshot = await db.collection("stripe_customer_subscriptions")
         .where("amount_paid", "==", 0)
+        //.where("created_at", ">=", startDate)
+        //.where("created_at", "<", endDate)
         .get();
 
         const documents = snapshot.docs.map(doc => {
@@ -120,7 +137,7 @@ const GoldpassDashboard = () => {
 		const snapshot = await db.collection("EntityMembers").get();
         const a = {};
 		snapshot.forEach(doc => {
-			a[doc.id] = doc.data().name;
+			a[doc.id] = doc.data()?.name || "";
 		});
 		setEntityMembers(a);
 	}
@@ -535,8 +552,8 @@ const GoldpassDashboard = () => {
                             let entityName;
                             if (et.free) {
                                 entityName = "1 Free Year";
-                            } else if (entity?.entity.name) {
-                                entityName = entity?.entity.name;
+                            } else if (entity?.entity?.name) {
+                                entityName = entity?.entity?.name || "";
                             } else {
                                 entityName = "N/A";
                             }
